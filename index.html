@@ -47,31 +47,43 @@ var map = L.map('map').setView([-25,135], 4);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
 .addTo(map);
 
-// === LOAD ROUTE
+// === LOAD GEOJSON
 fetch('route_past.geojson')
-.then(r => r.json())
+.then(res => res.json())
 .then(data => {
+
+  console.log("DATA:", data);
+
+  if (!data.features || data.features.length === 0) {
+    console.error("No features in GeoJSON");
+    return;
+  }
 
   let coords = data.features[0].geometry.coordinates;
 
-  // unwrap if nested
-  if (Array.isArray(coords[0][0])) {
+  // handle nested coords safely
+  if (Array.isArray(coords[0]) && Array.isArray(coords[0][0])) {
     coords = coords[0];
   }
 
-  let segments = [];
+  console.log("COORDS COUNT:", coords.length);
 
-  for (let i = 1; i < coords.length; i++) {
-    segments.push([
-      coords[i-1],
-      coords[i]
-    ]);
+  if (coords.length < 2) {
+    console.error("Not enough points");
+    return;
   }
 
-  console.log("Segments:", segments.length);
+  // build segments
+  let segments = [];
+  for (let i = 1; i < coords.length; i++) {
+    segments.push([coords[i-1], coords[i]]);
+  }
+
+  console.log("SEGMENTS:", segments.length);
 
   let layerGroup = L.layerGroup().addTo(map);
 
+  // slider
   let slider = document.createElement("input");
   slider.type = "range";
   slider.className = "slider";
@@ -89,25 +101,29 @@ fetch('route_past.geojson')
 
     for (let i = 0; i <= index; i++) {
       L.polyline(segments[i], {
-        color: `hsl(${i*2},80%,50%)`,
+        color: `hsl(${i * 2}, 80%, 50%)`,
         weight: 4
       }).addTo(layerGroup);
     }
+
+    label.innerText = "Step: " + index;
 
     let bounds = layerGroup.getBounds();
     if (bounds.isValid()) {
       map.fitBounds(bounds, {padding:[50,50]});
     }
-
-    label.innerText = "Step: " + index;
   }
 
+  // initial draw
   draw(segments.length - 1);
 
-  slider.oninput = () => {
-    draw(parseInt(slider.value));
-  };
+  slider.addEventListener("input", (e) => {
+    draw(parseInt(e.target.value));
+  });
 
+})
+.catch(err => {
+  console.error("FAILED TO LOAD GEOJSON:", err);
 });
 
 </script>
