@@ -81,7 +81,7 @@ fetch('route_past.geojson')
 
   console.log("SEGMENTS:", segments.length);
 
-  let layerGroup = L.layerGroup().addTo(map);
+  let layerGroup = L.featureGroup().addTo(map);
 
   // slider
   let slider = document.createElement("input");
