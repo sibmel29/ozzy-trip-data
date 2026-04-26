@@ -1,26 +1,28 @@
 import gpxpy
 import json
-from datetime import datetime
+import os
 
 INPUT_FILE = "track.gpx"
 OUTPUT_FILE = "route_live.geojson"
 
-# === SETTINGS (tune these later if needed)
-MIN_DISTANCE_METERS = 100   # skip points too close
-MAX_POINTS = 500            # avoid huge files
+MIN_DISTANCE_METERS = 100
+MAX_POINTS = 500
 
 
 def haversine(lat1, lon1, lat2, lon2):
     from math import radians, sin, cos, sqrt, atan2
-
     R = 6371000
     dlat = radians(lat2 - lat1)
     dlon = radians(lon2 - lon1)
-
     a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
     c = 2 * atan2(sqrt(a), sqrt(1-a))
     return R * c
 
+
+# ✅ Check file exists
+if not os.path.exists(INPUT_FILE):
+    print("❌ track.gpx not found")
+    exit(1)
 
 with open(INPUT_FILE, "r") as f:
     gpx = gpxpy.parse(f)
@@ -31,19 +33,20 @@ times = []
 last_lat = None
 last_lon = None
 
-# === EXTRACT + FILTER
 for track in gpx.tracks:
     for segment in track.segments:
         for point in segment.points:
+
+            if point.latitude is None or point.longitude is None:
+                continue
+
+            if point.time is None:
+                continue
 
             lat = point.latitude
             lon = point.longitude
             time = point.time
 
-            if not time:
-                continue
-
-            # distance filter
             if last_lat is not None:
                 dist = haversine(lat, lon, last_lat, last_lon)
                 if dist < MIN_DISTANCE_METERS:
@@ -55,31 +58,33 @@ for track in gpx.tracks:
             last_lat = lat
             last_lon = lon
 
-# === LIMIT POINT COUNT (important)
+# ✅ SAFETY: avoid empty output
+if len(coords) < 2:
+    print("❌ Not enough valid points")
+    exit(1)
+
+# LIMIT SIZE
 if len(coords) > MAX_POINTS:
     step = len(coords) // MAX_POINTS
     coords = coords[::step]
     times = times[::step]
 
-# === BUILD GEOJSON
 geojson = {
     "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "LineString",
-                "coordinates": coords
-            },
-            "properties": {
-                "times": times,
-                "label": times[-1][:10] if times else ""
-            }
+    "features": [{
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": coords
+        },
+        "properties": {
+            "times": times,
+            "label": times[-1][:10]
         }
-    ]
+    }]
 }
 
 with open(OUTPUT_FILE, "w") as f:
     json.dump(geojson, f)
 
-print(f"Points kept: {len(coords)} → {OUTPUT_FILE}")
+print(f"✅ Points kept: {len(coords)}")
