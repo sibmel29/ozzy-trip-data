@@ -60,13 +60,7 @@ body { margin:0; font-family: system-ui; }
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-  height: 20px;
   z-index: 1000;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  height: 26px;
-  width: 26px;
 }
 
 .play {
@@ -95,32 +89,6 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 8px;
   font-size: 14px;
 }
-
-@media (max-width: 600px) {
-  .panel {
-    top: auto;
-    bottom: 20px;
-    right: 10px;
-  }
-
-  .odo {
-    top: 10px;
-    left: 10px;
-    font-size: 12px;
-  }
-
-  .slider {
-    width: 90%;
-  }
-
-  .play {
-    bottom: 100px;
-  }
-
-  .label {
-    bottom: 150px;
-  }
-}
 </style>
 </head>
 
@@ -143,9 +111,7 @@ var map = L.map('map', {
   center: [-25, 135],
   zoom: 4,
   minZoom: 3,
-  maxBounds: [[-50,105],[-5,165]],
-  tap: true,
-  tapTolerance: 15
+  maxBounds: [[-50,105],[-5,165]]
 });
 
 // === MAP STYLES
@@ -164,9 +130,8 @@ document.querySelectorAll('.map-btn').forEach(btn => {
     document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
-    let style = btn.dataset.style;
     Object.values(layers).forEach(l => map.removeLayer(l));
-    layers[style].addTo(map);
+    layers[btn.dataset.style].addTo(map);
   };
 });
 
@@ -175,17 +140,13 @@ fetch('odo.json')
   .then(res => res.json())
   .then(data => {
     let current = data.current_odo;
-    let start = data.trip_start_odo;
-    let trip = current - start;
+    let trip = current - data.trip_start_odo;
 
-    document.getElementById("odoTile").innerHTML = `
-      🚐 ${current.toLocaleString()} km<br>
-      🗺 ${trip.toLocaleString()} km trip
-    `;
+    document.getElementById("odoTile").innerHTML =
+      `🚐 ${current.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip`;
   });
 
-// === ROUTE (FIXED)
-// === ROUTE (FIXED FOR YOUR DATA)
+// === ROUTE
 Promise.all([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
@@ -196,21 +157,21 @@ Promise.all([
     ...(live.features || [])
   ];
 
-  // ✅ FIX: only check geometry (NOT times)
-  features = features.filter(f => 
+  // keep only valid lines
+  features = features.filter(f =>
     f.geometry &&
     f.geometry.coordinates &&
     f.geometry.coordinates.length > 1
   );
 
-  console.log("Features loaded:", features.length);
-
-  // sort by time if available
+  // sort by time if exists
   features.sort((a,b) => {
     let ta = a.properties?.times?.[0] || 0;
     let tb = b.properties?.times?.[0] || 0;
     return new Date(ta) - new Date(tb);
   });
+
+  console.log("Loaded features:", features.length);
 
   var layerGroup = L.layerGroup().addTo(map);
 
@@ -238,7 +199,6 @@ Promise.all([
   function setIndex(index) {
     currentIndex = index;
     slider.value = index;
-
     layerGroup.clearLayers();
 
     for (let i = 0; i <= index; i++) {
@@ -253,15 +213,10 @@ Promise.all([
     label.innerText = features[index].properties?.label || "";
 
     let bounds = layerGroup.getBounds();
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding:[50,50] });
-    }
+    if (bounds.isValid()) map.fitBounds(bounds, { padding:[50,50] });
   }
 
-  // init
-  if (features.length > 0) {
-    setIndex(currentIndex);
-  }
+  if (features.length > 0) setIndex(currentIndex);
 
   slider.oninput = () => setIndex(parseInt(slider.value));
 
@@ -269,87 +224,10 @@ Promise.all([
     if (!playing) {
       playing = true;
       playBtn.innerText = "⏸ Pause";
-
       interval = setInterval(() => {
-        let next = currentIndex + 1;
-        if (next >= features.length) next = 0;
+        let next = (currentIndex + 1) % features.length;
         setIndex(next);
       }, 800);
-
-    } else {
-      playing = false;
-      playBtn.innerText = "▶ Play";
-      clearInterval(interval);
-    }
-  };
-
-});
-
-  features = features.filter(f => f.properties && f.properties.times);
-
-  features.sort((a,b) => new Date(a.properties.times[0]) - new Date(b.properties.times[0]));
-
-  var layerGroup = L.layerGroup().addTo(map);
-
-  var slider = document.createElement("input");
-  slider.type = "range";
-  slider.className = "slider";
-  slider.min = 0;
-  slider.max = features.length - 1;
-  slider.value = features.length - 1;
-  document.body.appendChild(slider);
-
-  var playBtn = document.createElement("button");
-  playBtn.className = "play";
-  playBtn.innerText = "▶ Play";
-  document.body.appendChild(playBtn);
-
-  var label = document.createElement("div");
-  label.className = "label";
-  document.body.appendChild(label);
-
-  let currentIndex = features.length - 1;
-  let playing = false;
-  let interval;
-
-  function setIndex(index) {
-    currentIndex = index;
-    slider.value = index;
-
-    layerGroup.clearLayers();
-
-    for (let i = 0; i <= index; i++) {
-      L.geoJSON(features[i], {
-        style: {
-          color: `hsl(${i * 25}, 80%, 50%)`,
-          weight: 5
-        }
-      }).addTo(layerGroup);
-    }
-
-    label.innerText = features[index].properties.label;
-
-    if (playing) {
-      let bounds = layerGroup.getBounds();
-      if (bounds.isValid()) map.fitBounds(bounds, { padding:[50,50] });
-    }
-  }
-
-  setIndex(currentIndex);
-
-  slider.oninput = () => setIndex(parseInt(slider.value));
-
-  playBtn.onclick = () => {
-    if (!playing) {
-      playing = true;
-      playBtn.innerText = "⏸ Pause";
-
-      interval = setInterval(() => {
-        let next = currentIndex + 1;
-        if (next >= features.length) next = 0;
-        setIndex(next);
-      }, 800);
-
     } else {
       playing = false;
       playBtn.innerText = "▶ Play";
