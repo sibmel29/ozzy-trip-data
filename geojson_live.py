@@ -60,8 +60,14 @@ for track in gpx.tracks:
 
 # ✅ SAFETY: avoid empty output
 if len(coords) < 2:
-    print("❌ Not enough valid points")
-    exit(1)
+    print("⚠️ Not enough movement, creating minimal line")
+
+    if len(coords) == 1:
+        coords = [coords[0], coords[0]]
+        times = [times[0], times[0]]
+    else:
+        coords = []
+        times = []
 
 # LIMIT SIZE
 if len(coords) > MAX_POINTS:
