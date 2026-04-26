@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Oz Trip Map</title>
+<title>Bori & Simon explore Oz in FUJI</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,6 +12,42 @@
 <style>
 body { margin:0; font-family: system-ui; }
 #map { height:100vh; }
+
+.panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.map-btn {
+  display: block;
+  margin: 6px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+}
+
+.map-btn.active {
+  background: #ff5500;
+  color: white;
+}
+
+.odo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  padding: 12px;
+  border-radius: 12px;
+}
 
 .slider {
   position: fixed;
@@ -24,13 +60,13 @@ body { margin:0; font-family: system-ui; }
 
 .label {
   position: fixed;
-  bottom: 80px;
+  bottom: 90px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.75);
   color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
 }
 </style>
 </head>
@@ -39,53 +75,85 @@ body { margin:0; font-family: system-ui; }
 
 <div id="map"></div>
 
+<div class="panel">
+  <button class="map-btn active" data-style="osm">🗺 Default</button>
+  <button class="map-btn" data-style="terrain">🏔 Terrain</button>
+  <button class="map-btn" data-style="sat">🛰 Satellite</button>
+</div>
+
+<div class="odo" id="odoTile">🚐 Loading...</div>
+
 <script>
 
-// === MAP
-var map = L.map('map').setView([-25,135], 4);
+// === MAP INIT
+var map = L.map('map', {
+  center: [-25, 135],
+  zoom: 4,
+  maxBounds: [[-50,105],[-5,165]]
+});
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '© OpenStreetMap'
-}).addTo(map);
+// === MAP STYLES
+var layers = {
+  osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+  terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'),
+  sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}')
+};
 
-// === LOAD GEOJSON
-fetch('route_past.geojson')
+layers.osm.addTo(map);
+
+// === STYLE SWITCHER
+document.querySelectorAll('.map-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    Object.values(layers).forEach(l => map.removeLayer(l));
+    layers[btn.dataset.style].addTo(map);
+  };
+});
+
+// === ODO
+fetch('odo.json')
 .then(res => res.json())
 .then(data => {
+  let trip = data.current_odo - data.trip_start_odo;
+  document.getElementById("odoTile").innerHTML =
+    `🚐 ${data.current_odo.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip`;
+});
 
-  console.log("DATA:", data);
+// === ROUTE
+Promise.allSettled([
+  fetch('route_past.geojson').then(r => r.json()),
+  fetch('route_live.geojson').then(r => r.json())
+]).then(results => {
 
-  if (!data.features || data.features.length === 0) {
-    console.error("No features in GeoJSON");
-    return;
-  }
+  let past = results[0].status === "fulfilled" ? results[0].value : {features: []};
+  let live = results[1].status === "fulfilled" ? results[1].value : {features: []};
 
-  let coords = data.features[0].geometry.coordinates;
+  let raw = [...(past.features || []), ...(live.features || [])];
 
-  // handle nested coords safely
-  if (Array.isArray(coords[0]) && Array.isArray(coords[0][0])) {
-    coords = coords[0];
-  }
-
-  console.log("COORDS COUNT:", coords.length);
-
-  if (coords.length < 2) {
-    console.error("Not enough points");
-    return;
-  }
-
-  // build segments
   let segments = [];
-  for (let i = 1; i < coords.length; i++) {
-    segments.push([coords[i-1], coords[i]]);
-  }
+
+  raw.forEach(f => {
+    let coords = f.geometry.coordinates;
+
+    // unwrap if nested
+    if (Array.isArray(coords[0][0])) coords = coords[0];
+
+    for (let i = 1; i < coords.length; i++) {
+      segments.push([
+        [coords[i-1][1], coords[i-1][0]],
+        [coords[i][1], coords[i][0]]
+      ]);
+    }
+  });
 
   console.log("SEGMENTS:", segments.length);
 
+  if (segments.length === 0) return;
+
   let layerGroup = L.featureGroup().addTo(map);
 
-  // slider
   let slider = document.createElement("input");
   slider.type = "range";
   slider.className = "slider";
@@ -99,33 +167,29 @@ fetch('route_past.geojson')
   document.body.appendChild(label);
 
   function draw(index) {
-  layerGroup.clearLayers();
+    layerGroup.clearLayers();
 
-  for (let i = 0; i <= index; i++) {
-    L.polyline(segments[i], {
-      color: `hsl(${i * 20}, 80%, 50%)`,
-      weight: 4
-    }).addTo(layerGroup);
-  }
+    for (let i = 0; i <= index; i++) {
+      L.polyline(segments[i], {
+        color: `hsl(${i * 2}, 80%, 50%)`,
+        weight: 4
+      }).addTo(layerGroup);
+    }
 
-  label.innerText = "Step: " + index;
+    label.innerText = "Step: " + index;
   }
 
   // initial draw
   draw(segments.length - 1);
 
+  // zoom once
   let bounds = layerGroup.getBounds();
   if (bounds.isValid()) {
-  map.fitBounds(bounds, { padding: [50,50] });
+    map.fitBounds(bounds, { padding:[50,50] });
   }
-  
-  slider.addEventListener("input", (e) => {
-    draw(parseInt(e.target.value));
-  });
 
-})
-.catch(err => {
-  console.error("FAILED TO LOAD GEOJSON:", err);
+  slider.oninput = () => draw(parseInt(slider.value));
+
 });
 
 </script>
