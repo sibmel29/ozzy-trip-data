@@ -1,0 +1,35 @@
+name: Update Route
+
+on:
+  push:
+    paths:
+      - 'track.gpx'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install gpxpy
+
+      - name: Run script
+        run: python geojson_live.py
+
+      - name: Remove raw GPX
+        run: rm -f track.gpx
+
+      - name: Commit updated route
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add route_live.geojson
+          git commit -m "Update route" || echo "No changes"
+          git push
