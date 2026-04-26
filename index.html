@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>My Trip</title>
+
+<!-- ✅ MOBILE VIEWPORT -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+body { margin:0; font-family: system-ui; }
+#map { height:100vh; }
+
+/* === MAP STYLE PANEL === */
+.panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.map-btn {
+  display: block;
+  margin: 6px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.map-btn.active {
+  background: #ff5500;
+  color: white;
+}
+
+/* === ODO TILE === */
+.odo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  font-size: 14px;
+}
+
+/* === SLIDER === */
+.slider {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 20px;
+  z-index: 1000;
+}
+
+/* Bigger thumb */
+input[type=range]::-webkit-slider-thumb {
+  height: 26px;
+  width: 26px;
+}
+
+/* === PLAY BUTTON === */
+.play {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: #ff5500;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+/* === LABEL === */
+.label {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* === MOBILE ADAPTATION === */
+@media (max-width: 600px) {
+
+  .panel {
+    top: auto;
+    bottom: 20px;
+    right: 10px;
+  }
+
+  .odo {
+    top: 10px;
+    left: 10px;
+    font-size: 12px;
+  }
+
+  .slider {
+    width: 90%;
+  }
+
+  .play {
+    bottom: 100px;
+  }
+
+  .label {
+    bottom: 150px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<!-- === MAP STYLE PANEL -->
+<div class="panel">
+  <button class="map-btn active" data-style="color">🎨 Color</button>
+  <button class="map-btn" data-style="clean">⚪ Clean</button>
+  <button class="map-btn" data-style="terrain">🏔 Terrain</button>
+  <button class="map-btn" data-style="sat">🛰 Satellite</button>
+</div>
+
+<!-- === ODO TILE -->
+<div class="odo" id="odoTile">
+  🚐 Loading...
+</div>
+
+<script>
+// === MAP INIT (mobile friendly)
+var map = L.map('map', {
+  center: [-25, 135],
+  zoom: 4,
+  minZoom: 3,
+  maxBounds: [[-50,105],[-5,165]],
+  tap: true,
+  tapTolerance: 15
+});
+
+// === MAP STYLES
+var layers = {
+  color: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'),
+  clean: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'),
+  terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'),
+  sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}')
+};
+
+layers.color.addTo(map);
+
+// === STYLE SWITCHER
+document.querySelectorAll('.map-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    let style = btn.dataset.style;
+    Object.values(layers).forEach(l => map.removeLayer(l));
+    layers[style].addTo(map);
+  };
+});
+
+// === ODO
+fetch('odo.json')
+  .then(res => res.json())
+  .then(data => {
+    let current = data.current_odo;
+    let start = data.trip_start_odo;
+    let trip = current - start;
+
+    document.getElementById("odoTile").innerHTML = `
+      🚐 ${current.toLocaleString()} km<br>
+      🗺 ${trip.toLocaleString()} km trip
+    `;
+  });
+
+// === ROUTE
+Promise.all([
+  fetch('route_past.geojson').then(r => r.json()),
+  fetch('route_live.geojson').then(r => r.json())
+]).then(([past, live]) => {
+
+  let features = [
+    ...past.features,
+    ...live.features
+  ];
+});
+.then(res => res.json())
+.then(data => {
+
+  let features = data.features.filter(f => f.properties && f.properties.times);
+
+  features.sort((a,b) => new Date(a.properties.times[0]) - new Date(b.properties.times[0]));
+
+  var layerGroup = L.layerGroup().addTo(map);
+
+  // UI
+  var slider = document.createElement("input");
+  slider.type = "range";
+  slider.className = "slider";
+  slider.min = 0;
+  slider.max = features.length - 1;
+  slider.value = features.length - 1;
+  document.body.appendChild(slider);
+
+  var playBtn = document.createElement("button");
+  playBtn.className = "play";
+  playBtn.innerText = "▶ Play";
+  document.body.appendChild(playBtn);
+
+  var label = document.createElement("div");
+  label.className = "label";
+  document.body.appendChild(label);
+
+  let currentIndex = features.length - 1;
+  let playing = false;
+  let interval;
+
+  function setIndex(index) {
+    currentIndex = index;
+    slider.value = index;
+
+    layerGroup.clearLayers();
+
+    for (let i = 0; i <= index; i++) {
+      L.geoJSON(features[i], {
+        style: {
+          color: `hsl(${i * 25}, 80%, 50%)`,
+          weight: 5
+        }
+      }).addTo(layerGroup);
+    }
+
+    label.innerText = features[index].properties.label;
+
+    if (playing) {
+      let bounds = layerGroup.getBounds();
+      if (bounds.isValid()) map.fitBounds(bounds, { padding:[50,50] });
+    }
+  }
+
+  setIndex(currentIndex);
+
+  slider.oninput = () => setIndex(parseInt(slider.value));
+
+  playBtn.onclick = () => {
+    if (!playing) {
+      playing = true;
+      playBtn.innerText = "⏸ Pause";
+
+      interval = setInterval(() => {
+        let next = currentIndex + 1;
+        if (next >= features.length) next = 0;
+        setIndex(next);
+      }, 800);
+
+    } else {
+      playing = false;
+      playBtn.innerText = "▶ Play";
+      clearInterval(interval);
+    }
+  };
+
+});
+</script>
+
+</body>
+</html>
