@@ -97,26 +97,26 @@ fetch('route_past.geojson')
   document.body.appendChild(label);
 
   function draw(index) {
-    layerGroup.clearLayers();
+  layerGroup.clearLayers();
 
-    for (let i = 0; i <= index; i++) {
-      L.polyline(segments[i], {
-        color: `hsl(${i * 2}, 80%, 50%)`,
-        weight: 4
-      }).addTo(layerGroup);
-    }
+  for (let i = 0; i <= index; i++) {
+    L.polyline(segments[i], {
+      color: `hsl(${i * 20}, 80%, 50%)`,
+      weight: 4
+    }).addTo(layerGroup);
+  }
 
-    label.innerText = "Step: " + index;
-
-    let bounds = layerGroup.getBounds();
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, {padding:[50,50]});
-    }
+  label.innerText = "Step: " + index;
   }
 
   // initial draw
   draw(segments.length - 1);
 
+  let bounds = layerGroup.getBounds();
+  if (bounds.isValid()) {
+  map.fitBounds(bounds, { padding: [50,50] });
+  }
+  
   slider.addEventListener("input", (e) => {
     draw(parseInt(e.target.value));
   });
