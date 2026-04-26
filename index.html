@@ -185,15 +185,105 @@ fetch('odo.json')
   });
 
 // === ROUTE (FIXED)
+// === ROUTE (FIXED FOR YOUR DATA)
 Promise.all([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
 ]).then(([past, live]) => {
 
   let features = [
-    ...past.features,
-    ...live.features
+    ...(past.features || []),
+    ...(live.features || [])
   ];
+
+  // ✅ FIX: only check geometry (NOT times)
+  features = features.filter(f => 
+    f.geometry &&
+    f.geometry.coordinates &&
+    f.geometry.coordinates.length > 1
+  );
+
+  console.log("Features loaded:", features.length);
+
+  // sort by time if available
+  features.sort((a,b) => {
+    let ta = a.properties?.times?.[0] || 0;
+    let tb = b.properties?.times?.[0] || 0;
+    return new Date(ta) - new Date(tb);
+  });
+
+  var layerGroup = L.layerGroup().addTo(map);
+
+  var slider = document.createElement("input");
+  slider.type = "range";
+  slider.className = "slider";
+  slider.min = 0;
+  slider.max = features.length - 1;
+  slider.value = features.length - 1;
+  document.body.appendChild(slider);
+
+  var playBtn = document.createElement("button");
+  playBtn.className = "play";
+  playBtn.innerText = "▶ Play";
+  document.body.appendChild(playBtn);
+
+  var label = document.createElement("div");
+  label.className = "label";
+  document.body.appendChild(label);
+
+  let currentIndex = features.length - 1;
+  let playing = false;
+  let interval;
+
+  function setIndex(index) {
+    currentIndex = index;
+    slider.value = index;
+
+    layerGroup.clearLayers();
+
+    for (let i = 0; i <= index; i++) {
+      L.geoJSON(features[i], {
+        style: {
+          color: `hsl(${i * 25}, 80%, 50%)`,
+          weight: 5
+        }
+      }).addTo(layerGroup);
+    }
+
+    label.innerText = features[index].properties?.label || "";
+
+    let bounds = layerGroup.getBounds();
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding:[50,50] });
+    }
+  }
+
+  // init
+  if (features.length > 0) {
+    setIndex(currentIndex);
+  }
+
+  slider.oninput = () => setIndex(parseInt(slider.value));
+
+  playBtn.onclick = () => {
+    if (!playing) {
+      playing = true;
+      playBtn.innerText = "⏸ Pause";
+
+      interval = setInterval(() => {
+        let next = currentIndex + 1;
+        if (next >= features.length) next = 0;
+        setIndex(next);
+      }, 800);
+
+    } else {
+      playing = false;
+      playBtn.innerText = "▶ Play";
+      clearInterval(interval);
+    }
+  };
+
+});
 
   features = features.filter(f => f.properties && f.properties.times);
 
