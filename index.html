@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <title>My Trip</title>
 
-<!-- ✅ MOBILE VIEWPORT -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -14,7 +13,6 @@
 body { margin:0; font-family: system-ui; }
 #map { height:100vh; }
 
-/* === MAP STYLE PANEL === */
 .panel {
   position: fixed;
   top: 20px;
@@ -43,7 +41,6 @@ body { margin:0; font-family: system-ui; }
   color: white;
 }
 
-/* === ODO TILE === */
 .odo {
   position: fixed;
   top: 20px;
@@ -57,7 +54,6 @@ body { margin:0; font-family: system-ui; }
   font-size: 14px;
 }
 
-/* === SLIDER === */
 .slider {
   position: fixed;
   bottom: 30px;
@@ -68,13 +64,11 @@ body { margin:0; font-family: system-ui; }
   z-index: 1000;
 }
 
-/* Bigger thumb */
 input[type=range]::-webkit-slider-thumb {
   height: 26px;
   width: 26px;
 }
 
-/* === PLAY BUTTON === */
 .play {
   position: fixed;
   bottom: 90px;
@@ -89,7 +83,6 @@ input[type=range]::-webkit-slider-thumb {
   font-size: 16px;
 }
 
-/* === LABEL === */
 .label {
   position: fixed;
   bottom: 140px;
@@ -103,9 +96,7 @@ input[type=range]::-webkit-slider-thumb {
   font-size: 14px;
 }
 
-/* === MOBILE ADAPTATION === */
 @media (max-width: 600px) {
-
   .panel {
     top: auto;
     bottom: 20px;
@@ -137,7 +128,6 @@ input[type=range]::-webkit-slider-thumb {
 
 <div id="map"></div>
 
-<!-- === MAP STYLE PANEL -->
 <div class="panel">
   <button class="map-btn active" data-style="color">🎨 Color</button>
   <button class="map-btn" data-style="clean">⚪ Clean</button>
@@ -145,13 +135,10 @@ input[type=range]::-webkit-slider-thumb {
   <button class="map-btn" data-style="sat">🛰 Satellite</button>
 </div>
 
-<!-- === ODO TILE -->
-<div class="odo" id="odoTile">
-  🚐 Loading...
-</div>
+<div class="odo" id="odoTile">🚐 Loading...</div>
 
 <script>
-// === MAP INIT (mobile friendly)
+// === MAP INIT
 var map = L.map('map', {
   center: [-25, 135],
   zoom: 4,
@@ -197,7 +184,7 @@ fetch('odo.json')
     `;
   });
 
-// === ROUTE
+// === ROUTE (FIXED)
 Promise.all([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
@@ -207,17 +194,13 @@ Promise.all([
     ...past.features,
     ...live.features
   ];
-});
-.then(res => res.json())
-.then(data => {
 
-  let features = data.features.filter(f => f.properties && f.properties.times);
+  features = features.filter(f => f.properties && f.properties.times);
 
   features.sort((a,b) => new Date(a.properties.times[0]) - new Date(b.properties.times[0]));
 
   var layerGroup = L.layerGroup().addTo(map);
 
-  // UI
   var slider = document.createElement("input");
   slider.type = "range";
   slider.className = "slider";
