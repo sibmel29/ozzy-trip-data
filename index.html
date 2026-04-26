@@ -33,7 +33,6 @@ body { margin:0; font-family: system-ui; }
   border: none;
   background: #eee;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .map-btn.active {
@@ -50,8 +49,6 @@ body { margin:0; font-family: system-ui; }
   backdrop-filter: blur(10px);
   padding: 12px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  font-size: 14px;
 }
 
 .slider {
@@ -74,7 +71,6 @@ body { margin:0; font-family: system-ui; }
   border: none;
   padding: 12px 18px;
   border-radius: 10px;
-  font-size: 16px;
 }
 
 .label {
@@ -87,7 +83,6 @@ body { margin:0; font-family: system-ui; }
   color: white;
   padding: 8px 14px;
   border-radius: 8px;
-  font-size: 14px;
 }
 </style>
 </head>
@@ -106,6 +101,7 @@ body { margin:0; font-family: system-ui; }
 <div class="odo" id="odoTile">🚐 Loading...</div>
 
 <script>
+
 // === MAP INIT
 var map = L.map('map', {
   center: [-25, 135],
@@ -129,7 +125,6 @@ document.querySelectorAll('.map-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
     Object.values(layers).forEach(l => map.removeLayer(l));
     layers[btn.dataset.style].addTo(map);
   };
@@ -147,31 +142,43 @@ fetch('odo.json')
   });
 
 // === ROUTE
-Promise.all([
+Promise.allSettled([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
-]).then(([past, live]) => {
+]).then(results => {
+
+  let past = results[0].status === "fulfilled" ? results[0].value : {features: []};
+  let live = results[1].status === "fulfilled" ? results[1].value : {features: []};
+
+  console.log("PAST:", past.features.length);
+  console.log("LIVE:", live.features.length);
 
   let features = [
     ...(past.features || []),
     ...(live.features || [])
   ];
 
-  // keep only valid lines
-  features = features.filter(f =>
+  // ✅ FIX nested coordinates
+  features = features.map(f => {
+    let coords = f.geometry?.coordinates;
+
+    if (Array.isArray(coords) && Array.isArray(coords[0]) && Array.isArray(coords[0][0])) {
+      f.geometry.coordinates = coords[0];
+    }
+
+    return f;
+  }).filter(f =>
     f.geometry &&
     f.geometry.coordinates &&
     f.geometry.coordinates.length > 1
   );
 
-  // sort by time if exists
-  features.sort((a,b) => {
-    let ta = a.properties?.times?.[0] || 0;
-    let tb = b.properties?.times?.[0] || 0;
-    return new Date(ta) - new Date(tb);
-  });
+  console.log("FINAL FEATURES:", features.length);
 
-  console.log("Loaded features:", features.length);
+  if (features.length === 0) {
+    console.warn("No features to display");
+    return;
+  }
 
   var layerGroup = L.layerGroup().addTo(map);
 
@@ -183,22 +190,13 @@ Promise.all([
   slider.value = features.length - 1;
   document.body.appendChild(slider);
 
-  var playBtn = document.createElement("button");
-  playBtn.className = "play";
-  playBtn.innerText = "▶ Play";
-  document.body.appendChild(playBtn);
-
   var label = document.createElement("div");
   label.className = "label";
   document.body.appendChild(label);
 
   let currentIndex = features.length - 1;
-  let playing = false;
-  let interval;
 
   function setIndex(index) {
-    currentIndex = index;
-    slider.value = index;
     layerGroup.clearLayers();
 
     for (let i = 0; i <= index; i++) {
@@ -216,24 +214,9 @@ Promise.all([
     if (bounds.isValid()) map.fitBounds(bounds, { padding:[50,50] });
   }
 
-  if (features.length > 0) setIndex(currentIndex);
+  setIndex(currentIndex);
 
   slider.oninput = () => setIndex(parseInt(slider.value));
-
-  playBtn.onclick = () => {
-    if (!playing) {
-      playing = true;
-      playBtn.innerText = "⏸ Pause";
-      interval = setInterval(() => {
-        let next = (currentIndex + 1) % features.length;
-        setIndex(next);
-      }, 800);
-    } else {
-      playing = false;
-      playBtn.innerText = "▶ Play";
-      clearInterval(interval);
-    }
-  };
 
 });
 </script>
