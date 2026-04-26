@@ -44,8 +44,10 @@ body { margin:0; font-family: system-ui; }
 // === MAP
 var map = L.map('map').setView([-25,135], 4);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png')
-.addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© OpenStreetMap'
+}).addTo(map);
 
 // === LOAD GEOJSON
 fetch('route_past.geojson')
