@@ -60,13 +60,15 @@ body { margin:0; font-family: system-ui; }
 
 .label {
   position: fixed;
-  bottom: 90px;
+  bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0,0,0,0.75);
   color: white;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
 }
 </style>
 </head>
@@ -76,9 +78,9 @@ body { margin:0; font-family: system-ui; }
 <div id="map"></div>
 
 <div class="panel">
-  <button class="map-btn active" data-style="osm">🗺 Default</button>
-  <button class="map-btn" data-style="terrain">🏔 Terrain</button>
-  <button class="map-btn" data-style="sat">🛰 Satellite</button>
+  <button class="map-btn active" data-style="osm">🗺</button>
+  <button class="map-btn" data-style="terrain">🏔</button>
+  <button class="map-btn" data-style="sat">🛰</button>
 </div>
 
 <div class="odo" id="odoTile">🚐 Loading...</div>
@@ -112,7 +114,7 @@ document.querySelectorAll('.map-btn').forEach(btn => {
   };
 });
 
-// === ODO
+// === ODO DISPLAY
 fetch('odo.json')
 .then(res => res.json())
 .then(data => {
@@ -121,7 +123,7 @@ fetch('odo.json')
     `🚐 ${data.current_odo.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip`;
 });
 
-// === ROUTE
+// === LOAD ROUTES
 Promise.allSettled([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
@@ -135,24 +137,24 @@ Promise.allSettled([
   let segments = [];
 
   raw.forEach(f => {
-  let coords = f.geometry.coordinates;
-  let times = f.properties?.times || [];
+    let coords = f.geometry.coordinates;
+    let times = f.properties?.times || [];
 
-  if (Array.isArray(coords[0][0])) coords = coords[0];
+    // unwrap nested
+    if (Array.isArray(coords[0][0])) coords = coords[0];
 
-  for (let i = 1; i < coords.length; i++) {
-    segments.push({
-      coords: [
-        [coords[i-1][1], coords[i-1][0]],
-        [coords[i][1], coords[i][0]]
-      ],
-      time: times[Math.min(i, times.length - 1)] || null
-    });
-  }
+    for (let i = 1; i < coords.length; i++) {
+      segments.push({
+        coords: [
+          [coords[i-1][1], coords[i-1][0]],
+          [coords[i][1], coords[i][0]]
+        ],
+        time: times[Math.min(i, times.length - 1)] || null
+      });
+    }
   });
 
   console.log("SEGMENTS:", segments.length);
-  console.log(segments[0]);
 
   if (segments.length === 0) return;
 
@@ -170,38 +172,30 @@ Promise.allSettled([
   label.className = "label";
   document.body.appendChild(label);
 
-function draw(index) {
-  layerGroup.clearLayers();
+  function draw(index) {
+    layerGroup.clearLayers();
 
-  for (let i = 0; i <= index; i++) {
-    L.polyline(segments[i].coords, {
-      color: `hsl(${i * 2}, 80%, 50%)`,
-      weight: 4
-    }).addTo(layerGroup);
+    for (let i = 0; i <= index; i++) {
+      L.polyline(segments[i].coords, {
+        color: `hsl(${i * 2}, 80%, 50%)`,
+        weight: 4
+      }).addTo(layerGroup);
+    }
+
+    let t = segments[index].time;
+
+    if (t) {
+      let d = new Date(t);
+
+      label.innerHTML = `
+        📅 ${d.toLocaleDateString()}
+        <br>
+        ⏱ ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+      `;
+    } else {
+      label.innerText = "No date";
+    }
   }
-
-  // 👉 Debug (ONLY ONCE)
-  console.log("INDEX:", index, segments[index]);
-
-  // 👉 Date display
-  let t = segments[index].time;
-  if (t) {
-    let d = new Date(t);
-    label.innerText = d.toLocaleDateString();
-  } else {
-    label.innerText = "No date";
-  }
-}
-
-  // 👉 FORMAT DATE
-  let t = segments[index].time;
-  if (t) {
-    let d = new Date(t);
-    label.innerText = d.toLocaleDateString();
-  } else {
-    label.innerText = "No date";
-  }
-}
 
   // initial draw
   draw(segments.length - 1);
@@ -215,7 +209,6 @@ function draw(index) {
   slider.oninput = () => draw(parseInt(slider.value));
 
 });
-
 </script>
 
 </body>
