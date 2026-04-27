@@ -13,6 +13,7 @@
 body { margin:0; font-family: system-ui; }
 #map { height:100vh; }
 
+/* Slider */
 .slider {
   position: fixed;
   bottom: 30px;
@@ -22,18 +23,61 @@ body { margin:0; font-family: system-ui; }
   z-index: 1000;
 }
 
+/* Date label */
 .label {
   position: fixed;
   bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255,0,0,0.9); /* DEBUG RED */
+  background: rgba(0,0,0,0.75);
   color: white;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 12px 18px;
+  border-radius: 14px;
   text-align: center;
   font-size: 14px;
-  z-index: 9999;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+/* ODO tile */
+.odo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Map style panel */
+.panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.9);
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.map-btn {
+  display: block;
+  margin: 5px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+}
+
+.map-btn.active {
+  background: #ff5500;
+  color: white;
 }
 </style>
 </head>
@@ -42,14 +86,50 @@ body { margin:0; font-family: system-ui; }
 
 <div id="map"></div>
 
+<div class="odo" id="odoTile">🚐 Loading...</div>
+
+<div class="panel">
+  <button class="map-btn active" data-style="osm">🗺</button>
+  <button class="map-btn" data-style="terrain">🏔</button>
+  <button class="map-btn" data-style="sat">🛰</button>
+</div>
+
 <script>
 
-// === MAP
+// === MAP INIT
 var map = L.map('map').setView([-25, 135], 4);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+// === MAP STYLES
+var layers = {
+  osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+  terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'),
+  sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}')
+};
 
-// === LOAD DATA
+layers.osm.addTo(map);
+
+// === STYLE SWITCHER
+document.querySelectorAll('.map-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    Object.values(layers).forEach(l => map.removeLayer(l));
+    layers[btn.dataset.style].addTo(map);
+  };
+});
+
+// === ODO
+fetch('odo.json')
+.then(res => res.json())
+.then(data => {
+  let trip = data.current_odo - data.trip_start_odo;
+
+  document.getElementById("odoTile").innerHTML =
+    `🚐 ${data.current_odo.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip`;
+});
+
+// === LOAD ROUTES
 Promise.all([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
@@ -77,11 +157,9 @@ Promise.all([
   });
 
   console.log("SEGMENTS:", segments.length);
-  console.log("FIRST SEGMENT:", segments[0]);
 
   if (segments.length === 0) return;
 
-  // === LAYERS
   let layerGroup = L.featureGroup().addTo(map);
 
   // === SLIDER
@@ -96,56 +174,38 @@ Promise.all([
   // === LABEL
   let label = document.createElement("div");
   label.className = "label";
-  label.innerText = "INIT";
   document.body.appendChild(label);
 
-  // === DRAW FUNCTION
   function draw(index) {
-
-    console.log("DRAW:", index);
-
     layerGroup.clearLayers();
 
     for (let i = 0; i <= index; i++) {
       L.polyline(segments[i].coords, {
-        color: "red",
+        color: `hsl(${(i / segments.length) * 360}, 80%, 50%)`,
         weight: 4
       }).addTo(layerGroup);
     }
 
     let t = segments[index].time;
 
-    console.log("TIME RAW:", t);
-
     if (t) {
       let d = new Date(t);
-
-      let dateStr = d.toLocaleDateString();
-      let timeStr = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-
-      console.log("FORMATTED:", dateStr, timeStr);
-
-      label.innerHTML =
-        "📅 " + dateStr +
-        "<br>⏱ " + timeStr;
+      label.innerHTML = "📅 " + d.toLocaleDateString();
     } else {
-      label.innerText = "NO TIME DATA";
+      label.innerText = "No date";
     }
   }
 
-  // === INITIAL DRAW
+  // initial draw
   draw(segments.length - 1);
 
-  // === FIT MAP
+  // zoom once
   let bounds = layerGroup.getBounds();
   if (bounds.isValid()) {
     map.fitBounds(bounds, { padding:[50,50] });
   }
 
-  // === SLIDER EVENT
-  slider.oninput = function() {
-    draw(parseInt(this.value));
-  };
+  slider.oninput = () => draw(parseInt(slider.value));
 
 });
 
