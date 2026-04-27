@@ -2,11 +2,11 @@ import gpxpy
 import json
 import glob
 import os
-from datetime import datetime
 from math import radians, sin, cos, sqrt, atan2
 
 # === SETTINGS (tune these if needed)
 MIN_DISTANCE_METERS = 150     # skip jitter
+MAX_JUMP_METERS = 5000        # split tracks at impossible GPS jumps
 MAX_POINTS = 800              # keep file light
 INPUT_FOLDER = "."            # where GPX files are
 OUTPUT_FILE = "route_live.geojson"
@@ -34,6 +34,7 @@ print(f"📂 Found {len(gpx_files)} GPX files")
 
 coords = []
 times = []
+segments = []
 
 last_lat = None
 last_lon = None
@@ -64,11 +65,16 @@ for file in gpx_files:
                 if last_lat is not None:
                     dist = haversine(lat, lon, last_lat, last_lon)
 
-                    if dist < MIN_DISTANCE_METERS:
-                        continue
-
                     # skip crazy GPS jumps
-                    if dist > 5000:
+                    if dist > MAX_JUMP_METERS:
+                        if len(coords) >= 2:
+                            segments.append((coords, times))
+                        coords = []
+                        times = []
+                        last_lat = None
+                        last_lon = None
+
+                    elif dist < MIN_DISTANCE_METERS:
                         continue
 
                 coords.append([round(lon, 5), round(lat, 5)])
@@ -77,39 +83,63 @@ for file in gpx_files:
                 last_lat = lat
                 last_lon = lon
 
+if len(coords) >= 2:
+    segments.append((coords, times))
 
 # === SAFETY CHECK
-if len(coords) < 2:
-    print("⚠️ Not enough valid points")
-    exit(1)
+if not segments:
+    print("⚠️ Not enough movement, writing empty route")
+    geojson = {
+        "type": "FeatureCollection",
+        "features": []
+    }
+
+    with open(OUTPUT_FILE, "w") as f:
+        json.dump(geojson, f, indent=2)
+        f.write("\n")
+
+    exit(0)
 
 
 # === LIMIT SIZE
-if len(coords) > MAX_POINTS:
-    step = len(coords) // MAX_POINTS
-    coords = coords[::step]
-    times = times[::step]
+total_points = sum(len(segment_coords) for segment_coords, _ in segments)
+
+if total_points > MAX_POINTS:
+    step = max(1, total_points // MAX_POINTS)
+    segments = [
+        (segment_coords[::step], segment_times[::step])
+        for segment_coords, segment_times in segments
+    ]
+    segments = [
+        (segment_coords, segment_times)
+        for segment_coords, segment_times in segments
+        if len(segment_coords) >= 2
+    ]
 
 
 # === BUILD GEOJSON
 geojson = {
     "type": "FeatureCollection",
-    "features": [{
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": coords
-        },
-        "properties": {
-            "times": times,
-            "label": times[-1][:10]
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": segment_coords
+            },
+            "properties": {
+                "times": segment_times,
+                "label": segment_times[-1][:10]
+            }
         }
-    }]
+        for segment_coords, segment_times in segments
+    ]
 }
 
 
 # === SAVE FILE
 with open(OUTPUT_FILE, "w") as f:
-    json.dump(geojson, f)
+    json.dump(geojson, f, indent=2)
+    f.write("\n")
 
-print(f"✅ Done: {len(coords)} points → {OUTPUT_FILE}")
+print(f"✅ Done: {sum(len(segment_coords) for segment_coords, _ in segments)} points → {OUTPUT_FILE}")
