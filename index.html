@@ -180,6 +180,19 @@ function draw(index) {
     }).addTo(layerGroup);
   }
 
+  // 👉 Debug (ONLY ONCE)
+  console.log("INDEX:", index, segments[index]);
+
+  // 👉 Date display
+  let t = segments[index].time;
+  if (t) {
+    let d = new Date(t);
+    label.innerText = d.toLocaleDateString();
+  } else {
+    label.innerText = "No date";
+  }
+}
+
   // 👉 FORMAT DATE
   let t = segments[index].time;
   if (t) {
