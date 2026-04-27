@@ -79,6 +79,34 @@ body { margin:0; font-family: system-ui; }
   background: #ff5500;
   color: white;
 }
+
+.current-marker {
+  position: relative;
+  width: 24px;
+  height: 24px;
+}
+
+.current-marker::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #ff5500;
+  border: 3px solid white;
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+  transform: rotate(-45deg);
+}
+
+.current-marker::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
 </style>
 </head>
 
@@ -138,12 +166,22 @@ Promise.all([
   let raw = [...(past.features || []), ...(live.features || [])];
 
   let segments = [];
+  let latestPoint = null;
+  let latestTime = null;
 
   raw.forEach(f => {
     let coords = f.geometry.coordinates;
     let times = f.properties?.times || [];
 
+    if (!coords || coords.length === 0) return;
+
     if (Array.isArray(coords[0][0])) coords = coords[0];
+
+    if (coords.length > 0) {
+      let point = coords[coords.length - 1];
+      latestPoint = [point[1], point[0]];
+      latestTime = times[times.length - 1] || f.properties?.label || null;
+    }
 
     for (let i = 1; i < coords.length; i++) {
       segments.push({
@@ -157,6 +195,19 @@ Promise.all([
   });
 
   console.log("SEGMENTS:", segments.length);
+
+  if (latestPoint) {
+    let currentIcon = L.divIcon({
+      className: "",
+      html: '<div class="current-marker"></div>',
+      iconSize: [24, 24],
+      iconAnchor: [12, 24]
+    });
+
+    L.marker(latestPoint, { icon: currentIcon, zIndexOffset: 1000 })
+      .bindPopup(latestTime ? `Last updated: ${latestTime}` : "Last updated location")
+      .addTo(map);
+  }
 
   if (segments.length === 0) return;
 
