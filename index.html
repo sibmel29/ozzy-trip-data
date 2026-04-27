@@ -24,19 +24,17 @@ body { margin:0; font-family: system-ui; }
 
 .label {
   position: fixed;
-  bottom: 90px;
+  bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.7);
+  background: rgba(255,0,0,0.9); /* DEBUG RED */
   color: white;
-  padding: 10px;
+  padding: 12px;
   border-radius: 10px;
   text-align: center;
+  font-size: 14px;
+  z-index: 9999;
 }
-label.innerText = "TEST LABEL";
-label.style.background = "red";
-label.style.zIndex = 9999;
-  
 </style>
 </head>
 
@@ -46,10 +44,12 @@ label.style.zIndex = 9999;
 
 <script>
 
+// === MAP
 var map = L.map('map').setView([-25, 135], 4);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
+// === LOAD DATA
 Promise.all([
   fetch('route_past.geojson').then(r => r.json()),
   fetch('route_live.geojson').then(r => r.json())
@@ -77,11 +77,14 @@ Promise.all([
   });
 
   console.log("SEGMENTS:", segments.length);
+  console.log("FIRST SEGMENT:", segments[0]);
 
   if (segments.length === 0) return;
 
+  // === LAYERS
   let layerGroup = L.featureGroup().addTo(map);
 
+  // === SLIDER
   let slider = document.createElement("input");
   slider.type = "range";
   slider.className = "slider";
@@ -90,11 +93,17 @@ Promise.all([
   slider.value = segments.length - 1;
   document.body.appendChild(slider);
 
+  // === LABEL
   let label = document.createElement("div");
   label.className = "label";
+  label.innerText = "INIT";
   document.body.appendChild(label);
 
+  // === DRAW FUNCTION
   function draw(index) {
+
+    console.log("DRAW:", index);
+
     layerGroup.clearLayers();
 
     for (let i = 0; i <= index; i++) {
@@ -106,25 +115,37 @@ Promise.all([
 
     let t = segments[index].time;
 
+    console.log("TIME RAW:", t);
+
     if (t) {
       let d = new Date(t);
 
+      let dateStr = d.toLocaleDateString();
+      let timeStr = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+      console.log("FORMATTED:", dateStr, timeStr);
+
       label.innerHTML =
-        "📅 " + d.toLocaleDateString() +
-        "<br>⏱ " + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        "📅 " + dateStr +
+        "<br>⏱ " + timeStr;
     } else {
-      label.innerText = "No date";
+      label.innerText = "NO TIME DATA";
     }
   }
 
+  // === INITIAL DRAW
   draw(segments.length - 1);
 
+  // === FIT MAP
   let bounds = layerGroup.getBounds();
   if (bounds.isValid()) {
     map.fitBounds(bounds, { padding:[50,50] });
   }
 
-  slider.oninput = () => draw(parseInt(slider.value));
+  // === SLIDER EVENT
+  slider.oninput = function() {
+    draw(parseInt(this.value));
+  };
 
 });
 
