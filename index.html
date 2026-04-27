@@ -146,12 +146,13 @@ Promise.allSettled([
         [coords[i-1][1], coords[i-1][0]],
         [coords[i][1], coords[i][0]]
       ],
-      time: times[i] || times[i-1] || null
+      time: times[Math.min(i, times.length - 1)] || null
     });
   }
   });
 
   console.log("SEGMENTS:", segments.length);
+  console.log(segments[0]);
 
   if (segments.length === 0) return;
 
