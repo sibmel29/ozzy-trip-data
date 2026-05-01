@@ -80,12 +80,12 @@ body { margin:0; font-family: system-ui; }
   color: white;
 }
 
-/* Marker */
 .current-marker {
   position: relative;
   width: 24px;
   height: 24px;
 }
+
 .current-marker::before {
   content: "";
   position: absolute;
@@ -97,15 +97,30 @@ body { margin:0; font-family: system-ui; }
   transform: rotate(-45deg);
 }
 
-/* ===== POPUP ===== */
+.current-marker::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+/* Welcome popup */
 .popup {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 2000;
+}
+
+.popup.visible {
+  display: flex;
 }
 
 .popup-content {
@@ -153,10 +168,9 @@ body { margin:0; font-family: system-ui; }
   <button class="map-btn" data-style="sat">🛰</button>
 </div>
 
-<!-- ===== POPUP ===== -->
 <div id="popup" class="popup">
   <div class="popup-content">
-    <img src="sticker.png" class="popup-img" />
+    <img src="sticker.png" class="popup-img" alt="Fuji Road Trip sticker" />
 
     <h2>🚐 Fuji Road Trip</h2>
 
@@ -171,18 +185,16 @@ body { margin:0; font-family: system-ui; }
 
 <script>
 
-// === POPUP LOGIC
+// === POPUP
 const popup = document.getElementById("popup");
-const closeBtn = document.getElementById("closePopup");
+const closePopup = document.getElementById("closePopup");
 
 if (!localStorage.getItem("seenPopup")) {
-  popup.style.display = "flex";
-} else {
-  popup.style.display = "none";
+  popup.classList.add("visible");
 }
 
-closeBtn.onclick = () => {
-  popup.style.display = "none";
+closePopup.onclick = () => {
+  popup.classList.remove("visible");
   localStorage.setItem("seenPopup", "true");
 };
 
@@ -229,6 +241,7 @@ Promise.all([
 
   let segments = [];
   let latestPoint = null;
+  let latestTime = null;
 
   raw.forEach(f => {
     let coords = f.geometry.coordinates;
@@ -241,6 +254,7 @@ Promise.all([
     if (coords.length > 0) {
       let point = coords[coords.length - 1];
       latestPoint = [point[1], point[0]];
+      latestTime = times[times.length - 1] || f.properties?.label || null;
     }
 
     for (let i = 1; i < coords.length; i++) {
@@ -254,18 +268,26 @@ Promise.all([
     }
   });
 
+  console.log("SEGMENTS:", segments.length);
+
   if (latestPoint) {
     let currentIcon = L.divIcon({
+      className: "",
       html: '<div class="current-marker"></div>',
       iconSize: [24, 24],
       iconAnchor: [12, 24]
     });
 
-    L.marker(latestPoint, { icon: currentIcon }).addTo(map);
+    L.marker(latestPoint, { icon: currentIcon, zIndexOffset: 1000 })
+      .bindPopup(latestTime ? `Last updated: ${latestTime}` : "Last updated location")
+      .addTo(map);
   }
+
+  if (segments.length === 0) return;
 
   let layerGroup = L.featureGroup().addTo(map);
 
+  // === SLIDER
   let slider = document.createElement("input");
   slider.type = "range";
   slider.className = "slider";
@@ -274,6 +296,7 @@ Promise.all([
   slider.value = segments.length - 1;
   document.body.appendChild(slider);
 
+  // === LABEL
   let label = document.createElement("div");
   label.className = "label";
   document.body.appendChild(label);
@@ -293,11 +316,15 @@ Promise.all([
     if (t) {
       let d = new Date(t);
       label.innerHTML = "📅 " + d.toLocaleDateString();
+    } else {
+      label.innerText = "No date";
     }
   }
 
+  // initial draw
   draw(segments.length - 1);
 
+  // zoom once
   let bounds = layerGroup.getBounds();
   if (bounds.isValid()) {
     map.fitBounds(bounds, { padding:[50,50] });
