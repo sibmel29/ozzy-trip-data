@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '*.gpx'
+      - 'hikes/gpx/*.gpx'
 
 jobs:
   build:
@@ -21,14 +22,17 @@ jobs:
       - name: Install dependencies
         run: pip install gpxpy
 
-      - name: Run script
+      - name: Process car route
         run: python geojson_merge.py
 
-      - name: Commit updated geojson
+      - name: Process hike routes
+        run: python process_hikes.py
+
+      - name: Commit updated route data
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add route_live.geojson
-          git diff --cached --quiet && echo "No route changes to commit" && exit 0
-          git commit -m "Update route"
+          git add route_live.geojson hikes.geojson hikes_stats.json
+          git diff --cached --quiet && echo "No generated route changes to commit" && exit 0
+          git commit -m "Update route data"
           git push
