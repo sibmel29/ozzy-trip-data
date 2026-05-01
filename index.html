@@ -47,10 +47,24 @@ body { margin:0; font-family: system-ui; }
   left: 20px;
   z-index: 1000;
   background: rgba(255,255,255,0.9);
-  padding: 12px;
+  padding: 10px 12px 12px;
   border-radius: 12px;
   font-size: 14px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  min-width: 130px;
+}
+
+.odo-logo {
+  display: block;
+  width: 108px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 8px;
+  border-radius: 6px;
+}
+
+.odo-values {
+  line-height: 1.35;
 }
 
 /* Map style panel */
@@ -63,6 +77,38 @@ body { margin:0; font-family: system-ui; }
   padding: 10px;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.hike-panel {
+  position: fixed;
+  top: 150px;
+  right: 20px;
+  z-index: 1000;
+  width: 132px;
+  background: rgba(255,255,255,0.92);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-size: 12px;
+}
+
+.hike-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hike-stats {
+  display: grid;
+  gap: 2px;
+  margin-top: 6px;
+  color: #333;
+}
+
+.hike-stats strong {
+  color: #166534;
 }
 
 .map-btn {
@@ -106,6 +152,151 @@ body { margin:0; font-family: system-ui; }
   height: 6px;
   background: white;
   border-radius: 50%;
+}
+
+.poi-marker {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: #155e75;
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hike-marker {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: #166534;
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+  color: white;
+  font-size: 14px;
+}
+
+.story-window {
+  position: fixed;
+  right: 20px;
+  top: 90px;
+  width: min(380px, calc(100vw - 40px));
+  max-height: calc(100vh - 130px);
+  overflow: auto;
+  z-index: 1600;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  display: none;
+}
+
+.story-window.visible {
+  display: block;
+}
+
+.story-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 8px;
+}
+
+.story-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.story-date {
+  margin-top: 4px;
+  color: #555;
+  font-size: 13px;
+}
+
+.story-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.story-media {
+  position: relative;
+  padding: 8px 16px 0;
+}
+
+.story-media img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.story-gallery-controls {
+  position: absolute;
+  inset: 8px 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.story-gallery-controls button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.62);
+  color: white;
+  cursor: pointer;
+  font-size: 22px;
+  pointer-events: auto;
+}
+
+.story-image-count {
+  position: absolute;
+  right: 26px;
+  bottom: 10px;
+  background: rgba(0,0,0,0.62);
+  color: white;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.story-body {
+  padding: 12px 16px 16px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.story-body p {
+  margin: 0 0 10px;
+}
+
+.story-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.story-tags span {
+  background: #e0f2fe;
+  color: #155e75;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 12px;
 }
 
 /* Welcome popup */
@@ -160,12 +351,25 @@ body { margin:0; font-family: system-ui; }
 
 <div id="map"></div>
 
-<div class="odo" id="odoTile">🚐 Loading...</div>
+<div class="odo" id="odoTile">
+  <img src="fuji-logo.png" class="odo-logo" alt="Fuji logo" />
+  <div class="odo-values">🚐 Loading...</div>
+</div>
 
 <div class="panel">
   <button class="map-btn active" data-style="osm">🗺</button>
   <button class="map-btn" data-style="terrain">🏔</button>
   <button class="map-btn" data-style="sat">🛰</button>
+</div>
+
+<div class="hike-panel">
+  <label class="hike-toggle">
+    <input type="checkbox" id="hikeToggle">
+    <span>Hikes</span>
+  </label>
+  <div class="hike-stats" id="hikeStats">
+    <span>No hikes loaded</span>
+  </div>
 </div>
 
 <div id="popup" class="popup">
@@ -183,6 +387,8 @@ body { margin:0; font-family: system-ui; }
   </div>
 </div>
 
+<article id="storyWindow" class="story-window" aria-live="polite"></article>
+
 <script>
 
 // === POPUP
@@ -197,6 +403,208 @@ closePopup.onclick = () => {
   popup.classList.remove("visible");
   localStorage.setItem("seenPopup", "true");
 };
+
+// === POI STORIES
+const storyWindow = document.getElementById("storyWindow");
+let activeStory = null;
+let activeImageIndex = 0;
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+function openStory(poi) {
+  activeStory = poi;
+  activeImageIndex = 0;
+  renderStory();
+}
+
+function renderStory() {
+  let poi = activeStory;
+  if (!poi) return;
+
+  let title = escapeHTML(poi.title || "Untitled stop");
+  let date = poi.date ? `<div class="story-date">${escapeHTML(poi.date)}</div>` : "";
+  let images = poi.images || [];
+  let currentImage = images[activeImageIndex];
+  let gallery = currentImage ? `
+    <div class="story-media">
+      <img src="${escapeHTML(currentImage.src)}" alt="${escapeHTML(currentImage.alt || poi.title || "Point of interest image")}">
+      ${images.length > 1 ? `
+        <div class="story-gallery-controls">
+          <button class="story-prev" type="button" aria-label="Previous image">‹</button>
+          <button class="story-next" type="button" aria-label="Next image">›</button>
+        </div>
+        <div class="story-image-count">${activeImageIndex + 1} / ${images.length}</div>
+      ` : ""}
+    </div>
+  ` : "";
+  let body = (poi.body || []).map(paragraph => `<p>${escapeHTML(paragraph)}</p>`).join("");
+  let tags = (poi.tags || []).map(tag => `<span>${escapeHTML(tag)}</span>`).join("");
+
+  storyWindow.innerHTML = `
+    <div class="story-header">
+      <div>
+        <h2>${title}</h2>
+        ${date}
+      </div>
+      <button class="story-close" type="button" aria-label="Close story">×</button>
+    </div>
+    ${gallery}
+    <div class="story-body">
+      ${poi.summary ? `<p><strong>${escapeHTML(poi.summary)}</strong></p>` : ""}
+      ${body}
+      ${tags ? `<div class="story-tags">${tags}</div>` : ""}
+    </div>
+  `;
+
+  storyWindow.classList.add("visible");
+  storyWindow.querySelector(".story-close").onclick = closeStory;
+
+  let previous = storyWindow.querySelector(".story-prev");
+  let next = storyWindow.querySelector(".story-next");
+
+  if (previous) {
+    previous.onclick = () => {
+      activeImageIndex = (activeImageIndex - 1 + images.length) % images.length;
+      renderStory();
+    };
+  }
+
+  if (next) {
+    next.onclick = () => {
+      activeImageIndex = (activeImageIndex + 1) % images.length;
+      renderStory();
+    };
+  }
+}
+
+function closeStory() {
+  activeStory = null;
+  storyWindow.classList.remove("visible");
+  storyWindow.innerHTML = "";
+}
+
+function addPOIMarkers(points) {
+  let poiIcon = L.divIcon({
+    className: "",
+    html: '<div class="poi-marker">i</div>',
+    iconSize: [26, 26],
+    iconAnchor: [13, 13]
+  });
+
+  points.forEach(poi => {
+    let coords = poi.coordinates;
+
+    if (!Array.isArray(coords) || coords.length < 2) return;
+
+    let marker = L.marker([coords[1], coords[0]], {
+      icon: poiIcon,
+      title: poi.title || "Point of interest",
+      zIndexOffset: 900
+    }).addTo(map);
+
+    marker.on("click", () => openStory(poi));
+  });
+}
+
+// === HIKES
+const hikeToggle = document.getElementById("hikeToggle");
+const hikeStats = document.getElementById("hikeStats");
+const hikeLayer = L.featureGroup();
+
+function hikeFeatureToStory(feature) {
+  let properties = feature.properties || {};
+
+  return {
+    id: properties.id,
+    title: properties.title,
+    date: properties.date,
+    summary: properties.summary,
+    body: properties.body || [],
+    images: properties.images || [],
+    tags: properties.tags || ["hike"]
+  };
+}
+
+function renderHikeStats(stats) {
+  hikeStats.innerHTML = `
+    <span><strong>${Number(stats.hike_count || 0).toLocaleString()}</strong> hikes</span>
+    <span><strong>${Number(stats.distance_km || 0).toLocaleString()}</strong> km total</span>
+    <span><strong>${Number(stats.ascent_m || 0).toLocaleString()}</strong> m ascent</span>
+    <span><strong>${Number(stats.descent_m || 0).toLocaleString()}</strong> m descent</span>
+  `;
+}
+
+function addHikes(data) {
+  let hikeIcon = L.divIcon({
+    className: "",
+    html: '<div class="hike-marker">↟</div>',
+    iconSize: [26, 26],
+    iconAnchor: [13, 13]
+  });
+
+  (data.features || []).forEach(feature => {
+    let coordinates = feature.geometry?.coordinates || [];
+    if (coordinates.length < 2) return;
+
+    let latLngs = coordinates.map(coord => [coord[1], coord[0]]);
+    let properties = feature.properties || {};
+    let start = properties.start || coordinates[0];
+
+    L.polyline(latLngs, {
+      color: "#16a34a",
+      weight: 5,
+      opacity: 0.85
+    }).addTo(hikeLayer).on("click", () => openStory(hikeFeatureToStory(feature)));
+
+    L.marker([start[1], start[0]], {
+      icon: hikeIcon,
+      title: properties.title || "Hike",
+      zIndexOffset: 850
+    }).addTo(hikeLayer).on("click", () => openStory(hikeFeatureToStory(feature)));
+  });
+}
+
+Promise.all([
+  fetch('hikes.geojson').then(res => res.ok ? res.json() : { features: [] }),
+  fetch('hikes_stats.json').then(res => res.ok ? res.json() : {})
+]).then(([hikes, stats]) => {
+  addHikes(hikes);
+  renderHikeStats(stats);
+  hikeToggle.disabled = (hikes.features || []).length === 0;
+}).catch(error => {
+  console.warn("Hike data not loaded:", error);
+  hikeStats.innerHTML = "<span>No hikes loaded</span>";
+  hikeToggle.disabled = true;
+});
+
+hikeToggle.onchange = () => {
+  if (hikeToggle.checked) {
+    hikeLayer.addTo(map);
+
+    if (hikeLayer.getLayers().length > 0) {
+      map.fitBounds(hikeLayer.getBounds(), { padding: [50, 50] });
+    }
+  } else {
+    hikeLayer.removeFrom(map);
+  }
+};
+
+fetch('poi.json')
+.then(res => res.ok ? res.json() : [])
+.then(addPOIMarkers)
+.catch(error => console.warn("POI data not loaded:", error));
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeStory();
+});
 
 // === MAP INIT
 var map = L.map('map').setView([-25, 135], 4);
@@ -227,7 +635,7 @@ fetch('odo.json')
 .then(data => {
   let trip = data.current_odo - data.trip_start_odo;
 
-  document.getElementById("odoTile").innerHTML =
+  document.querySelector("#odoTile .odo-values").innerHTML =
     `🚐 ${data.current_odo.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip`;
 });
 
