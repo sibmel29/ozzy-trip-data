@@ -519,17 +519,21 @@ const hikeToggle = document.getElementById("hikeToggle");
 const hikeStats = document.getElementById("hikeStats");
 const hikeLayer = L.featureGroup();
 
-function hikeFeatureToStory(feature) {
+function hikeFeatureToStory(feature, storiesById) {
   let properties = feature.properties || {};
+  let customStory = storiesById[properties.id] || {};
+  let body = customStory.body || properties.body || [];
+  let images = customStory.images || properties.images || [];
+  let tags = customStory.tags || properties.tags || ["hike"];
 
   return {
     id: properties.id,
-    title: properties.title,
-    date: properties.date,
-    summary: properties.summary,
-    body: properties.body || [],
-    images: properties.images || [],
-    tags: properties.tags || ["hike"]
+    title: customStory.title || properties.title,
+    date: customStory.date || properties.date,
+    summary: customStory.summary || properties.summary,
+    body,
+    images,
+    tags
   };
 }
 
@@ -542,7 +546,7 @@ function renderHikeStats(stats) {
   `;
 }
 
-function addHikes(data) {
+function addHikes(data, storiesById = {}) {
   let hikeIcon = L.divIcon({
     className: "",
     html: '<div class="hike-marker">↟</div>',
@@ -562,21 +566,22 @@ function addHikes(data) {
       color: "#16a34a",
       weight: 5,
       opacity: 0.85
-    }).addTo(hikeLayer).on("click", () => openStory(hikeFeatureToStory(feature)));
+    }).addTo(hikeLayer).on("click", () => openStory(hikeFeatureToStory(feature, storiesById)));
 
     L.marker([start[1], start[0]], {
       icon: hikeIcon,
       title: properties.title || "Hike",
       zIndexOffset: 850
-    }).addTo(hikeLayer).on("click", () => openStory(hikeFeatureToStory(feature)));
+    }).addTo(hikeLayer).on("click", () => openStory(hikeFeatureToStory(feature, storiesById)));
   });
 }
 
 Promise.all([
   fetch('hikes.geojson').then(res => res.ok ? res.json() : { features: [] }),
-  fetch('hikes_stats.json').then(res => res.ok ? res.json() : {})
-]).then(([hikes, stats]) => {
-  addHikes(hikes);
+  fetch('hikes_stats.json').then(res => res.ok ? res.json() : {}),
+  fetch('hike_stories.json').then(res => res.ok ? res.json() : {})
+]).then(([hikes, stats, hikeStories]) => {
+  addHikes(hikes, hikeStories || {});
   renderHikeStats(stats);
   hikeToggle.disabled = (hikes.features || []).length === 0;
 }).catch(error => {

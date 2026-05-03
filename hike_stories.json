@@ -1,0 +1,16 @@
+{
+  "goonengerry-national-park-loop": {
+    "summary": "A sample custom hike recap connected to the generated GPX route.",
+    "body": [
+      "This text comes from hike_stories.json, while the route, distance, ascent, and map line still come from the GPX file.",
+      "To customize another hike, copy this entry, replace the id with that hike's id, and add your own text and photos."
+    ],
+    "images": [
+      {
+        "src": "sticker.png",
+        "alt": "Fuji Road Trip sticker placeholder"
+      }
+    ],
+    "tags": ["hike", "sample"]
+  }
+}

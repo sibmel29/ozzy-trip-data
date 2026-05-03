@@ -139,7 +139,7 @@ def feature_for(path):
             "summary": f"{stats['distance_km']} km hike with {stats['ascent_m']} m ascent.",
             "body": [
                 "Imported from a Komoot GPX file.",
-                "Add photos and a longer recap by editing this hike entry or creating a matching POI story."
+                "Add photos and a longer recap by creating a matching entry in hike_stories.json."
             ],
             "images": [],
             "tags": ["hike"],
