@@ -1,0 +1,58 @@
+name: Add POI
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add-poi:
+    if: contains(github.event.issue.labels.*.name, 'poi-request') || startsWith(github.event.issue.title, '[POI]')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Add POI from issue
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: python scripts/add_poi_from_issue.py
+
+      - name: Commit POI update
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add poi.json
+          git diff --cached --quiet && echo "No POI changes to commit" && exit 0
+          git commit -m "Add POI from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment and close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const result = JSON.parse(fs.readFileSync("poi_result.json", "utf8"));
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Added POI **${result.title}** to \`poi.json\` with id \`${result.id}\`.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: "closed"
+            });

@@ -69,6 +69,20 @@ Example:
 }
 ```
 
+### Add a POI from your phone
+
+Use the GitHub issue form instead of editing JSON manually:
+
+1. Open the repository on your phone.
+2. Go to **Issues**.
+3. Tap **New issue**.
+4. Choose **Add POI**.
+5. Fill in the title, date, longitude, latitude, marker, text, tags, and optional image paths.
+6. Submit the issue.
+
+GitHub Actions will validate the form, add the POI to `poi.json`, commit the
+change, comment on the issue, and close it.
+
 Use a local web server when testing in Chrome so `fetch()` can load JSON files:
 
 ```sh

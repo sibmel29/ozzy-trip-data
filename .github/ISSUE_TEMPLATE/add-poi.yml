@@ -1,0 +1,88 @@
+name: Add POI
+description: Add a point of interest to the trip map from your phone.
+title: "[POI] "
+labels: ["poi-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in from your phone. When you submit, GitHub Actions will add the POI to `poi.json`.
+
+        Coordinates use map format: longitude first, latitude second. Google Maps usually shows latitude first, so copy carefully.
+  - type: input
+    id: poi_title
+    attributes:
+      label: POI title
+      placeholder: Rabbits Eat Lettuce Festival
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: "2026-04-01"
+    validations:
+      required: false
+  - type: input
+    id: longitude
+    attributes:
+      label: Longitude
+      description: East/west coordinate. Example for eastern Australia is around 150 to 153.
+      placeholder: "150.892986"
+    validations:
+      required: true
+  - type: input
+    id: latitude
+    attributes:
+      label: Latitude
+      description: North/south coordinate. Example for Australia is usually negative.
+      placeholder: "-28.688287"
+    validations:
+      required: true
+  - type: dropdown
+    id: marker
+    attributes:
+      label: Marker
+      options:
+        - info
+        - sun
+        - star
+        - camera
+        - camp
+        - food
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: Short summary
+      placeholder: A beautiful place full of crazy people
+    validations:
+      required: false
+  - type: textarea
+    id: body
+    attributes:
+      label: Story text
+      description: Use blank lines if you want separate paragraphs.
+      placeholder: Write the story here.
+    validations:
+      required: false
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Separate with commas.
+      placeholder: coast, festival, volunteering
+    validations:
+      required: false
+  - type: textarea
+    id: images
+    attributes:
+      label: Image paths
+      description: Optional. Add one image path per line after uploading images to the repo.
+      placeholder: |
+        poi-media/rabbits/1.jpg
+        poi-media/rabbits/2.jpg
+    validations:
+      required: false
