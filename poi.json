@@ -1,51 +1,30 @@
 [
   {
     "id": "byron-stop",
-    "title": "First Byron Stop",
+    "title": "Byron Hinterland",
     "date": "2026-04-20",
     "coordinates": [153.49925, -28.55479],
-    "summary": "A short note from the road near Byron Bay.",
+    "summary": "'Everyone gets stuck in Byron...'",
     "body": [
-      "This is a sample point of interest. Each POI can become a small blog entry tied to a precise spot on the map.",
-      "Use this structure for campsite notes, favourite beaches, repairs, hikes, cafes, people you met, or anything else worth remembering."
-    ],
+      "While the famous town of Byron wasn't too impressive for us, the rest of the region was magical. The people we met & the experiences we had will stay in my heart forever.",    ],
     "images": [
       {
         "src": "sticker.png",
         "alt": "Fuji Road Trip sticker"
       }
     ],
-    "tags": ["sample", "coast"]
+    "tags": ["coast", "volunteering"]
   },
   {
     "id": "sydney-start",
-    "title": "Sydney Launch",
+    "title": "Sydney - The Nothern Beaches",
     "date": "2025-09-22",
     "coordinates": [151.32158, -33.65704],
-    "summary": "A sample origin story for the beginning of the route.",
+    "summary": "Our home for 5 months",
     "body": [
-      "This is another example POI. The content is just static JSON, so adding a new story is as simple as adding one more object to the file.",
-      "Coordinates are stored as GeoJSON-style longitude and latitude: [longitude, latitude]."
+      "The Nothern Beaches, Freshwater, was our home for the first few months in Australia. We had a great experience, discovering the region while working and saving to get our car, Fuji.",
     ],
     "images": [],
-    "tags": ["sample", "start"]
-  },
-  {
-    "id": "goonengerry-hike",
-    "title": "Goonengerry National Park Loop",
-    "date": "2026-04-28",
-    "coordinates": [153.408247, -28.586167],
-    "summary": "A sample hike story connected to the hikes overlay.",
-    "body": [
-      "This POI points at the same place as the imported Komoot hike. You can use the hike overlay for the route and this story card for photos, notes, and a more personal recap.",
-      "Add hike photos under a folder like poi-media/goonengerry-hike/ and reference them in the images list."
-    ],
-    "images": [
-      {
-        "src": "sticker.png",
-        "alt": "Fuji Road Trip sticker placeholder"
-      }
-    ],
-    "tags": ["hike", "national park"]
+    "tags": ["city", "coast", "work"]
   }
 ]
