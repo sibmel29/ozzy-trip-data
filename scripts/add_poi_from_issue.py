@@ -89,12 +89,17 @@ def image_entries_for(value):
         if not line:
             continue
 
+        html_srcs = re.findall(r"""src=["'](https?://[^"']+)["']""", line)
+        if html_srcs:
+            entries.extend(html_srcs)
+            continue
+
         markdown_urls = re.findall(r"!\[[^\]]*\]\((https?://[^)]+)\)", line)
         if markdown_urls:
             entries.extend(markdown_urls)
             continue
 
-        urls = re.findall(r"https?://[^\s)]+", line)
+        urls = re.findall(r"""https?://[^\s)"'<>]+""", line)
         if urls:
             entries.extend(urls)
             continue

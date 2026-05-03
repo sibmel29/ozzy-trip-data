@@ -1,5 +1,44 @@
 [
   {
+    "id": "hat-head",
+    "title": "Hat Head",
+    "date": "2026-03-10",
+    "coordinates": [
+      153.062065,
+      -31.053463
+    ],
+    "marker": "sun",
+    "summary": "Headland Highlights",
+    "body": [
+      "The headlands are beautiful, but hat head was next level. Coming north from Crescent Head, we found our way through some crazy 4x4 paths, allowing us to test Fuji at a higher potential. \nWe found a breathtaking landscape, sunset over the cliffs, and a whole crowd of kangoroos just chilling around, not minding us being close to them, fascinated by their presence."
+    ],
+    "images": [
+      {
+        "src": "poi-media/hat-head/1.jpg",
+        "alt": "Hat Head photo 1"
+      },
+      {
+        "src": "poi-media/hat-head/2.jpg",
+        "alt": "Hat Head photo 2"
+      },
+      {
+        "src": "poi-media/hat-head/3.jpg",
+        "alt": "Hat Head photo 3"
+      },
+      {
+        "src": "poi-media/hat-head/4.jpg",
+        "alt": "Hat Head photo 4"
+      }
+    ],
+    "tags": [
+      "Coast",
+      "Headland",
+      "Animals"
+    ],
+    "source_issue": "2",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/2"
+  },
+  {
     "id": "worimi-regional-park",
     "title": "Worimi Regional Park",
     "date": "2026-03-03",
