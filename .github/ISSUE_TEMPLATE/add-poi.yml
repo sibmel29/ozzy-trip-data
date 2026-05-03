@@ -80,9 +80,10 @@ body:
     id: images
     attributes:
       label: Image paths
-      description: Optional. Add one image path per line after uploading images to the repo.
+      description: Optional. Paste GitHub uploaded image links, normal image URLs, or existing repo image paths. Remote images are compressed into poi-media automatically.
       placeholder: |
+        ![photo](https://github.com/user-attachments/assets/example)
+        https://example.com/photo.jpg
         poi-media/rabbits/1.jpg
-        poi-media/rabbits/2.jpg
     validations:
       required: false

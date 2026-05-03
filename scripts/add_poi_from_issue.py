@@ -1,13 +1,18 @@
 import json
 import os
 import re
+import shutil
+import urllib.request
 from pathlib import Path
 
 
 POI_FILE = Path(os.environ.get("POI_FILE", "poi.json"))
 RESULT_FILE = Path(os.environ.get("RESULT_FILE", "poi_result.json"))
+POI_MEDIA_FOLDER = Path(os.environ.get("POI_MEDIA_FOLDER", "poi-media"))
 MARKERS = {"info", "sun", "star", "camera", "camp", "food"}
 NO_RESPONSE = {"", "_No response_"}
+IMAGE_MAX_WIDTH = int(os.environ.get("IMAGE_MAX_WIDTH", "1600"))
+IMAGE_QUALITY = int(os.environ.get("IMAGE_QUALITY", "80"))
 
 
 def parse_sections(body):
@@ -73,21 +78,94 @@ def parse_tags(value):
     ]
 
 
-def parse_images(value, title):
+def image_entries_for(value):
     if value in NO_RESPONSE:
         return []
 
-    images = []
+    entries = []
 
     for line in value.splitlines():
-        src = line.strip().lstrip("-").strip()
-        if not src:
+        line = line.strip()
+        if not line:
             continue
 
+        markdown_urls = re.findall(r"!\[[^\]]*\]\((https?://[^)]+)\)", line)
+        if markdown_urls:
+            entries.extend(markdown_urls)
+            continue
+
+        urls = re.findall(r"https?://[^\s)]+", line)
+        if urls:
+            entries.extend(urls)
+            continue
+
+        src = line.lstrip("-").strip()
+        if src:
+            entries.append(src)
+
+    return entries
+
+
+def is_url(value):
+    return value.startswith("http://") or value.startswith("https://")
+
+
+def download_image(url, destination):
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "ozzy-trip-data-poi-action"}
+    )
+
+    with urllib.request.urlopen(request, timeout=30) as response:
+        with destination.open("wb") as file:
+            shutil.copyfileobj(response, file)
+
+
+def optimize_image(source, destination):
+    from PIL import Image, ImageOps
+
+    with Image.open(source) as image:
+        image = ImageOps.exif_transpose(image)
+        image.thumbnail((IMAGE_MAX_WIDTH, IMAGE_MAX_WIDTH * 4), Image.Resampling.LANCZOS)
+
+        if image.mode not in ("RGB", "L"):
+            image = image.convert("RGB")
+
+        image.save(
+            destination,
+            "JPEG",
+            quality=IMAGE_QUALITY,
+            optimize=True,
+            progressive=True,
+        )
+
+
+def images_from_entries(entries, poi_id, title):
+    media_folder = POI_MEDIA_FOLDER / poi_id
+    images = []
+    remote_index = 1
+
+    for entry in entries:
+        if not is_url(entry):
+            images.append({
+                "src": entry,
+                "alt": f"{title} photo {len(images) + 1}"
+            })
+            continue
+
+        media_folder.mkdir(parents=True, exist_ok=True)
+        raw_path = media_folder / f"_raw_{remote_index}"
+        output_path = media_folder / f"{remote_index}.jpg"
+
+        download_image(entry, raw_path)
+        optimize_image(raw_path, output_path)
+        raw_path.unlink(missing_ok=True)
+
         images.append({
-            "src": src,
+            "src": output_path.as_posix(),
             "alt": f"{title} photo {len(images) + 1}"
         })
+        remote_index += 1
 
     return images
 
@@ -138,6 +216,8 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
 
     poi_id, existing = unique_id(slugify(title), issue_number, existing_pois)
 
+    image_entries = image_entries_for(value_for(sections, "Image paths"))
+
     poi = {
         "id": poi_id,
         "title": title,
@@ -146,7 +226,7 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
         "marker": marker,
         "summary": value_for(sections, "Short summary"),
         "body": parse_paragraphs(value_for(sections, "Story text")),
-        "images": parse_images(value_for(sections, "Image paths"), title),
+        "images": images_from_entries(image_entries, poi_id, title),
         "tags": parse_tags(value_for(sections, "Tags")),
         "source_issue": str(issue_number),
         "source_url": issue_url,

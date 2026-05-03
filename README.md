@@ -77,11 +77,20 @@ Use the GitHub issue form instead of editing JSON manually:
 2. Go to **Issues**.
 3. Tap **New issue**.
 4. Choose **Add POI**.
-5. Fill in the title, date, longitude, latitude, marker, text, tags, and optional image paths.
+5. Fill in the title, date, longitude, latitude, marker, text, tags, and optional images.
 6. Submit the issue.
 
 GitHub Actions will validate the form, add the POI to `poi.json`, commit the
 change, comment on the issue, and close it.
+
+In the image field, you can paste GitHub uploaded image links, normal image
+URLs, or existing repo paths. Remote images are downloaded, resized to a maximum
+width of 1600px, stripped of metadata, compressed to JPG, and saved under:
+
+```text
+poi-media/<poi-id>/1.jpg
+poi-media/<poi-id>/2.jpg
+```
 
 For Australian coordinates, the automation will turn a positive latitude into a
 negative one if the longitude is clearly in Australia.

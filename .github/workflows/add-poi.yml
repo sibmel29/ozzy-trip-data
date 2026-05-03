@@ -22,6 +22,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install image tools
+        run: pip install pillow
+
       - name: Add POI from issue
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
@@ -33,7 +36,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add poi.json
+          git add poi.json poi-media
           git diff --cached --quiet && echo "No POI changes to commit" && exit 0
           git commit -m "Add POI from issue #${{ github.event.issue.number }}"
           git push
