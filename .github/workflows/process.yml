@@ -6,6 +6,9 @@ on:
       - '*.gpx'
       - 'hikes/gpx/*.gpx'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
