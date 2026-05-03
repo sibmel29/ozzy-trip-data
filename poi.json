@@ -1,5 +1,43 @@
 [
   {
+    "id": "blue-mountains",
+    "title": "Blue Mountains",
+    "date": "2025-11-02",
+    "coordinates": [
+      150.2999961,
+      -33.7348572
+    ],
+    "marker": "sun",
+    "summary": "The blue mountains",
+    "body": [
+      "The blue mountains is a special place with gorgeous hikes. When the sky is clear you can see the three sisters from Katoomba, quite a sight, with the cockatoo flying over the cliff edges."
+    ],
+    "images": [
+      {
+        "src": "poi-media/blue-mountains/1.jpg",
+        "alt": "Blue Mountains photo 1"
+      },
+      {
+        "src": "poi-media/blue-mountains/2.jpg",
+        "alt": "Blue Mountains photo 2"
+      },
+      {
+        "src": "poi-media/blue-mountains/3.jpg",
+        "alt": "Blue Mountains photo 3"
+      },
+      {
+        "src": "poi-media/blue-mountains/4.jpg",
+        "alt": "Blue Mountains photo 4"
+      }
+    ],
+    "tags": [
+      "Mountains",
+      "hike"
+    ],
+    "source_issue": "3",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/3"
+  },
+  {
     "id": "hat-head",
     "title": "Hat Head",
     "date": "2026-03-10",
