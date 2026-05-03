@@ -43,6 +43,10 @@ def value_for(sections, label, default=""):
     return default if value in NO_RESPONSE else value
 
 
+def has_value(sections, label):
+    return sections.get(label, "").strip() not in NO_RESPONSE
+
+
 def slugify(value):
     value = value.lower()
     value = re.sub(r"[^a-z0-9]+", "-", value)
@@ -198,13 +202,26 @@ def unique_id(base_id, issue_number, pois):
     return f"{issue_id}-{index}", None
 
 
-def build_poi(sections, issue_number, issue_url, existing_pois):
-    title = value_for(sections, "POI title")
-    if not title:
-        raise ValueError("POI title is required")
+def find_poi_by_id(pois, poi_id):
+    for poi in pois:
+        if poi.get("id") == poi_id:
+            return poi
 
-    longitude = parse_coordinate(value_for(sections, "Longitude"), "Longitude")
-    latitude = parse_coordinate(value_for(sections, "Latitude"), "Latitude")
+    return None
+
+
+def coordinates_from_sections(sections, existing=None):
+    longitude_value = value_for(sections, "Longitude")
+    latitude_value = value_for(sections, "Latitude")
+
+    if not longitude_value and not latitude_value and existing is not None:
+        return existing.get("coordinates", [])
+
+    if not longitude_value or not latitude_value:
+        raise ValueError("Longitude and Latitude must both be filled when changing location")
+
+    longitude = parse_coordinate(longitude_value, "Longitude")
+    latitude = parse_coordinate(latitude_value, "Latitude")
 
     if 110 <= longitude <= 155 and 0 < latitude <= 45:
         latitude = -latitude
@@ -215,24 +232,56 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
     if not -90 <= latitude <= 90:
         raise ValueError("Latitude must be between -90 and 90")
 
-    marker = value_for(sections, "Marker", "info").lower()
-    if marker not in MARKERS:
-        marker = "info"
+    return [longitude, latitude]
 
-    poi_id, existing = unique_id(slugify(title), issue_number, existing_pois)
+
+def marker_from_sections(sections, existing=None):
+    marker = value_for(sections, "Marker")
+
+    if not marker or marker == "keep":
+        return existing.get("marker", "info") if existing else "info"
+
+    marker = marker.lower()
+    return marker if marker in MARKERS else "info"
+
+
+def images_from_sections(sections, poi_id, title, existing=None):
+    if not has_value(sections, "Image paths"):
+        return existing.get("images", []) if existing else []
 
     image_entries = image_entries_for(value_for(sections, "Image paths"))
+    return images_from_entries(image_entries, poi_id, title)
+
+
+def build_poi(sections, issue_number, issue_url, existing_pois):
+    requested_id = value_for(sections, "Existing POI id")
+    existing = find_poi_by_id(existing_pois, requested_id) if requested_id else None
+
+    if requested_id and existing is None:
+        raise ValueError(f"Could not find POI id {requested_id!r}")
+
+    title = value_for(sections, "POI title")
+    if not title and existing:
+        title = existing.get("title", "")
+
+    if not title:
+        raise ValueError("POI title is required")
+
+    if existing:
+        poi_id = requested_id
+    else:
+        poi_id, existing = unique_id(slugify(title), issue_number, existing_pois)
 
     poi = {
         "id": poi_id,
         "title": title,
-        "date": value_for(sections, "Date"),
-        "coordinates": [longitude, latitude],
-        "marker": marker,
-        "summary": value_for(sections, "Short summary"),
-        "body": parse_paragraphs(value_for(sections, "Story text")),
-        "images": images_from_entries(image_entries, poi_id, title),
-        "tags": parse_tags(value_for(sections, "Tags")),
+        "date": value_for(sections, "Date", existing.get("date", "") if existing else ""),
+        "coordinates": coordinates_from_sections(sections, existing),
+        "marker": marker_from_sections(sections, existing),
+        "summary": value_for(sections, "Short summary", existing.get("summary", "") if existing else ""),
+        "body": parse_paragraphs(value_for(sections, "Story text")) if has_value(sections, "Story text") else (existing.get("body", []) if existing else []),
+        "images": images_from_sections(sections, poi_id, title, existing),
+        "tags": parse_tags(value_for(sections, "Tags")) if has_value(sections, "Tags") else (existing.get("tags", []) if existing else []),
         "source_issue": str(issue_number),
         "source_url": issue_url,
     }
@@ -259,9 +308,10 @@ def main():
         pois.insert(0, poi)
 
     POI_FILE.write_text(json.dumps(pois, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    RESULT_FILE.write_text(json.dumps({"id": poi["id"], "title": poi["title"]}), encoding="utf-8")
+    action = "updated" if existing is not None else "added"
+    RESULT_FILE.write_text(json.dumps({"id": poi["id"], "title": poi["title"], "action": action}), encoding="utf-8")
 
-    print(f"Added POI {poi['id']}: {poi['title']}")
+    print(f"{action.title()} POI {poi['id']}: {poi['title']}")
 
 
 if __name__ == "__main__":

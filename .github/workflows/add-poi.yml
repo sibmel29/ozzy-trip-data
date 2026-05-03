@@ -1,4 +1,4 @@
-name: Add POI
+name: Manage POI
 
 on:
   issues:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   add-poi:
-    if: contains(github.event.issue.labels.*.name, 'poi-request') || startsWith(github.event.issue.title, '[POI]') || contains(github.event.issue.body, '### POI title')
+    if: contains(github.event.issue.labels.*.name, 'poi-request') || contains(github.event.issue.labels.*.name, 'poi-update') || startsWith(github.event.issue.title, '[POI]') || startsWith(github.event.issue.title, '[UPDATE POI]') || contains(github.event.issue.body, '### POI title') || contains(github.event.issue.body, '### Existing POI id')
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
       - name: Install image tools
         run: pip install pillow
 
-      - name: Add POI from issue
+      - name: Apply POI issue
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -38,7 +38,7 @@ jobs:
           git config user.email "actions@github.com"
           git add poi.json poi-media
           git diff --cached --quiet && echo "No POI changes to commit" && exit 0
-          git commit -m "Add POI from issue #${{ github.event.issue.number }}"
+          git commit -m "Update POI from issue #${{ github.event.issue.number }}"
           git push
 
       - name: Comment and close issue
@@ -51,7 +51,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `Added POI **${result.title}** to \`poi.json\` with id \`${result.id}\`.`
+              body: `${result.action === "updated" ? "Updated" : "Added"} POI **${result.title}** in \`poi.json\` with id \`${result.id}\`.`
             });
             await github.rest.issues.update({
               owner: context.repo.owner,

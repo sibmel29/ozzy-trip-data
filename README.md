@@ -95,6 +95,20 @@ poi-media/<poi-id>/2.jpg
 For Australian coordinates, the automation will turn a positive latitude into a
 negative one if the longitude is clearly in Australia.
 
+### Update a POI from your phone
+
+Use the **Update POI** issue form when an existing POI needs edits.
+
+1. Open the repository on your phone.
+2. Go to **Issues**.
+3. Tap **New issue**.
+4. Choose **Update POI**.
+5. Enter the existing POI id, such as `hat-head` or `blue-mountains`.
+6. Fill only the fields you want to replace.
+
+Blank fields keep the current value. If you fill the image field, the current
+image list is replaced; if you leave it blank, existing images stay unchanged.
+
 Use a local web server when testing in Chrome so `fetch()` can load JSON files:
 
 ```sh

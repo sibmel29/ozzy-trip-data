@@ -1,0 +1,98 @@
+name: Update POI
+description: Update an existing point of interest from your phone.
+title: "[UPDATE POI] "
+labels: ["poi-update"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this to update an existing POI without editing JSON. Only filled fields are replaced; blank fields stay unchanged.
+
+        Find the POI id in `poi.json`, for example `hat-head` or `blue-mountains`.
+  - type: input
+    id: poi_id
+    attributes:
+      label: Existing POI id
+      placeholder: hat-head
+    validations:
+      required: true
+  - type: input
+    id: poi_title
+    attributes:
+      label: POI title
+      description: Optional. Leave blank to keep the current title.
+      placeholder: Hat Head
+    validations:
+      required: false
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Optional. Leave blank to keep the current date.
+      placeholder: "2026-03-10"
+    validations:
+      required: false
+  - type: input
+    id: longitude
+    attributes:
+      label: Longitude
+      description: Optional. Fill both longitude and latitude if changing location.
+      placeholder: "153.062065"
+    validations:
+      required: false
+  - type: input
+    id: latitude
+    attributes:
+      label: Latitude
+      description: Optional. Fill both longitude and latitude if changing location.
+      placeholder: "-31.053463"
+    validations:
+      required: false
+  - type: dropdown
+    id: marker
+    attributes:
+      label: Marker
+      description: Optional. Choose "keep" to leave unchanged.
+      options:
+        - keep
+        - info
+        - sun
+        - star
+        - camera
+        - camp
+        - food
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: summary
+    attributes:
+      label: Short summary
+      description: Optional. Leave blank to keep the current summary.
+    validations:
+      required: false
+  - type: textarea
+    id: body
+    attributes:
+      label: Story text
+      description: Optional. Fill to replace the current story text. Blank keeps current text.
+    validations:
+      required: false
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Optional. Separate with commas. Blank keeps current tags.
+      placeholder: coast, headland, animals
+    validations:
+      required: false
+  - type: textarea
+    id: images
+    attributes:
+      label: Image paths
+      description: Optional. Fill to replace current images. Paste GitHub image links, normal image URLs, or existing repo image paths.
+      placeholder: |
+        ![photo](https://github.com/user-attachments/assets/example)
+        poi-media/hat-head/1.jpg
+    validations:
+      required: false
