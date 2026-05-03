@@ -4,7 +4,18 @@ on:
   push:
     paths:
       - '*.gpx'
+      - '*.GPX'
       - 'hikes/gpx/*.gpx'
+      - 'hikes/gpx/*.GPX'
+      - 'hike-media/**/*.jpg'
+      - 'hike-media/**/*.JPG'
+      - 'hike-media/**/*.jpeg'
+      - 'hike-media/**/*.JPEG'
+      - 'hike-media/**/*.png'
+      - 'hike-media/**/*.PNG'
+      - 'hike-media/**/*.webp'
+      - 'hike-media/**/*.WEBP'
+      - 'hike_stories.json'
 
 permissions:
   contents: write
@@ -35,7 +46,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add route_live.geojson hikes.geojson hikes_stats.json
+          git add route_live.geojson hikes.geojson hikes_stats.json hike-media
           git diff --cached --quiet && echo "No generated route changes to commit" && exit 0
           git commit -m "Update route data"
           git push

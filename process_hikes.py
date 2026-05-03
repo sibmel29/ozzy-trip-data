@@ -7,8 +7,10 @@ from pathlib import Path
 
 
 INPUT_FOLDER = Path("hikes/gpx")
+MEDIA_FOLDER = Path("hike-media")
 OUTPUT_GEOJSON = Path("hikes.geojson")
 OUTPUT_STATS = Path("hikes_stats.json")
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 def slugify(value):
@@ -107,6 +109,35 @@ def summarize(points):
     }
 
 
+def ensure_media_folder(hike_id):
+    folder = MEDIA_FOLDER / hike_id
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / ".gitkeep").touch()
+    return folder
+
+
+def image_sort_key(path):
+    try:
+        return (0, int(path.stem))
+    except ValueError:
+        return (1, path.name.lower())
+
+
+def images_for(folder, title):
+    images = []
+
+    for path in sorted(folder.iterdir(), key=image_sort_key):
+        if not path.is_file() or path.suffix.lower() not in IMAGE_EXTENSIONS:
+            continue
+
+        images.append({
+            "src": path.as_posix(),
+            "alt": f"{title} photo {len(images) + 1}"
+        })
+
+    return images
+
+
 def feature_for(path):
     title, points = read_gpx(path)
 
@@ -115,6 +146,7 @@ def feature_for(path):
 
     stats = summarize(points)
     hike_id = slugify(path.stem)
+    media_folder = ensure_media_folder(hike_id)
     start = points[0]
     coordinates = []
 
@@ -139,9 +171,10 @@ def feature_for(path):
             "summary": f"{stats['distance_km']} km hike with {stats['ascent_m']} m ascent.",
             "body": [
                 "Imported from a Komoot GPX file.",
-                "Add photos and a longer recap by creating a matching entry in hike_stories.json."
+                f"Add photos by uploading 1.jpg, 2.jpg, 3.jpg, and so on to hike-media/{hike_id}/.",
+                "Add a longer recap by creating a matching entry in hike_stories.json."
             ],
-            "images": [],
+            "images": images_for(media_folder, title),
             "tags": ["hike"],
             "start": [round(start["lon"], 6), round(start["lat"], 6)],
             **stats
@@ -152,7 +185,9 @@ def feature_for(path):
 def build_outputs():
     features = []
 
-    for path in sorted(INPUT_FOLDER.glob("*.gpx")):
+    paths = [path for path in INPUT_FOLDER.iterdir() if path.suffix.lower() == ".gpx"]
+
+    for path in sorted(paths):
         feature = feature_for(path)
         if feature:
             features.append(feature)
