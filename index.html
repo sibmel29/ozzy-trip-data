@@ -168,6 +168,36 @@ body { margin:0; font-family: system-ui; }
   font-weight: 700;
 }
 
+.poi-marker.sun {
+  background: #f59e0b;
+  color: #fff7ed;
+  font-size: 16px;
+}
+
+.poi-marker.star {
+  background: #7c3aed;
+  color: white;
+  font-size: 15px;
+}
+
+.poi-marker.camera {
+  background: #0f766e;
+  color: white;
+  font-size: 13px;
+}
+
+.poi-marker.camp {
+  background: #166534;
+  color: white;
+  font-size: 13px;
+}
+
+.poi-marker.food {
+  background: #be123c;
+  color: white;
+  font-size: 13px;
+}
+
 .hike-marker {
   width: 26px;
   height: 26px;
@@ -492,12 +522,26 @@ function closeStory() {
 }
 
 function addPOIMarkers(points) {
-  let poiIcon = L.divIcon({
+  const markerTypes = {
+    info: "i",
+    sun: "☀",
+    star: "★",
+    camera: "⌾",
+    camp: "△",
+    food: "+"
+  };
+
+  function iconForPOI(poi) {
+    let marker = String(poi.marker || poi.icon || "info").toLowerCase();
+    if (!markerTypes[marker]) marker = "info";
+
+    return L.divIcon({
     className: "",
-    html: '<div class="poi-marker">i</div>',
+      html: `<div class="poi-marker ${marker}">${markerTypes[marker]}</div>`,
     iconSize: [26, 26],
     iconAnchor: [13, 13]
   });
+  }
 
   points.forEach(poi => {
     let coords = poi.coordinates;
@@ -505,7 +549,7 @@ function addPOIMarkers(points) {
     if (!Array.isArray(coords) || coords.length < 2) return;
 
     let marker = L.marker([coords[1], coords[0]], {
-      icon: poiIcon,
+      icon: iconForPOI(poi),
       title: poi.title || "Point of interest",
       zIndexOffset: 900
     }).addTo(map);

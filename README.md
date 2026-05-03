@@ -47,6 +47,7 @@ Then open `index.html` in a browser or serve the directory locally.
 - `title`
 - `date`
 - `coordinates` as `[longitude, latitude]`
+- `marker`, optionally: `info`, `sun`, `star`, `camera`, `camp`, or `food`
 - `summary`
 - `body` paragraphs
 - `images`
@@ -60,6 +61,7 @@ Example:
   "title": "First Byron Stop",
   "date": "2026-04-20",
   "coordinates": [153.49925, -28.55479],
+  "marker": "sun",
   "summary": "A short note from the road near Byron Bay.",
   "body": ["Story text goes here."],
   "images": [{ "src": "sticker.png", "alt": "Fuji Road Trip sticker" }],
