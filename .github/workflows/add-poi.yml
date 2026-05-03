@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   add-poi:
-    if: contains(github.event.issue.labels.*.name, 'poi-request') || startsWith(github.event.issue.title, '[POI]')
+    if: contains(github.event.issue.labels.*.name, 'poi-request') || startsWith(github.event.issue.title, '[POI]') || contains(github.event.issue.body, '### POI title')
     runs-on: ubuntu-latest
 
     steps:

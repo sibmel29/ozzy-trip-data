@@ -83,6 +83,9 @@ Use the GitHub issue form instead of editing JSON manually:
 GitHub Actions will validate the form, add the POI to `poi.json`, commit the
 change, comment on the issue, and close it.
 
+For Australian coordinates, the automation will turn a positive latitude into a
+negative one if the longitude is clearly in Australia.
+
 Use a local web server when testing in Chrome so `fetch()` can load JSON files:
 
 ```sh

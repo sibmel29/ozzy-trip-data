@@ -1,21 +1,50 @@
 [
-   {
+  {
+    "id": "worimi-regional-park",
+    "title": "Worimi Regional Park",
+    "date": "2026-03-03",
+    "coordinates": [
+      152.025978,
+      -32.790037
+    ],
+    "marker": "sun",
+    "summary": "Fuji's first time on the beach",
+    "body": [
+      "Beautiful beach, with a huge sand bar and a forest behind. \nFuji was overheating like crazy on the sand, we already knew it might happen. I'll get a new oversized radiator in the next town, so it won't happen again."
+    ],
+    "images": [],
+    "tags": [
+      "Off-road"
+    ],
+    "source_issue": "1",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/1"
+  },
+  {
     "id": "rabbits",
     "title": "Rabbits Eat Lettuce Festival",
     "date": "2026-04-01",
-    "coordinates": [150.892986, -28.688287],
+    "coordinates": [
+      150.892986,
+      -28.688287
+    ],
     "marker": "sun",
     "summary": "A beautiful place full of crazy people",
     "body": [
       "While this is one of the most commercial doofs in Australia, it also has an amazing vibe to offer. We had a great time at Rabbits and got to experience a proper Australian dancfloor."
     ],
-    "tags": ["coast", "volunteering"]
+    "tags": [
+      "coast",
+      "volunteering"
+    ]
   },
   {
     "id": "byron-stop",
     "title": "Byron Hinterland",
     "date": "2026-04-20",
-    "coordinates": [153.49925, -28.55479],
+    "coordinates": [
+      153.49925,
+      -28.55479
+    ],
     "summary": "'Everyone gets stuck in Byron...'",
     "body": [
       "While the famous town of Byron wasn't too impressive for us, the rest of the region was magical. The people we met & the experiences we had will stay in my heart forever."
@@ -26,18 +55,28 @@
         "alt": "Fuji Road Trip sticker"
       }
     ],
-    "tags": ["coast", "volunteering"]
+    "tags": [
+      "coast",
+      "volunteering"
+    ]
   },
   {
     "id": "sydney-start",
     "title": "Sydney - The Nothern Beaches",
     "date": "2025-09-22",
-    "coordinates": [151.32158, -33.65704],
+    "coordinates": [
+      151.32158,
+      -33.65704
+    ],
     "summary": "Our home for 5 months",
     "body": [
       "The Nothern Beaches, Freshwater, was our home for the first few months in Australia. We had a great experience, discovering the region while working and saving to get our car, Fuji."
     ],
     "images": [],
-    "tags": ["city", "coast", "work"]
+    "tags": [
+      "city",
+      "coast",
+      "work"
+    ]
   }
 ]

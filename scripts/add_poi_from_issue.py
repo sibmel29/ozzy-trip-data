@@ -123,6 +123,9 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
     longitude = parse_coordinate(value_for(sections, "Longitude"), "Longitude")
     latitude = parse_coordinate(value_for(sections, "Latitude"), "Latitude")
 
+    if 110 <= longitude <= 155 and 0 < latitude <= 45:
+        latitude = -latitude
+
     if not -180 <= longitude <= 180:
         raise ValueError("Longitude must be between -180 and 180")
 
