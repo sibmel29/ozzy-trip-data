@@ -84,12 +84,54 @@ body { margin:0; font-family: system-ui; }
   top: 150px;
   right: 20px;
   z-index: 1000;
-  width: 132px;
-  background: rgba(255,255,255,0.92);
+  font-size: 12px;
+}
+
+.hike-menu-button {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #166534;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.hike-menu-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.hike-menu-arrow {
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.hike-panel.open .hike-menu-arrow {
+  transform: rotate(180deg);
+}
+
+.hike-menu-content {
+  display: none;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 142px;
+  background: rgba(255,255,255,0.94);
   padding: 8px 10px;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  font-size: 12px;
+}
+
+.hike-panel.open .hike-menu-content {
+  display: block;
 }
 
 .hike-toggle {
@@ -392,13 +434,19 @@ body { margin:0; font-family: system-ui; }
   <button class="map-btn" data-style="sat">🛰</button>
 </div>
 
-<div class="hike-panel">
-  <label class="hike-toggle">
-    <input type="checkbox" id="hikeToggle">
-    <span>Hikes</span>
-  </label>
-  <div class="hike-stats" id="hikeStats">
-    <span>No hikes loaded</span>
+<div class="hike-panel" id="hikePanel">
+  <button class="hike-menu-button" id="hikeMenuButton" type="button" aria-label="Hike layer" aria-expanded="false" aria-controls="hikeMenuContent">
+    <span class="hike-menu-icon">↟</span>
+    <span class="hike-menu-arrow">⌄</span>
+  </button>
+  <div class="hike-menu-content" id="hikeMenuContent">
+    <label class="hike-toggle">
+      <input type="checkbox" id="hikeToggle">
+      <span>Hikes</span>
+    </label>
+    <div class="hike-stats" id="hikeStats">
+      <span>No hikes loaded</span>
+    </div>
   </div>
 </div>
 
@@ -559,9 +607,16 @@ function addPOIMarkers(points) {
 }
 
 // === HIKES
+const hikePanel = document.getElementById("hikePanel");
+const hikeMenuButton = document.getElementById("hikeMenuButton");
 const hikeToggle = document.getElementById("hikeToggle");
 const hikeStats = document.getElementById("hikeStats");
 const hikeLayer = L.featureGroup();
+
+hikeMenuButton.onclick = () => {
+  let isOpen = hikePanel.classList.toggle("open");
+  hikeMenuButton.setAttribute("aria-expanded", String(isOpen));
+};
 
 function hikeFeatureToStory(feature, storiesById) {
   let properties = feature.properties || {};
