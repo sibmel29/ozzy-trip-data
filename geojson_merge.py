@@ -2,14 +2,19 @@ import gpxpy
 import json
 import glob
 import os
+import shutil
 from math import radians, sin, cos, sqrt, atan2
+from datetime import datetime, timezone
+from pathlib import Path
 
 # === SETTINGS (tune these if needed)
 MIN_DISTANCE_METERS = 150     # skip jitter
 MAX_JUMP_METERS = 5000        # split tracks at impossible GPS jumps
 MAX_POINTS = 800              # keep file light
-INPUT_FOLDER = "."            # where GPX files are
+INPUT_FOLDERS = [".", "car/gpx", "car/archive"]
 OUTPUT_FILE = "route_live.geojson"
+META_FILE = "route_meta.json"
+ARCHIVE_CAR_GPX = os.environ.get("ARCHIVE_CAR_GPX") == "1"
 
 
 # === DISTANCE FUNCTION
@@ -23,18 +28,82 @@ def haversine(lat1, lon1, lat2, lon2):
     return R * c
 
 
+def car_gpx_files():
+    files = []
+
+    for folder in INPUT_FOLDERS:
+        pattern = "**/*.gpx" if folder == "car/archive" else "*.gpx"
+        files.extend(glob.glob(os.path.join(folder, pattern), recursive=True))
+        files.extend(glob.glob(os.path.join(folder, pattern.upper()), recursive=True))
+
+    return sorted(set(files))
+
+
+def archive_car_files(files):
+    for file in files:
+        path = Path(file)
+
+        if path.parent != Path("car/gpx"):
+            continue
+
+        month = "unknown"
+
+        try:
+            with path.open("r") as handle:
+                gpx = gpxpy.parse(handle)
+
+            times = [
+                point.time
+                for track in gpx.tracks
+                for segment in track.segments
+                for point in segment.points
+                if point.time is not None
+            ]
+
+            if times:
+                month = min(times).strftime("%Y-%m")
+        except Exception:
+            pass
+
+        target_folder = Path("car/archive") / month
+        target_folder.mkdir(parents=True, exist_ok=True)
+        target = target_folder / path.name
+
+        if target.exists():
+            target = target_folder / f"{path.stem}-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}{path.suffix}"
+
+        shutil.move(str(path), str(target))
+        print(f"↳ Archived {path} → {target}")
+
+
 # === LOAD ALL GPX FILES
-gpx_files = sorted(glob.glob(os.path.join(INPUT_FOLDER, "*.gpx")))
+gpx_files = car_gpx_files()
 
 if not gpx_files:
     print("❌ No GPX files found")
-    exit(1)
+    geojson = {"type": "FeatureCollection", "features": []}
+    metadata = {
+        "gpx_count": 0,
+        "latest_time": None,
+        "generated_at": datetime.now(timezone.utc).isoformat()
+    }
+
+    with open(OUTPUT_FILE, "w") as f:
+        json.dump(geojson, f, indent=2)
+        f.write("\n")
+
+    with open(META_FILE, "w") as f:
+        json.dump(metadata, f, indent=2)
+        f.write("\n")
+
+    exit(0)
 
 print(f"📂 Found {len(gpx_files)} GPX files")
 
 coords = []
 times = []
 segments = []
+all_times = []
 
 last_lat = None
 last_lon = None
@@ -60,6 +129,7 @@ for file in gpx_files:
                 lat = point.latitude
                 lon = point.longitude
                 time = point.time
+                all_times.append(time)
 
                 # distance filter (removes jitter + duplicates)
                 if last_lat is not None:
@@ -93,10 +163,22 @@ if not segments:
         "type": "FeatureCollection",
         "features": []
     }
+    metadata = {
+        "gpx_count": len(gpx_files),
+        "latest_time": max(all_times).isoformat() if all_times else None,
+        "generated_at": datetime.now(timezone.utc).isoformat()
+    }
 
     with open(OUTPUT_FILE, "w") as f:
         json.dump(geojson, f, indent=2)
         f.write("\n")
+
+    with open(META_FILE, "w") as f:
+        json.dump(metadata, f, indent=2)
+        f.write("\n")
+
+    if ARCHIVE_CAR_GPX:
+        archive_car_files(gpx_files)
 
     exit(0)
 
@@ -141,5 +223,18 @@ geojson = {
 with open(OUTPUT_FILE, "w") as f:
     json.dump(geojson, f, indent=2)
     f.write("\n")
+
+metadata = {
+    "gpx_count": len(gpx_files),
+    "latest_time": max(all_times).isoformat() if all_times else None,
+    "generated_at": datetime.now(timezone.utc).isoformat()
+}
+
+with open(META_FILE, "w") as f:
+    json.dump(metadata, f, indent=2)
+    f.write("\n")
+
+if ARCHIVE_CAR_GPX:
+    archive_car_files(gpx_files)
 
 print(f"✅ Done: {sum(len(segment_coords) for segment_coords, _ in segments)} points → {OUTPUT_FILE}")

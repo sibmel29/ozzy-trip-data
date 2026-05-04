@@ -5,6 +5,8 @@ on:
     paths:
       - '*.gpx'
       - '*.GPX'
+      - 'car/gpx/*.gpx'
+      - 'car/gpx/*.GPX'
       - 'hikes/gpx/*.gpx'
       - 'hikes/gpx/*.GPX'
       - 'hike-media/**/*.jpg'
@@ -37,7 +39,7 @@ jobs:
         run: pip install gpxpy
 
       - name: Process car route
-        run: python geojson_merge.py
+        run: ARCHIVE_CAR_GPX=1 python geojson_merge.py
 
       - name: Process hike routes
         run: python process_hikes.py
@@ -46,7 +48,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add route_live.geojson hikes.geojson hikes_stats.json hike-media
+          git add route_live.geojson route_meta.json car hikes.geojson hikes_stats.json hike-media
           git diff --cached --quiet && echo "No generated route changes to commit" && exit 0
           git commit -m "Update route data"
           git push

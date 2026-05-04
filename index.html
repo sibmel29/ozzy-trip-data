@@ -79,6 +79,58 @@ body { margin:0; font-family: system-ui; }
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
+.poi-filter-panel {
+  position: fixed;
+  top: 92px;
+  right: 20px;
+  z-index: 1000;
+  font-size: 12px;
+}
+
+.poi-filter-button {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #155e75;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.poi-filter-content {
+  display: none;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 150px;
+  background: rgba(255,255,255,0.94);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.poi-filter-panel.open .poi-filter-content {
+  display: grid;
+  gap: 8px;
+}
+
+.poi-filter-content select {
+  width: 100%;
+}
+
+.draft-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
 .hike-panel {
   position: fixed;
   top: 150px;
@@ -324,6 +376,7 @@ body { margin:0; font-family: system-ui; }
   object-fit: cover;
   border-radius: 10px;
   display: block;
+  cursor: zoom-in;
 }
 
 .story-gallery-controls {
@@ -381,6 +434,40 @@ body { margin:0; font-family: system-ui; }
   border-radius: 999px;
   padding: 4px 8px;
   font-size: 12px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2600;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.9);
+}
+
+.lightbox.visible {
+  display: flex;
+}
+
+.lightbox img {
+  max-width: 94vw;
+  max-height: 88vh;
+  object-fit: contain;
+}
+
+.lightbox button {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
 }
 
 /* Welcome popup */
@@ -446,6 +533,21 @@ body { margin:0; font-family: system-ui; }
   <button class="map-btn" data-style="sat">🛰</button>
 </div>
 
+<div class="poi-filter-panel" id="poiFilterPanel">
+  <button class="poi-filter-button" id="poiFilterButton" type="button" aria-label="POI filters" aria-expanded="false" aria-controls="poiFilterContent">
+    <span>☼</span><span>⌄</span>
+  </button>
+  <div class="poi-filter-content" id="poiFilterContent">
+    <select id="poiFilterSelect" aria-label="POI category">
+      <option value="all">All POIs</option>
+    </select>
+    <label class="draft-toggle">
+      <input type="checkbox" id="showDraftPOIs">
+      <span>Drafts</span>
+    </label>
+  </div>
+</div>
+
 <div class="hike-panel" id="hikePanel">
   <button class="hike-menu-button" id="hikeMenuButton" type="button" aria-label="Hike layer" aria-expanded="false" aria-controls="hikeMenuContent">
     <span class="hike-menu-icon">🚶</span>
@@ -478,6 +580,10 @@ body { margin:0; font-family: system-ui; }
 </div>
 
 <article id="storyWindow" class="story-window" aria-live="polite"></article>
+<div id="lightbox" class="lightbox">
+  <button type="button" id="lightboxClose" aria-label="Close image">×</button>
+  <img id="lightboxImage" alt="">
+</div>
 
 <script>
 
@@ -496,8 +602,12 @@ closePopup.onclick = () => {
 
 // === POI STORIES
 const storyWindow = document.getElementById("storyWindow");
+const lightbox = document.getElementById("lightbox");
+const lightboxImage = document.getElementById("lightboxImage");
+const lightboxClose = document.getElementById("lightboxClose");
 let activeStory = null;
 let activeImageIndex = 0;
+let touchStartX = null;
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -556,6 +666,30 @@ function renderStory() {
 
   storyWindow.classList.add("visible");
   storyWindow.querySelector(".story-close").onclick = closeStory;
+  let activeImage = storyWindow.querySelector(".story-media img");
+
+  if (activeImage) {
+    activeImage.onclick = () => openLightbox(currentImage);
+  }
+
+  let media = storyWindow.querySelector(".story-media");
+
+  if (media && images.length > 1) {
+    media.ontouchstart = event => {
+      touchStartX = event.touches[0].clientX;
+    };
+    media.ontouchend = event => {
+      if (touchStartX === null) return;
+      let delta = event.changedTouches[0].clientX - touchStartX;
+      touchStartX = null;
+
+      if (Math.abs(delta) < 45) return;
+      activeImageIndex = delta < 0
+        ? (activeImageIndex + 1) % images.length
+        : (activeImageIndex - 1 + images.length) % images.length;
+      renderStory();
+    };
+  }
 
   let previous = storyWindow.querySelector(".story-prev");
   let next = storyWindow.querySelector(".story-next");
@@ -579,6 +713,67 @@ function closeStory() {
   activeStory = null;
   storyWindow.classList.remove("visible");
   storyWindow.innerHTML = "";
+}
+
+function openLightbox(image) {
+  if (!image) return;
+  lightboxImage.src = image.src;
+  lightboxImage.alt = image.alt || "";
+  lightbox.classList.add("visible");
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("visible");
+  lightboxImage.src = "";
+}
+
+lightboxClose.onclick = closeLightbox;
+lightbox.onclick = event => {
+  if (event.target === lightbox) closeLightbox();
+};
+
+const poiFilterPanel = document.getElementById("poiFilterPanel");
+const poiFilterButton = document.getElementById("poiFilterButton");
+const poiFilterSelect = document.getElementById("poiFilterSelect");
+const showDraftPOIs = document.getElementById("showDraftPOIs");
+const poiLayer = L.featureGroup();
+let poiMarkerRecords = [];
+
+poiFilterButton.onclick = () => {
+  let isOpen = poiFilterPanel.classList.toggle("open");
+  poiFilterButton.setAttribute("aria-expanded", String(isOpen));
+};
+
+function tagsForPOI(poi) {
+  return (poi.tags || []).map(tag => String(tag).trim()).filter(Boolean);
+}
+
+function populatePOIFilter(points) {
+  let tags = new Set();
+
+  points.forEach(poi => tagsForPOI(poi).forEach(tag => tags.add(tag)));
+
+  poiFilterSelect.innerHTML = '<option value="all">All POIs</option>' + [...tags]
+    .sort((a, b) => a.localeCompare(b))
+    .map(tag => `<option value="${escapeHTML(tag.toLowerCase())}">${escapeHTML(tag)}</option>`)
+    .join("");
+}
+
+function renderPOIFilter() {
+  let selected = poiFilterSelect.value;
+  let includeDrafts = showDraftPOIs.checked;
+
+  poiLayer.clearLayers();
+
+  poiMarkerRecords.forEach(record => {
+    let tags = tagsForPOI(record.poi).map(tag => tag.toLowerCase());
+    let isPublished = record.poi.published !== false;
+    let matchesTag = selected === "all" || tags.includes(selected);
+
+    if (matchesTag && (isPublished || includeDrafts)) {
+      record.marker.addTo(poiLayer);
+    }
+  });
 }
 
 function addPOIMarkers(points) {
@@ -605,6 +800,9 @@ function addPOIMarkers(points) {
   });
   }
 
+  populatePOIFilter(points);
+  poiMarkerRecords = [];
+
   points.forEach(poi => {
     let coords = poi.coordinates;
 
@@ -614,11 +812,17 @@ function addPOIMarkers(points) {
       icon: iconForPOI(poi),
       title: poi.title || "Point of interest",
       zIndexOffset: 900
-    }).addTo(map);
+    });
 
     marker.on("click", () => openStory(poi));
+    poiMarkerRecords.push({ poi, marker });
   });
+
+  renderPOIFilter();
 }
+
+poiFilterSelect.onchange = renderPOIFilter;
+showDraftPOIs.onchange = renderPOIFilter;
 
 // === HIKES
 const hikePanel = document.getElementById("hikePanel");
@@ -721,7 +925,10 @@ fetch('poi.json')
 .catch(error => console.warn("POI data not loaded:", error));
 
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeStory();
+  if (event.key === "Escape") {
+    closeLightbox();
+    closeStory();
+  }
 });
 
 // === MAP INIT
@@ -735,6 +942,7 @@ var layers = {
 };
 
 layers.osm.addTo(map);
+poiLayer.addTo(map);
 
 // === STYLE SWITCHER
 document.querySelectorAll('.map-btn').forEach(btn => {
@@ -748,13 +956,15 @@ document.querySelectorAll('.map-btn').forEach(btn => {
 });
 
 // === ODO
-fetch('odo.json')
-.then(res => res.json())
-.then(data => {
+Promise.all([
+  fetch('odo.json').then(res => res.json()),
+  fetch('route_meta.json').then(res => res.ok ? res.json() : {})
+]).then(([data, meta]) => {
   let trip = data.current_odo - data.trip_start_odo;
+  let lastUpdated = meta.latest_time ? new Date(meta.latest_time).toLocaleString() : "No GPS update yet";
 
   document.querySelector("#odoTile .odo-values").innerHTML =
-    `🚐 ${data.current_odo.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip`;
+    `🚐 ${data.current_odo.toLocaleString()} km<br>🗺 ${trip.toLocaleString()} km trip<br>⏱ ${escapeHTML(lastUpdated)}`;
 });
 
 // === LOAD ROUTES

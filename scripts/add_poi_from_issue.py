@@ -60,6 +60,33 @@ def parse_coordinate(value, label):
         raise ValueError(f"{label} must be a number, got {value!r}") from exc
 
 
+def coordinates_from_maps_link(value):
+    if value in NO_RESPONSE:
+        return None
+
+    patterns = [
+        r"@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
+        r"[?&](?:q|query|ll)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
+        r"(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)"
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, value)
+        if not match:
+            continue
+
+        first = float(match.group(1))
+        second = float(match.group(2))
+
+        if -90 <= first <= 90 and -180 <= second <= 180:
+            return [second, first]
+
+        if -180 <= first <= 180 and -90 <= second <= 90:
+            return [first, second]
+
+    return None
+
+
 def parse_paragraphs(value):
     if value in NO_RESPONSE:
         return []
@@ -151,6 +178,8 @@ def optimize_image(source, destination):
 
 def images_from_entries(entries, poi_id, title):
     media_folder = POI_MEDIA_FOLDER / poi_id
+    media_folder.mkdir(parents=True, exist_ok=True)
+    (media_folder / ".gitkeep").touch()
     images = []
     remote_index = 1
 
@@ -162,7 +191,6 @@ def images_from_entries(entries, poi_id, title):
             })
             continue
 
-        media_folder.mkdir(parents=True, exist_ok=True)
         raw_path = media_folder / f"_raw_{remote_index}"
         output_path = media_folder / f"{remote_index}.jpg"
 
@@ -211,6 +239,10 @@ def find_poi_by_id(pois, poi_id):
 
 
 def coordinates_from_sections(sections, existing=None):
+    maps_coordinates = coordinates_from_maps_link(value_for(sections, "Google Maps link"))
+    if maps_coordinates:
+        return maps_coordinates
+
     longitude_value = value_for(sections, "Longitude")
     latitude_value = value_for(sections, "Latitude")
 
@@ -233,6 +265,15 @@ def coordinates_from_sections(sections, existing=None):
         raise ValueError("Latitude must be between -90 and 90")
 
     return [longitude, latitude]
+
+
+def published_from_sections(sections, existing=None):
+    value = value_for(sections, "Published")
+
+    if not value or value == "keep":
+        return existing.get("published", True) if existing else True
+
+    return value.lower() not in {"draft", "no", "false", "private"}
 
 
 def marker_from_sections(sections, existing=None):
@@ -272,6 +313,10 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
     else:
         poi_id, existing = unique_id(slugify(title), issue_number, existing_pois)
 
+    media_folder = POI_MEDIA_FOLDER / poi_id
+    media_folder.mkdir(parents=True, exist_ok=True)
+    (media_folder / ".gitkeep").touch()
+
     poi = {
         "id": poi_id,
         "title": title,
@@ -282,6 +327,7 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
         "body": parse_paragraphs(value_for(sections, "Story text")) if has_value(sections, "Story text") else (existing.get("body", []) if existing else []),
         "images": images_from_sections(sections, poi_id, title, existing),
         "tags": parse_tags(value_for(sections, "Tags")) if has_value(sections, "Tags") else (existing.get("tags", []) if existing else []),
+        "published": published_from_sections(sections, existing),
         "source_issue": str(issue_number),
         "source_url": issue_url,
     }
