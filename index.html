@@ -240,6 +240,18 @@ body { margin:0; font-family: system-ui; }
   font-size: 13px;
 }
 
+.poi-marker.forest {
+  background: #166534;
+  color: white;
+  font-size: 14px;
+}
+
+.poi-marker.mountain {
+  background: #475569;
+  color: white;
+  font-size: 14px;
+}
+
 .hike-marker {
   width: 26px;
   height: 26px;
@@ -250,7 +262,7 @@ body { margin:0; font-family: system-ui; }
   border-radius: 50%;
   box-shadow: 0 3px 12px rgba(0,0,0,0.35);
   color: white;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .story-window {
@@ -436,7 +448,7 @@ body { margin:0; font-family: system-ui; }
 
 <div class="hike-panel" id="hikePanel">
   <button class="hike-menu-button" id="hikeMenuButton" type="button" aria-label="Hike layer" aria-expanded="false" aria-controls="hikeMenuContent">
-    <span class="hike-menu-icon">↟</span>
+    <span class="hike-menu-icon">🚶</span>
     <span class="hike-menu-arrow">⌄</span>
   </button>
   <div class="hike-menu-content" id="hikeMenuContent">
@@ -576,7 +588,9 @@ function addPOIMarkers(points) {
     star: "★",
     camera: "⌾",
     camp: "△",
-    food: "+"
+    food: "+",
+    forest: "♣",
+    mountain: "▲"
   };
 
   function iconForPOI(poi) {
@@ -648,7 +662,7 @@ function renderHikeStats(stats) {
 function addHikes(data, storiesById = {}) {
   let hikeIcon = L.divIcon({
     className: "",
-    html: '<div class="hike-marker">↟</div>',
+    html: '<div class="hike-marker">🚶</div>',
     iconSize: [26, 26],
     iconAnchor: [13, 13]
   });

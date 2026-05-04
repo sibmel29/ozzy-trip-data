@@ -9,7 +9,7 @@ from pathlib import Path
 POI_FILE = Path(os.environ.get("POI_FILE", "poi.json"))
 RESULT_FILE = Path(os.environ.get("RESULT_FILE", "poi_result.json"))
 POI_MEDIA_FOLDER = Path(os.environ.get("POI_MEDIA_FOLDER", "poi-media"))
-MARKERS = {"info", "sun", "star", "camera", "camp", "food"}
+MARKERS = {"info", "sun", "star", "camera", "camp", "food", "forest", "mountain"}
 NO_RESPONSE = {"", "_No response_"}
 IMAGE_MAX_WIDTH = int(os.environ.get("IMAGE_MAX_WIDTH", "1600"))
 IMAGE_QUALITY = int(os.environ.get("IMAGE_QUALITY", "80"))

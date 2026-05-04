@@ -47,7 +47,7 @@ Then open `index.html` in a browser or serve the directory locally.
 - `title`
 - `date`
 - `coordinates` as `[longitude, latitude]`
-- `marker`, optionally: `info`, `sun`, `star`, `camera`, `camp`, or `food`
+- `marker`, optionally: `info`, `sun`, `star`, `camera`, `camp`, `food`, `forest`, or `mountain`
 - `summary`
 - `body` paragraphs
 - `images`

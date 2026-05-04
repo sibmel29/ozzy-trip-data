@@ -50,6 +50,8 @@ body:
         - camera
         - camp
         - food
+        - forest
+        - mountain
       default: 0
     validations:
       required: true
