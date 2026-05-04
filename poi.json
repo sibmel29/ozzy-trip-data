@@ -1,5 +1,35 @@
 [
   {
+    "id": "jervis-bay",
+    "title": "Jervis Bay",
+    "date": "2025-12-01",
+    "coordinates": [
+      151.0780075,
+      -35.13833
+    ],
+    "marker": "sun",
+    "summary": "White sand beaches",
+    "body": [
+      "A shorter trip to Jervis, over a long weekend. This place is just like a postal card, most beaches are empty.\nJervis bay is a territory of its own, stealth camping isn't permitted, but we always find a way around that."
+    ],
+    "images": [
+      {
+        "src": "poi-media/jervis-bay/1.jpg",
+        "alt": "Jervis Bay photo 1"
+      },
+      {
+        "src": "poi-media/jervis-bay/2.jpg",
+        "alt": "Jervis Bay photo 2"
+      }
+    ],
+    "tags": [
+      "coast"
+    ],
+    "published": true,
+    "source_issue": "4",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/4"
+  },
+  {
     "id": "blue-mountains",
     "title": "Blue Mountains",
     "date": "2025-11-02",
