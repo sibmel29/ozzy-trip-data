@@ -1,5 +1,35 @@
 [
   {
+    "id": "taylors-on-the-rock",
+    "type": "fishing",
+    "title": "Taylors on the rock",
+    "date": "2026-02-13",
+    "coordinates": [
+      151.291797,
+      -33.785679
+    ],
+    "marker": "fish",
+    "summary": "Many taylors",
+    "body": [
+      "Caught one by one on the Raglou,, very cool session."
+    ],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Freshie",
+      "Species": "Taylor",
+      "Count": "10",
+      "Size": "30",
+      "Kept or released": "kept",
+      "Bait or lure": "Lure (Asturias & Raglou)"
+    },
+    "published": true,
+    "source_issue": "8",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/8"
+  },
+  {
     "id": "pompano-coolum-beach",
     "type": "fishing",
     "title": "Pompano @ Coolum Beach",
