@@ -1,5 +1,41 @@
 [
   {
+    "id": "bream-evans-head",
+    "type": "fishing",
+    "title": "Bream @ Evans Head",
+    "date": "2026-03-16",
+    "coordinates": [
+      153.454727,
+      -29.138674
+    ],
+    "marker": "fish",
+    "summary": "Two breams",
+    "body": [
+      "Casting Kanji in the rocks, got 4 breams. Kept two big ones, on the barbecue that very night, in foil."
+    ],
+    "images": [
+      {
+        "src": "fishing-media/bream-evans-head/1.jpg",
+        "alt": "Bream @ Evans Head photo 1"
+      }
+    ],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Goanna Reserve - Evans Head",
+      "Species": "Yellowtail Bream",
+      "Count": "2",
+      "Size": "25/30",
+      "Kept or released": "kept",
+      "Bait or lure": "Kanji bait",
+      "Conditions": "Rocks dawn"
+    },
+    "published": true,
+    "source_issue": "12",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/12"
+  },
+  {
     "id": "cuttlefish",
     "type": "fishing",
     "title": "Cuttlefish",
