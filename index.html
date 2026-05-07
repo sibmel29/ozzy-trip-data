@@ -79,61 +79,9 @@ body { margin:0; font-family: system-ui; }
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.poi-filter-panel {
-  position: fixed;
-  top: 92px;
-  right: 20px;
-  z-index: 1000;
-  font-size: 12px;
-}
-
-.poi-filter-button {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  border: 3px solid white;
-  border-radius: 50%;
-  background: #155e75;
-  color: white;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
-  cursor: pointer;
-  font-weight: 800;
-}
-
-.poi-filter-content {
-  display: none;
-  position: absolute;
-  top: 48px;
-  right: 0;
-  width: 150px;
-  background: rgba(255,255,255,0.94);
-  padding: 8px 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.poi-filter-panel.open .poi-filter-content {
-  display: grid;
-  gap: 8px;
-}
-
-.poi-filter-content select {
-  width: 100%;
-}
-
-.draft-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-}
-
 .hike-panel {
   position: fixed;
-  top: 150px;
+  top: 178px;
   right: 20px;
   z-index: 1000;
   font-size: 12px;
@@ -173,8 +121,8 @@ body { margin:0; font-family: system-ui; }
 .hike-menu-content {
   display: none;
   position: absolute;
-  top: 48px;
-  right: 0;
+  top: 0;
+  right: 52px;
   width: 142px;
   background: rgba(255,255,255,0.94);
   padding: 8px 10px;
@@ -203,6 +151,88 @@ body { margin:0; font-family: system-ui; }
 
 .hike-stats strong {
   color: #166534;
+}
+
+.fish-panel {
+  position: fixed;
+  top: 232px;
+  right: 20px;
+  z-index: 1000;
+  font-size: 12px;
+}
+
+.fish-menu-button {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #0f766e;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.fish-menu-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.fish-menu-arrow {
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.fish-panel.open .fish-menu-arrow {
+  transform: rotate(180deg);
+}
+
+.fish-menu-content {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 52px;
+  width: 156px;
+  max-height: 210px;
+  overflow: auto;
+  background: rgba(255,255,255,0.94);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.fish-panel.open .fish-menu-content {
+  display: block;
+}
+
+.fish-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fish-stats {
+  display: grid;
+  gap: 3px;
+  margin-top: 7px;
+  color: #333;
+}
+
+.fish-stats span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fish-stats strong {
+  color: #0f766e;
 }
 
 .map-btn {
@@ -436,6 +466,32 @@ body { margin:0; font-family: system-ui; }
   font-size: 12px;
 }
 
+.story-details {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0;
+  padding: 9px 10px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.06);
+  color: #223;
+  font-size: 12px;
+}
+
+.story-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.story-details dt {
+  font-weight: 800;
+}
+
+.story-details dd {
+  margin: 0;
+  text-align: right;
+}
+
 .lightbox {
   position: fixed;
   inset: 0;
@@ -533,21 +589,6 @@ body { margin:0; font-family: system-ui; }
   <button class="map-btn" data-style="sat">🛰</button>
 </div>
 
-<div class="poi-filter-panel" id="poiFilterPanel">
-  <button class="poi-filter-button" id="poiFilterButton" type="button" aria-label="POI filters" aria-expanded="false" aria-controls="poiFilterContent">
-    <span>☼</span><span>⌄</span>
-  </button>
-  <div class="poi-filter-content" id="poiFilterContent">
-    <select id="poiFilterSelect" aria-label="POI category">
-      <option value="all">All POIs</option>
-    </select>
-    <label class="draft-toggle">
-      <input type="checkbox" id="showDraftPOIs">
-      <span>Drafts</span>
-    </label>
-  </div>
-</div>
-
 <div class="hike-panel" id="hikePanel">
   <button class="hike-menu-button" id="hikeMenuButton" type="button" aria-label="Hike layer" aria-expanded="false" aria-controls="hikeMenuContent">
     <span class="hike-menu-icon">🚶</span>
@@ -560,6 +601,22 @@ body { margin:0; font-family: system-ui; }
     </label>
     <div class="hike-stats" id="hikeStats">
       <span>No hikes loaded</span>
+    </div>
+  </div>
+</div>
+
+<div class="fish-panel" id="fishPanel">
+  <button class="fish-menu-button" id="fishMenuButton" type="button" aria-label="Fishing log layer" aria-expanded="false" aria-controls="fishMenuContent">
+    <span class="fish-menu-icon">🎣</span>
+    <span class="fish-menu-arrow">⌄</span>
+  </button>
+  <div class="fish-menu-content" id="fishMenuContent">
+    <label class="fish-toggle">
+      <input type="checkbox" id="fishToggle">
+      <span>Fishing</span>
+    </label>
+    <div class="fish-stats" id="fishStats">
+      <span>No catches loaded</span>
     </div>
   </div>
 </div>
@@ -647,6 +704,14 @@ function renderStory() {
   ` : "";
   let body = (poi.body || []).map(paragraph => `<p>${escapeHTML(paragraph)}</p>`).join("");
   let tags = (poi.tags || []).map(tag => `<span>${escapeHTML(tag)}</span>`).join("");
+  let details = Object.entries(poi.details || {})
+    .filter(([, value]) => value !== null && value !== undefined && String(value).trim() !== "")
+    .map(([key, value]) => `
+      <div>
+        <dt>${escapeHTML(key)}</dt>
+        <dd>${escapeHTML(value)}</dd>
+      </div>
+    `).join("");
 
   storyWindow.innerHTML = `
     <div class="story-header">
@@ -659,6 +724,7 @@ function renderStory() {
     ${gallery}
     <div class="story-body">
       ${poi.summary ? `<p><strong>${escapeHTML(poi.summary)}</strong></p>` : ""}
+      ${details ? `<dl class="story-details">${details}</dl>` : ""}
       ${body}
       ${tags ? `<div class="story-tags">${tags}</div>` : ""}
     </div>
@@ -732,49 +798,7 @@ lightbox.onclick = event => {
   if (event.target === lightbox) closeLightbox();
 };
 
-const poiFilterPanel = document.getElementById("poiFilterPanel");
-const poiFilterButton = document.getElementById("poiFilterButton");
-const poiFilterSelect = document.getElementById("poiFilterSelect");
-const showDraftPOIs = document.getElementById("showDraftPOIs");
 const poiLayer = L.featureGroup();
-let poiMarkerRecords = [];
-
-poiFilterButton.onclick = () => {
-  let isOpen = poiFilterPanel.classList.toggle("open");
-  poiFilterButton.setAttribute("aria-expanded", String(isOpen));
-};
-
-function tagsForPOI(poi) {
-  return (poi.tags || []).map(tag => String(tag).trim()).filter(Boolean);
-}
-
-function populatePOIFilter(points) {
-  let tags = new Set();
-
-  points.forEach(poi => tagsForPOI(poi).forEach(tag => tags.add(tag)));
-
-  poiFilterSelect.innerHTML = '<option value="all">All POIs</option>' + [...tags]
-    .sort((a, b) => a.localeCompare(b))
-    .map(tag => `<option value="${escapeHTML(tag.toLowerCase())}">${escapeHTML(tag)}</option>`)
-    .join("");
-}
-
-function renderPOIFilter() {
-  let selected = poiFilterSelect.value;
-  let includeDrafts = showDraftPOIs.checked;
-
-  poiLayer.clearLayers();
-
-  poiMarkerRecords.forEach(record => {
-    let tags = tagsForPOI(record.poi).map(tag => tag.toLowerCase());
-    let isPublished = record.poi.published !== false;
-    let matchesTag = selected === "all" || tags.includes(selected);
-
-    if (matchesTag && (isPublished || includeDrafts)) {
-      record.marker.addTo(poiLayer);
-    }
-  });
-}
 
 function addPOIMarkers(points) {
   const markerTypes = {
@@ -785,7 +809,9 @@ function addPOIMarkers(points) {
     camp: "△",
     food: "+",
     forest: "♣",
-    mountain: "▲"
+    mountain: "▲",
+    fish: "🎣",
+    surf: "≈"
   };
 
   function iconForPOI(poi) {
@@ -800,10 +826,9 @@ function addPOIMarkers(points) {
   });
   }
 
-  populatePOIFilter(points);
-  poiMarkerRecords = [];
-
   points.forEach(poi => {
+    if (poi.published === false) return;
+
     let coords = poi.coordinates;
 
     if (!Array.isArray(coords) || coords.length < 2) return;
@@ -815,14 +840,96 @@ function addPOIMarkers(points) {
     });
 
     marker.on("click", () => openStory(poi));
-    poiMarkerRecords.push({ poi, marker });
+    marker.addTo(poiLayer);
   });
-
-  renderPOIFilter();
 }
 
-poiFilterSelect.onchange = renderPOIFilter;
-showDraftPOIs.onchange = renderPOIFilter;
+// === FISHING
+const fishPanel = document.getElementById("fishPanel");
+const fishMenuButton = document.getElementById("fishMenuButton");
+const fishToggle = document.getElementById("fishToggle");
+const fishStats = document.getElementById("fishStats");
+const fishLayer = L.featureGroup();
+
+fishMenuButton.onclick = () => {
+  let isOpen = fishPanel.classList.toggle("open");
+  fishMenuButton.setAttribute("aria-expanded", String(isOpen));
+
+  if (isOpen) {
+    hikePanel.classList.remove("open");
+    hikeMenuButton.setAttribute("aria-expanded", "false");
+  }
+};
+
+function fishLabel(entry) {
+  let details = entry.details || {};
+  let species = details.Species || entry.title || "Catch";
+  let size = details.Size ? ` · ${details.Size}` : "";
+  let timestamp = details["Caught time"] || entry.date || "";
+  let time = timestamp ? ` · ${timestamp}` : "";
+  return `${species}${size}${time}`;
+}
+
+function renderFishStats(entries) {
+  let totals = new Map();
+
+  entries.forEach(entry => {
+    if (entry.published === false) return;
+
+    let details = entry.details || {};
+    let species = String(details.Species || "Unknown").trim() || "Unknown";
+    let count = Number.parseFloat(details.Count || "1");
+
+    totals.set(species, (totals.get(species) || 0) + (Number.isFinite(count) ? count : 1));
+  });
+
+  let rows = [...totals.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+  fishStats.innerHTML = rows.length
+    ? rows.map(([species, count]) => `<span><span>${escapeHTML(species)}</span><strong>${count.toLocaleString()}</strong></span>`).join("")
+    : "<span>No catches loaded</span>";
+}
+
+function addFishingMarkers(entries) {
+  fishLayer.clearLayers();
+
+  entries.forEach(entry => {
+    if (entry.published === false) return;
+
+    let coords = entry.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) return;
+
+    let marker = L.marker([coords[1], coords[0]], {
+      icon: L.divIcon({
+        className: "",
+        html: `<div class="poi-marker fish">🎣</div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 13]
+      }),
+      title: fishLabel(entry),
+      zIndexOffset: 950
+    });
+
+    marker.bindTooltip(fishLabel(entry), { direction: "top", offset: [0, -10] });
+    marker.on("click", () => openStory(entry));
+    marker.addTo(fishLayer);
+  });
+
+  renderFishStats(entries);
+  fishToggle.disabled = fishLayer.getLayers().length === 0;
+}
+
+fishToggle.onchange = () => {
+  if (fishToggle.checked) {
+    fishLayer.addTo(map);
+
+    if (fishLayer.getLayers().length > 0) {
+      map.fitBounds(fishLayer.getBounds(), { padding: [50, 50] });
+    }
+  } else {
+    fishLayer.removeFrom(map);
+  }
+};
 
 // === HIKES
 const hikePanel = document.getElementById("hikePanel");
@@ -834,6 +941,11 @@ const hikeLayer = L.featureGroup();
 hikeMenuButton.onclick = () => {
   let isOpen = hikePanel.classList.toggle("open");
   hikeMenuButton.setAttribute("aria-expanded", String(isOpen));
+
+  if (isOpen) {
+    fishPanel.classList.remove("open");
+    fishMenuButton.setAttribute("aria-expanded", "false");
+  }
 };
 
 function hikeFeatureToStory(feature, storiesById) {
@@ -923,6 +1035,20 @@ fetch('poi.json')
 .then(res => res.ok ? res.json() : [])
 .then(addPOIMarkers)
 .catch(error => console.warn("POI data not loaded:", error));
+
+fetch('surf-log.json')
+.then(res => res.ok ? res.json() : [])
+.then(addPOIMarkers)
+.catch(error => console.warn("Surf data not loaded:", error));
+
+fetch('fishing-log.json')
+.then(res => res.ok ? res.json() : [])
+.then(addFishingMarkers)
+.catch(error => {
+  console.warn("Fishing data not loaded:", error);
+  fishStats.innerHTML = "<span>No catches loaded</span>";
+  fishToggle.disabled = true;
+});
 
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") {

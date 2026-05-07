@@ -50,7 +50,7 @@ Then open `index.html` in a browser or serve the directory locally.
 - `title`
 - `date`
 - `coordinates` as `[longitude, latitude]`
-- `marker`, optionally: `info`, `sun`, `star`, `camera`, `camp`, `food`, `forest`, or `mountain`
+- `marker`, optionally: `info`, `sun`, `star`, `camera`, `camp`, `food`, `forest`, `mountain`, `fish`, or `surf`
 - `summary`
 - `body` paragraphs
 - `images`
@@ -74,8 +74,8 @@ Example:
 }
 ```
 
-The map has a POI filter menu where you can show one tag/category at a time.
-Draft POIs are hidden unless the Drafts checkbox is enabled.
+Published POIs are always shown on the map. Draft POIs stay in `poi.json` but
+are hidden from the map until published.
 
 ### Add a POI from your phone
 
@@ -119,6 +119,32 @@ Use the **Update POI** issue form when an existing POI needs edits.
 
 Blank fields keep the current value. If you fill the image field, the current
 image list is replaced; if you leave it blank, existing images stay unchanged.
+
+## Fishing and surf logs
+
+Fishing and surf sessions are stored separately from normal POIs:
+
+- `fishing-log.json`
+- `surf-log.json`
+- `fishing-media/`
+- `surf-media/`
+
+Use the **Add fishing log** and **Add surf log** issue forms from your phone.
+Each form accepts a Google Maps link or coordinates, story text, tags, optional
+images, and log-specific details such as species, count, fish size, caught time,
+conditions, wave size, wind, tide, board, and rating.
+
+GitHub Actions writes the entry to the matching JSON file, downloads and
+compresses attached images, commits the update, comments on the issue, and
+closes it. Surf entries appear as clickable markers on the map using the same
+popup gallery as POIs. Fishing entries live behind the fishing menu, which shows
+species totals like `Tailor 10`, `Bream 6`, and `GT 2`; toggling the menu shows
+each catch marker with its species, size, and timestamp in the marker tooltip and
+popup details.
+
+`fish_species_nsw.json` is a small reference list derived from the NSW DPI fish
+species index. It stores species names and freshwater/saltwater category only,
+with the official source URL kept in the file for deeper lookup.
 
 Use a local web server when testing in Chrome so `fetch()` can load JSON files:
 

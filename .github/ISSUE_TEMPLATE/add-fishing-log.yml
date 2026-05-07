@@ -1,0 +1,154 @@
+name: Add fishing log
+description: Add a fishing journal entry to the map.
+title: "[FISHING] "
+labels: ["fishing-log"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in from your phone. When you submit, GitHub Actions will add the entry to `fishing-log.json`.
+  - type: input
+    id: title
+    attributes:
+      label: Fishing log title
+      description: A short title for this fishing session.
+      placeholder: "Flathead at Jervis Bay"
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: "2026-05-07"
+    validations:
+      required: false
+  - type: input
+    id: caught_time
+    attributes:
+      label: Caught time
+      description: Optional time or timestamp for this catch/session.
+      placeholder: "16:35"
+    validations:
+      required: false
+  - type: input
+    id: maps_link
+    attributes:
+      label: Google Maps link
+      description: Optional. Paste a Maps link instead of coordinates when possible.
+      placeholder: https://maps.google.com/?q=-35.047,150.744
+    validations:
+      required: false
+  - type: input
+    id: longitude
+    attributes:
+      label: Longitude
+      description: Optional if you pasted a Google Maps link.
+      placeholder: "150.744"
+    validations:
+      required: false
+  - type: input
+    id: latitude
+    attributes:
+      label: Latitude
+      description: Optional if you pasted a Google Maps link.
+      placeholder: "-35.047"
+    validations:
+      required: false
+  - type: input
+    id: spot_name
+    attributes:
+      label: Spot name
+      placeholder: "Jervis Bay"
+    validations:
+      required: false
+  - type: input
+    id: species
+    attributes:
+      label: Species
+      description: Species or target fish. Free text for now.
+      placeholder: "Dusky flathead"
+    validations:
+      required: false
+  - type: input
+    id: count
+    attributes:
+      label: Count
+      placeholder: "2"
+    validations:
+      required: false
+  - type: input
+    id: size
+    attributes:
+      label: Size
+      placeholder: "42 cm"
+    validations:
+      required: false
+  - type: dropdown
+    id: kept_released
+    attributes:
+      label: Kept or released
+      options:
+        - released
+        - kept
+        - mixed
+        - no catch
+      default: 0
+    validations:
+      required: false
+  - type: input
+    id: bait_lure
+    attributes:
+      label: Bait or lure
+      placeholder: "Soft plastic, pilchard, squid jig..."
+    validations:
+      required: false
+  - type: input
+    id: conditions
+    attributes:
+      label: Conditions
+      placeholder: "Incoming tide, light wind"
+    validations:
+      required: false
+  - type: textarea
+    id: summary
+    attributes:
+      label: Short summary
+      description: One sentence shown at the top of the popup.
+      placeholder: Quick note about the session.
+    validations:
+      required: false
+  - type: textarea
+    id: story
+    attributes:
+      label: Story text
+      description: Longer recap. Blank is okay.
+      placeholder: Write the story here.
+    validations:
+      required: false
+  - type: textarea
+    id: images
+    attributes:
+      label: Image paths
+      description: Optional. Paste uploaded GitHub issue image links, one per line.
+      placeholder: https://github.com/user-attachments/assets/...
+    validations:
+      required: false
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Optional comma-separated tags.
+      placeholder: "fishing, coast"
+    validations:
+      required: false
+  - type: dropdown
+    id: published
+    attributes:
+      label: Published
+      description: Choose draft if you do not want it visible on the map yet.
+      options:
+        - "yes"
+        - "draft"
+      default: 0
+    validations:
+      required: true

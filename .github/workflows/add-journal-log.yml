@@ -1,0 +1,118 @@
+name: Manage journal logs
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  fishing-log:
+    if: contains(github.event.issue.labels.*.name, 'fishing-log') || startsWith(github.event.issue.title, '[FISHING]') || contains(github.event.issue.body, '### Fishing log title')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install image tools
+        run: pip install pillow
+
+      - name: Apply fishing log issue
+        env:
+          JOURNAL_TYPE: fishing
+          JOURNAL_FILE: fishing-log.json
+          MEDIA_FOLDER: fishing-media
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: python scripts/add_journal_entry_from_issue.py
+
+      - name: Commit fishing log update
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add fishing-log.json fishing-media
+          git diff --cached --quiet && echo "No fishing log changes to commit" && exit 0
+          git commit -m "Update fishing log from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment and close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const result = JSON.parse(fs.readFileSync("journal_result.json", "utf8"));
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `${result.action === "updated" ? "Updated" : "Added"} fishing log **${result.title}** in \`fishing-log.json\` with id \`${result.id}\`.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: "closed"
+            });
+
+  surf-log:
+    if: contains(github.event.issue.labels.*.name, 'surf-log') || startsWith(github.event.issue.title, '[SURF]') || contains(github.event.issue.body, '### Surf log title')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install image tools
+        run: pip install pillow
+
+      - name: Apply surf log issue
+        env:
+          JOURNAL_TYPE: surf
+          JOURNAL_FILE: surf-log.json
+          MEDIA_FOLDER: surf-media
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: python scripts/add_journal_entry_from_issue.py
+
+      - name: Commit surf log update
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add surf-log.json surf-media
+          git diff --cached --quiet && echo "No surf log changes to commit" && exit 0
+          git commit -m "Update surf log from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment and close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const result = JSON.parse(fs.readFileSync("journal_result.json", "utf8"));
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `${result.action === "updated" ? "Updated" : "Added"} surf log **${result.title}** in \`surf-log.json\` with id \`${result.id}\`.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: "closed"
+            });

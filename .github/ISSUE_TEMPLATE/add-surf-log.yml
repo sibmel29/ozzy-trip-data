@@ -1,0 +1,146 @@
+name: Add surf log
+description: Add a surf journal entry to the map.
+title: "[SURF] "
+labels: ["surf-log"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in from your phone. When you submit, GitHub Actions will add the entry to `surf-log.json`.
+  - type: input
+    id: title
+    attributes:
+      label: Surf log title
+      description: A short title for this surf.
+      placeholder: "Morning surf at The Pass"
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      placeholder: "2026-05-07"
+    validations:
+      required: false
+  - type: input
+    id: maps_link
+    attributes:
+      label: Google Maps link
+      description: Optional. Paste a Maps link instead of coordinates when possible.
+      placeholder: https://maps.google.com/?q=-28.638,153.626
+    validations:
+      required: false
+  - type: input
+    id: longitude
+    attributes:
+      label: Longitude
+      description: Optional if you pasted a Google Maps link.
+      placeholder: "153.626"
+    validations:
+      required: false
+  - type: input
+    id: latitude
+    attributes:
+      label: Latitude
+      description: Optional if you pasted a Google Maps link.
+      placeholder: "-28.638"
+    validations:
+      required: false
+  - type: input
+    id: surf_spot
+    attributes:
+      label: Surf spot
+      placeholder: "The Pass"
+    validations:
+      required: false
+  - type: input
+    id: wave_size
+    attributes:
+      label: Wave size
+      placeholder: "2-3 ft"
+    validations:
+      required: false
+  - type: input
+    id: wind
+    attributes:
+      label: Wind
+      placeholder: "Light offshore"
+    validations:
+      required: false
+  - type: input
+    id: tide
+    attributes:
+      label: Tide
+      placeholder: "Mid incoming"
+    validations:
+      required: false
+  - type: input
+    id: board
+    attributes:
+      label: Board
+      placeholder: "7'0 mid length"
+    validations:
+      required: false
+  - type: dropdown
+    id: rating
+    attributes:
+      label: Rating
+      options:
+        - "5/5"
+        - "4/5"
+        - "3/5"
+        - "2/5"
+        - "1/5"
+      default: 2
+    validations:
+      required: false
+  - type: input
+    id: crowd
+    attributes:
+      label: Crowd
+      placeholder: "Quiet, busy, packed..."
+    validations:
+      required: false
+  - type: textarea
+    id: summary
+    attributes:
+      label: Short summary
+      description: One sentence shown at the top of the popup.
+      placeholder: Quick note about the session.
+    validations:
+      required: false
+  - type: textarea
+    id: story
+    attributes:
+      label: Story text
+      description: Longer recap. Blank is okay.
+      placeholder: Write the story here.
+    validations:
+      required: false
+  - type: textarea
+    id: images
+    attributes:
+      label: Image paths
+      description: Optional. Paste uploaded GitHub issue image links, one per line.
+      placeholder: https://github.com/user-attachments/assets/...
+    validations:
+      required: false
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Optional comma-separated tags.
+      placeholder: "surf, coast"
+    validations:
+      required: false
+  - type: dropdown
+    id: published
+    attributes:
+      label: Published
+      description: Choose draft if you do not want it visible on the map yet.
+      options:
+        - "yes"
+        - "draft"
+      default: 0
+    validations:
+      required: true
