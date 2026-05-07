@@ -1,5 +1,41 @@
 [
   {
+    "id": "cuttlefish",
+    "type": "fishing",
+    "title": "Cuttlefish",
+    "date": "2026-02-07",
+    "coordinates": [
+      151.294869,
+      -33.782405
+    ],
+    "marker": "fish",
+    "summary": "Biggest ever",
+    "body": [
+      "End of a breath hold, 7m deep. Shot right in the head.",
+      "This beast is the biggest cuttlefish I've ever caught, it fed 10+ people at our farewel party. Beautiful creature."
+    ],
+    "images": [
+      {
+        "src": "fishing-media/cuttlefish/1.jpg",
+        "alt": "Cuttlefish photo 1"
+      }
+    ],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Freshwater",
+      "Species": "Cuttlefish",
+      "Count": "1",
+      "Size": "3 Kg",
+      "Kept or released": "kept",
+      "Bait or lure": "Polespear"
+    },
+    "published": true,
+    "source_issue": "11",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/11"
+  },
+  {
     "id": "wrasse-spear-sesh",
     "type": "fishing",
     "title": "Wrasse spear sesh",
