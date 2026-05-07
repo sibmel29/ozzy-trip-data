@@ -119,12 +119,18 @@
     "body": [
       "Beautiful beach, with a huge sand bar and a forest behind. \nFuji was overheating like crazy on the sand, we already knew it might happen. I'll get a new oversized radiator in the next town, so it won't happen again."
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "poi-media/worimi-regional-park/1.jpg",
+        "alt": "Worimi Regional Park photo 1"
+      }
+    ],
     "tags": [
       "Off-road"
     ],
-    "source_issue": "1",
-    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/1"
+    "published": true,
+    "source_issue": "5",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/5"
   },
   {
     "id": "rabbits",

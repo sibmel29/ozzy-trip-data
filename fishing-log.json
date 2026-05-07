@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "id": "pompano-coolum-beach",
+    "type": "fishing",
+    "title": "Pompano @ Coolum Beach",
+    "date": "2026-05-06",
+    "coordinates": [
+      153.102576,
+      -26.548517
+    ],
+    "marker": "fish",
+    "summary": "Surfcasting",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Coolum",
+      "Species": "Trevally",
+      "Count": "1",
+      "Size": "35",
+      "Caught time": "13:00",
+      "Kept or released": "kept",
+      "Bait or lure": "Shrimp"
+    },
+    "published": true,
+    "source_issue": "6",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/6"
+  }
+]

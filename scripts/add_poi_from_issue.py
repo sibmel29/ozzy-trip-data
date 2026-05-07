@@ -64,6 +64,18 @@ def coordinates_from_maps_link(value):
     if value in NO_RESPONSE:
         return None
 
+    if "maps.app.goo.gl" in value or "goo.gl/maps" in value:
+        try:
+            request = urllib.request.Request(
+                value,
+                headers={"User-Agent": "ozzy-trip-data-poi-action"}
+            )
+
+            with urllib.request.urlopen(request, timeout=15) as response:
+                value = response.geturl()
+        except Exception:
+            pass
+
     patterns = [
         r"@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
         r"[?&](?:q|query|ll)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
@@ -231,9 +243,28 @@ def unique_id(base_id, issue_number, pois):
 
 
 def find_poi_by_id(pois, poi_id):
+    requested = slugify(poi_id)
+
     for poi in pois:
         if poi.get("id") == poi_id:
             return poi
+
+    for poi in pois:
+        poi_id_slug = slugify(poi.get("id", ""))
+        title_slug = slugify(poi.get("title", ""))
+
+        if requested in {poi_id_slug, title_slug}:
+            return poi
+
+    matches = [
+        poi
+        for poi in pois
+        if slugify(poi.get("id", "")).startswith(requested)
+        or slugify(poi.get("title", "")).startswith(requested)
+    ]
+
+    if len(matches) == 1:
+        return matches[0]
 
     return None
 
@@ -309,7 +340,7 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
         raise ValueError("POI title is required")
 
     if existing:
-        poi_id = requested_id
+        poi_id = existing.get("id", requested_id)
     else:
         poi_id, existing = unique_id(slugify(title), issue_number, existing_pois)
 
