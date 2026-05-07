@@ -136,11 +136,13 @@ conditions, wave size, wind, tide, board, and rating.
 
 GitHub Actions writes the entry to the matching JSON file, downloads and
 compresses attached images, commits the update, comments on the issue, and
-closes it. Surf entries appear as clickable markers on the map using the same
-popup gallery as POIs. Fishing entries live behind the fishing menu, which shows
-species totals like `Tailor 10`, `Bream 6`, and `GT 2`; toggling the menu shows
-each catch marker with its species, size, and timestamp in the marker tooltip and
-popup details.
+closes it. Fishing and surf entries live behind their own floating toggle menus,
+so normal POIs stay always visible and activity logs do not clutter the map.
+The fishing menu shows species totals like `Tailor 10`, `Bream 6`, and `GT 2`;
+toggling it shows each catch marker with its species, size, and timestamp in the
+marker tooltip and popup details. The surf menu shows session totals by surf
+spot, and toggling it shows each surf marker with spot, wave size, rating, and
+date.
 
 `fish_species_nsw.json` is a small reference list derived from the NSW DPI fish
 species index. It stores species names and freshwater/saltwater category only,

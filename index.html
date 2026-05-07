@@ -235,6 +235,88 @@ body { margin:0; font-family: system-ui; }
   color: #0f766e;
 }
 
+.surf-panel {
+  position: fixed;
+  top: 286px;
+  right: 20px;
+  z-index: 1000;
+  font-size: 12px;
+}
+
+.surf-menu-button {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 3px solid white;
+  border-radius: 50%;
+  background: #0369a1;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.surf-menu-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.surf-menu-arrow {
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.surf-panel.open .surf-menu-arrow {
+  transform: rotate(180deg);
+}
+
+.surf-menu-content {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 52px;
+  width: 156px;
+  max-height: 210px;
+  overflow: auto;
+  background: rgba(255,255,255,0.94);
+  padding: 8px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.surf-panel.open .surf-menu-content {
+  display: block;
+}
+
+.surf-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.surf-stats {
+  display: grid;
+  gap: 3px;
+  margin-top: 7px;
+  color: #333;
+}
+
+.surf-stats span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.surf-stats strong {
+  color: #0369a1;
+}
+
 .map-btn {
   display: block;
   margin: 5px 0;
@@ -332,6 +414,18 @@ body { margin:0; font-family: system-ui; }
   background: #475569;
   color: white;
   font-size: 14px;
+}
+
+.poi-marker.fish {
+  background: #0f766e;
+  color: white;
+  font-size: 14px;
+}
+
+.poi-marker.surf {
+  background: #0369a1;
+  color: white;
+  font-size: 16px;
 }
 
 .hike-marker {
@@ -621,6 +715,22 @@ body { margin:0; font-family: system-ui; }
   </div>
 </div>
 
+<div class="surf-panel" id="surfPanel">
+  <button class="surf-menu-button" id="surfMenuButton" type="button" aria-label="Surf log layer" aria-expanded="false" aria-controls="surfMenuContent">
+    <span class="surf-menu-icon">≈</span>
+    <span class="surf-menu-arrow">⌄</span>
+  </button>
+  <div class="surf-menu-content" id="surfMenuContent">
+    <label class="surf-toggle">
+      <input type="checkbox" id="surfToggle">
+      <span>Surf</span>
+    </label>
+    <div class="surf-stats" id="surfStats">
+      <span>No surfs loaded</span>
+    </div>
+  </div>
+</div>
+
 <div id="popup" class="popup">
   <div class="popup-content">
     <img src="sticker.png" class="popup-img" alt="Fuji Road Trip sticker" />
@@ -858,6 +968,8 @@ fishMenuButton.onclick = () => {
   if (isOpen) {
     hikePanel.classList.remove("open");
     hikeMenuButton.setAttribute("aria-expanded", "false");
+    surfPanel.classList.remove("open");
+    surfMenuButton.setAttribute("aria-expanded", "false");
   }
 };
 
@@ -931,6 +1043,94 @@ fishToggle.onchange = () => {
   }
 };
 
+// === SURF
+const surfPanel = document.getElementById("surfPanel");
+const surfMenuButton = document.getElementById("surfMenuButton");
+const surfToggle = document.getElementById("surfToggle");
+const surfStats = document.getElementById("surfStats");
+const surfLayer = L.featureGroup();
+
+surfMenuButton.onclick = () => {
+  let isOpen = surfPanel.classList.toggle("open");
+  surfMenuButton.setAttribute("aria-expanded", String(isOpen));
+
+  if (isOpen) {
+    hikePanel.classList.remove("open");
+    hikeMenuButton.setAttribute("aria-expanded", "false");
+    fishPanel.classList.remove("open");
+    fishMenuButton.setAttribute("aria-expanded", "false");
+  }
+};
+
+function surfLabel(entry) {
+  let details = entry.details || {};
+  let spot = details["Surf spot"] || entry.title || "Surf";
+  let size = details["Wave size"] ? ` · ${details["Wave size"]}` : "";
+  let rating = details.Rating ? ` · ${details.Rating}` : "";
+  let date = entry.date ? ` · ${entry.date}` : "";
+  return `${spot}${size}${rating}${date}`;
+}
+
+function renderSurfStats(entries) {
+  let spotCounts = new Map();
+  let publishedEntries = entries.filter(entry => entry.published !== false);
+
+  publishedEntries.forEach(entry => {
+    let details = entry.details || {};
+    let spot = String(details["Surf spot"] || entry.title || "Unknown").trim() || "Unknown";
+    spotCounts.set(spot, (spotCounts.get(spot) || 0) + 1);
+  });
+
+  let rows = [...spotCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  let total = publishedEntries.length;
+
+  surfStats.innerHTML = rows.length
+    ? `<span><span>Sessions</span><strong>${total.toLocaleString()}</strong></span>` +
+      rows.map(([spot, count]) => `<span><span>${escapeHTML(spot)}</span><strong>${count.toLocaleString()}</strong></span>`).join("")
+    : "<span>No surfs loaded</span>";
+}
+
+function addSurfMarkers(entries) {
+  surfLayer.clearLayers();
+
+  entries.forEach(entry => {
+    if (entry.published === false) return;
+
+    let coords = entry.coordinates;
+    if (!Array.isArray(coords) || coords.length < 2) return;
+
+    let marker = L.marker([coords[1], coords[0]], {
+      icon: L.divIcon({
+        className: "",
+        html: `<div class="poi-marker surf">≈</div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 13]
+      }),
+      title: surfLabel(entry),
+      zIndexOffset: 950
+    });
+
+    marker.bindTooltip(surfLabel(entry), { direction: "top", offset: [0, -10] });
+    marker.on("click", () => openStory(entry));
+    marker.addTo(surfLayer);
+  });
+
+  renderSurfStats(entries);
+  surfToggle.disabled = surfLayer.getLayers().length === 0;
+}
+
+surfToggle.onchange = () => {
+  if (surfToggle.checked) {
+    surfLayer.addTo(map);
+
+    if (surfLayer.getLayers().length > 0) {
+      map.fitBounds(surfLayer.getBounds(), { padding: [50, 50] });
+    }
+  } else {
+    surfLayer.removeFrom(map);
+  }
+};
+
 // === HIKES
 const hikePanel = document.getElementById("hikePanel");
 const hikeMenuButton = document.getElementById("hikeMenuButton");
@@ -945,6 +1145,8 @@ hikeMenuButton.onclick = () => {
   if (isOpen) {
     fishPanel.classList.remove("open");
     fishMenuButton.setAttribute("aria-expanded", "false");
+    surfPanel.classList.remove("open");
+    surfMenuButton.setAttribute("aria-expanded", "false");
   }
 };
 
@@ -1038,7 +1240,7 @@ fetch('poi.json')
 
 fetch('surf-log.json')
 .then(res => res.ok ? res.json() : [])
-.then(addPOIMarkers)
+.then(addSurfMarkers)
 .catch(error => console.warn("Surf data not loaded:", error));
 
 fetch('fishing-log.json')
