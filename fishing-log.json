@@ -1,5 +1,35 @@
 [
   {
+    "id": "wrasse-spear-sesh",
+    "type": "fishing",
+    "title": "Wrasse spear sesh",
+    "date": "2026-02-07",
+    "coordinates": [
+      151.299311,
+      -33.799738
+    ],
+    "marker": "fish",
+    "summary": "What a spot",
+    "body": [
+      "Many fish in there! Got a few wrasse on the polespear."
+    ],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Bower",
+      "Species": "Wrasse",
+      "Count": "4",
+      "Size": "40+",
+      "Kept or released": "kept",
+      "Bait or lure": "Polespear"
+    },
+    "published": true,
+    "source_issue": "9",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/9"
+  },
+  {
     "id": "taylors-on-the-rock",
     "type": "fishing",
     "title": "Taylors on the rock",
