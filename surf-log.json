@@ -1,5 +1,34 @@
 [
   {
+    "id": "snapper-rock",
+    "type": "surf",
+    "title": "Snapper rock",
+    "date": "2026-04-11",
+    "coordinates": [
+      153.549333,
+      -28.162307
+    ],
+    "marker": "surf",
+    "summary": "Monstre wave",
+    "body": [
+      "Scary place! You need to jump in the water in a channel with rock on either side, and in a few seconds you're facing a 3m monstre, with lots of people on it.\nStill, I had a lot of fun :)"
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Snapper Rock",
+      "Wave size": "3m",
+      "Wind": "Onshore",
+      "Rating": "4/5",
+      "Crowd": "Packed"
+    },
+    "published": true,
+    "source_issue": "10",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/10"
+  },
+  {
     "id": "brunswick-madness",
     "type": "surf",
     "title": "Brunswick madness",
