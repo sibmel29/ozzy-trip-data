@@ -1,5 +1,31 @@
 [
   {
+    "id": "avalon-beach",
+    "type": "surf",
+    "title": "Avalon beach",
+    "date": "",
+    "coordinates": [
+      151.334232,
+      -33.635811
+    ],
+    "marker": "surf",
+    "summary": "3 breaks 1 beach",
+    "body": [
+      "The famous Avalon beach. Home of Ben player! \nThere are these breaks here, I mostly tried the north wave, but had a sesh south as well. There's also \"little Avalon\" that breaks further in, haven't tried. Good spot, gets crowded."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Avalon",
+      "Rating": "3/5"
+    },
+    "published": true,
+    "source_issue": "21",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/21"
+  },
+  {
     "id": "whaly",
     "type": "surf",
     "title": "Whaly",
