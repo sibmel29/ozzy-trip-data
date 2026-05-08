@@ -1,5 +1,31 @@
 [
   {
+    "id": "bilgola",
+    "type": "surf",
+    "title": "Bilgola",
+    "date": "",
+    "coordinates": [
+      151.328656,
+      -33.64606
+    ],
+    "marker": "surf",
+    "summary": "Good backup place",
+    "body": [
+      "A few sessions here, when it's too crowded everywhere else, you can get some waves here at Bilgola."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Bilgola",
+      "Rating": "3/5"
+    },
+    "published": true,
+    "source_issue": "22",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/22"
+  },
+  {
     "id": "avalon-beach",
     "type": "surf",
     "title": "Avalon beach",
