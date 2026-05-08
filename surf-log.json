@@ -1,5 +1,32 @@
 [
   {
+    "id": "curl-curl",
+    "type": "surf",
+    "title": "Curl curl",
+    "date": "",
+    "coordinates": [
+      151.296488,
+      -33.771097
+    ],
+    "marker": "surf",
+    "summary": "Last resort!",
+    "body": [
+      "When nowhere the waves are good, curly somehow still works!? But be aware, this is extremely crowded, and some localisms..."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Curl Curl",
+      "Rating": "3/5",
+      "Crowd": "Super crowded"
+    },
+    "published": true,
+    "source_issue": "27",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/27"
+  },
+  {
     "id": "mona-vale",
     "type": "surf",
     "title": "Mona Vale",
