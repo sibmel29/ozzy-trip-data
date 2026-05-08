@@ -1,5 +1,33 @@
 [
   {
+    "id": "newport-my-home-spot",
+    "type": "surf",
+    "title": "Newport, my home spot.",
+    "date": "",
+    "coordinates": [
+      151.325474,
+      -33.651072
+    ],
+    "marker": "surf",
+    "summary": "Nice wave, crowded.",
+    "body": [
+      "No matter how early you wake up, there's always someone in the water before you at Newport.",
+      "I could literally run to the spot from my bedroom at sunrise, it's always crowded!!",
+      "Given this was my home spot for a while, I had amazing sessions. The reef on the south offers a beautiful right that cam barrel with the good conditions."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Newport Beach",
+      "Rating": "3/5"
+    },
+    "published": true,
+    "source_issue": "23",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/23"
+  },
+  {
     "id": "bilgola",
     "type": "surf",
     "title": "Bilgola",
