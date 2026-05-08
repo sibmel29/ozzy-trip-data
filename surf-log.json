@@ -1,5 +1,34 @@
 [
   {
+    "id": "coolum",
+    "type": "surf",
+    "title": "Coolum",
+    "date": "2026-05-08",
+    "coordinates": [
+      153.096301,
+      -26.538592
+    ],
+    "marker": "surf",
+    "summary": "Clean waves",
+    "body": [
+      "Early morning surf sesh, my instinct tells me to jump off the rocks into a break, and I was served with beautiful clean waves. Not too crowded, got a few good ones"
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Coolum Reef",
+      "Wave size": "1.5m",
+      "Wind": "Sideshore",
+      "Rating": "4/5",
+      "Crowd": "<10 people"
+    },
+    "published": true,
+    "source_issue": "13",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/13"
+  },
+  {
     "id": "snapper-rock",
     "type": "surf",
     "title": "Snapper rock",
