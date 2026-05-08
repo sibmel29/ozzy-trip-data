@@ -1,5 +1,36 @@
 [
   {
+    "id": "taylor-yamba",
+    "type": "fishing",
+    "title": "Taylor @ Yamba",
+    "date": "2026-03-15",
+    "coordinates": [
+      153.365679,
+      -29.431914
+    ],
+    "marker": "fish",
+    "summary": "Nice Taylor",
+    "body": [
+      "Good ceviche"
+    ],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Yamba",
+      "Species": "Taylor",
+      "Count": "1",
+      "Size": "30",
+      "Kept or released": "kept",
+      "Bait or lure": "Jerkbait hard lure",
+      "Conditions": "Wavy"
+    },
+    "published": true,
+    "source_issue": "14",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/14"
+  },
+  {
     "id": "bream-evans-head",
     "type": "fishing",
     "title": "Bream @ Evans Head",
