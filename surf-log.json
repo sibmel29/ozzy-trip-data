@@ -1,5 +1,31 @@
 [
   {
+    "id": "bungan-beach",
+    "type": "surf",
+    "title": "Bungan beach",
+    "date": "",
+    "coordinates": [
+      151.321907,
+      -33.665691
+    ],
+    "marker": "surf",
+    "summary": "A little secret",
+    "body": [
+      "Almost everywhere you can access by car, but bungan is one of the only places where you can't, which means it's filtering some of the lazy guys, and gives you a good chance to grabs some waves when you're hungry!"
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Bungan",
+      "Rating": "3/5"
+    },
+    "published": true,
+    "source_issue": "24",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/24"
+  },
+  {
     "id": "newport-my-home-spot",
     "type": "surf",
     "title": "Newport, my home spot.",
