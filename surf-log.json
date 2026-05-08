@@ -1,5 +1,31 @@
 [
   {
+    "id": "freshie-home-spot",
+    "type": "surf",
+    "title": "Freshie. Home spot",
+    "date": "",
+    "coordinates": [
+      151.290914,
+      -33.783507
+    ],
+    "marker": "surf",
+    "summary": "Famous for longboards and beginners.",
+    "body": [
+      "While it's a longboards wave mostly, freshie being my home spot (running from home with my board under the arm, I'd be in the water in 2 minutes) I still got tons of good boogy sessions here. Especially around Christmas when a bit swell hit us. There were waves up to 2/3 meters, it was the first real big waves I surfed in Australia."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Freshwater",
+      "Rating": "5/5"
+    },
+    "published": true,
+    "source_issue": "28",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/28"
+  },
+  {
     "id": "curl-curl",
     "type": "surf",
     "title": "Curl curl",
