@@ -1,5 +1,33 @@
 [
   {
+    "id": "manly",
+    "type": "surf",
+    "title": "Manly",
+    "date": "",
+    "coordinates": [
+      151.289385,
+      -33.788241
+    ],
+    "marker": "surf",
+    "summary": "Always crowded, lots of beginners.",
+    "body": [
+      "Manly is the most populated place in the nothern beaches. A lot of beginners in the water here, but also a lot of pros! When the condition are met, manly is home to some of the most powerful and giant waves around here. (Deadman's).",
+      "North steyn, the northern part of the beach, is where I had most of my sessions. While it's crowded, I got a nice few ones."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Manly",
+      "Rating": "3/5",
+      "Crowd": "Crowded always"
+    },
+    "published": true,
+    "source_issue": "29",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/29"
+  },
+  {
     "id": "freshie-home-spot",
     "type": "surf",
     "title": "Freshie. Home spot",
