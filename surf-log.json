@@ -1,5 +1,30 @@
 [
   {
+    "id": "mona-vale",
+    "type": "surf",
+    "title": "Mona Vale",
+    "date": "",
+    "coordinates": [
+      151.313994,
+      -33.679764
+    ],
+    "marker": "surf",
+    "summary": "",
+    "body": [
+      "Mona vale is a good spot but lot of current."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Rating": "3/5"
+    },
+    "published": true,
+    "source_issue": "25",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/25"
+  },
+  {
     "id": "bungan-beach",
     "type": "surf",
     "title": "Bungan beach",
