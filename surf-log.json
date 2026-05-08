@@ -1,5 +1,33 @@
 [
   {
+    "id": "whaly",
+    "type": "surf",
+    "title": "Whaly",
+    "date": "",
+    "coordinates": [
+      151.332546,
+      -33.611037
+    ],
+    "marker": "surf",
+    "summary": "One of my home spots",
+    "body": [
+      "I had countless sessions at Whaly. \nThe weekends get hectic, but it's always great fun. It's vanlife paradise territory, so it's always good to camp out and surf there."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Whale Beach",
+      "Wave size": "2",
+      "Rating": "4/5",
+      "Crowd": "Sometimes busy"
+    },
+    "published": true,
+    "source_issue": "20",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/20"
+  },
+  {
     "id": "barrels-seal-rocks",
     "type": "surf",
     "title": "Barrels @ Seal rocks",
