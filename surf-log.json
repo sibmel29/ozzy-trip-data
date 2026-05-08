@@ -1,5 +1,33 @@
 [
   {
+    "id": "scoots-head",
+    "type": "surf",
+    "title": "Scoots Head",
+    "date": "",
+    "coordinates": [
+      152.997409,
+      -30.742778
+    ],
+    "marker": "surf",
+    "summary": "Nice long right",
+    "body": [
+      "Very long right, breaking way behind the rocks. I jumped in after a long walk on the reef, and found a big right, very long! The locals were very friendly and welcoming, what a great experience."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Scotts Head",
+      "Wave size": "1.5",
+      "Rating": "4/5",
+      "Crowd": "Not too busy"
+    },
+    "published": true,
+    "source_issue": "18",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/18"
+  },
+  {
     "id": "duranbah",
     "type": "surf",
     "title": "Duranbah",
