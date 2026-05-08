@@ -1,5 +1,33 @@
 [
   {
+    "id": "duranbah",
+    "type": "surf",
+    "title": "Duranbah",
+    "date": "",
+    "coordinates": [
+      153.552769,
+      -28.166403
+    ],
+    "marker": "surf",
+    "summary": "Duranbah, a full blown secret spot",
+    "body": [
+      "Turns out the left of d-bah is almost boogy only. Met a few guys in there, pretty nice left and good vibes."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "D-bah",
+      "Wave size": "1.5m",
+      "Rating": "3/5",
+      "Crowd": "Crowded"
+    },
+    "published": true,
+    "source_issue": "16",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/16"
+  },
+  {
     "id": "small-lefts-mystics",
     "type": "surf",
     "title": "Small lefts @ Mystics",
