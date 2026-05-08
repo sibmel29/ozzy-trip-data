@@ -1,5 +1,33 @@
 [
   {
+    "id": "small-lefts-mystics",
+    "type": "surf",
+    "title": "Small lefts @ Mystics",
+    "date": "",
+    "coordinates": [
+      150.8554,
+      -34.6152
+    ],
+    "marker": "surf",
+    "summary": "Small waves",
+    "body": [
+      "Mystics is a famous boogy wave, a big left that is praised by riders in Australia. When I visited, there was only a small wave, but it was still fun."
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Mystics",
+      "Wave size": "0.5 - 1 m",
+      "Rating": "2/5",
+      "Crowd": "2/3"
+    },
+    "published": true,
+    "source_issue": "15",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/15"
+  },
+  {
     "id": "coolum",
     "type": "surf",
     "title": "Coolum",
