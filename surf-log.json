@@ -1,5 +1,34 @@
 [
   {
+    "id": "barrels-seal-rocks",
+    "type": "surf",
+    "title": "Barrels @ Seal rocks",
+    "date": "",
+    "coordinates": [
+      152.536759,
+      -32.443443
+    ],
+    "marker": "surf",
+    "summary": "Barrels, clean waves & dolphins",
+    "body": [
+      "First sesh, very clean waves! Second early morning, lots of dolphins around! Got a few good waves but suddenly it stopped for over 30min, the water was strangely extremely cold!?"
+    ],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Seal rocks",
+      "Wave size": "2",
+      "Wind": "Offshore",
+      "Rating": "3/5",
+      "Crowd": "Busy"
+    },
+    "published": true,
+    "source_issue": "19",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/19"
+  },
+  {
     "id": "scoots-head",
     "type": "surf",
     "title": "Scoots Head",
