@@ -48478,7 +48478,12 @@
           "Add photos by uploading 1.jpg, 2.jpg, 3.jpg, and so on to hike-media/noosa/.",
           "Add a longer recap by creating a matching entry in hike_stories.json."
         ],
-        "images": [],
+        "images": [
+          {
+            "src": "hike-media/noosa/IMG20260508102237.jpg",
+            "alt": "Noosa photo 1"
+          }
+        ],
         "tags": [
           "hike"
         ],
