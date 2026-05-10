@@ -1,5 +1,35 @@
 [
   {
+    "id": "stripped-sea-perch",
+    "type": "fishing",
+    "title": "Stripped Sea Perch",
+    "date": "2026-05-10",
+    "coordinates": [
+      153.101405,
+      -26.647452
+    ],
+    "marker": "fish",
+    "summary": "",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Mudjimba",
+      "Species": "Stripped Sea Perch",
+      "Count": "2",
+      "Size": "15",
+      "Caught time": "18:30",
+      "Kept or released": "released",
+      "Bait or lure": "Shrimp",
+      "Conditions": "Night"
+    },
+    "published": true,
+    "source_issue": "30",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/30"
+  },
+  {
     "id": "taylor-yamba",
     "type": "fishing",
     "title": "Taylor @ Yamba",
