@@ -1067,27 +1067,25 @@ function surfLabel(entry) {
   let spot = details["Surf spot"] || entry.title || "Surf";
   let size = details["Wave size"] ? ` · ${details["Wave size"]}` : "";
   let rating = details.Rating ? ` · ${details.Rating}` : "";
-  let date = entry.date ? ` · ${entry.date}` : "";
-  return `${spot}${size}${rating}${date}`;
+  return `${spot}${size}${rating}`;
 }
 
 function renderSurfStats(entries) {
-  let spotCounts = new Map();
   let publishedEntries = entries.filter(entry => entry.published !== false);
 
-  publishedEntries.forEach(entry => {
-    let details = entry.details || {};
-    let spot = String(details["Surf spot"] || entry.title || "Unknown").trim() || "Unknown";
-    spotCounts.set(spot, (spotCounts.get(spot) || 0) + 1);
-  });
-
-  let rows = [...spotCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  let total = publishedEntries.length;
+  let rows = publishedEntries
+    .map(entry => {
+      let details = entry.details || {};
+      let spot = String(details["Surf spot"] || entry.title || "Unknown").trim() || "Unknown";
+      let rating = details.Rating ? ` ${details.Rating}` : "";
+      return [spot, rating];
+    })
+    .sort((a, b) => a[0].localeCompare(b[0]));
 
   surfStats.innerHTML = rows.length
-    ? `<span><span>Sessions</span><strong>${total.toLocaleString()}</strong></span>` +
-      rows.map(([spot, count]) => `<span><span>${escapeHTML(spot)}</span><strong>${count.toLocaleString()}</strong></span>`).join("")
-    : "<span>No surfs loaded</span>";
+    ? `<span><span>Spots</span><strong>${rows.length.toLocaleString()}</strong></span>` +
+      rows.map(([spot, rating]) => `<span><span>${escapeHTML(spot)}</span><strong>${escapeHTML(rating)}</strong></span>`).join("")
+    : "<span>No surf spots loaded</span>";
 }
 
 function addSurfMarkers(entries) {

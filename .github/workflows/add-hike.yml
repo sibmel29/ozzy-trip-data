@@ -1,0 +1,64 @@
+name: Manage hikes
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  add-hike:
+    if: contains(github.event.issue.labels.*.name, 'hike-log') || startsWith(github.event.issue.title, '[HIKE]') || contains(github.event.issue.body, '### GPX file')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install image tools
+        run: pip install pillow
+
+      - name: Apply hike issue
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: python scripts/add_hike_from_issue.py
+
+      - name: Regenerate hike layer
+        run: python process_hikes.py
+
+      - name: Commit hike update
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add hikes/gpx hike-media hike_stories.json hikes.geojson hikes_stats.json
+          git diff --cached --quiet && echo "No hike changes to commit" && exit 0
+          git commit -m "Update hike from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Comment and close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const result = JSON.parse(fs.readFileSync("hike_result.json", "utf8"));
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Added hike **${result.title}** with id \`${result.id}\`.`
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: "closed"
+            });

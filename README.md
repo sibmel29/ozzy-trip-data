@@ -122,14 +122,14 @@ image list is replaced; if you leave it blank, existing images stay unchanged.
 
 ## Fishing and surf logs
 
-Fishing and surf sessions are stored separately from normal POIs:
+Fishing catches and surf spots are stored separately from normal POIs:
 
 - `fishing-log.json`
 - `surf-log.json`
 - `fishing-media/`
 - `surf-media/`
 
-Use the **Add fishing log** and **Add surf log** issue forms from your phone.
+Use the **Add fishing log** and **Add surf spot** issue forms from your phone.
 Each form accepts a Google Maps link or coordinates, story text, tags, optional
 images, and log-specific details such as species, count, fish size, caught time,
 conditions, wave size, wind, tide, board, and rating.
@@ -140,9 +140,10 @@ closes it. Fishing and surf entries live behind their own floating toggle menus,
 so normal POIs stay always visible and activity logs do not clutter the map.
 The fishing menu shows species totals like `Tailor 10`, `Bream 6`, and `GT 2`;
 toggling it shows each catch marker with its species, size, and timestamp in the
-marker tooltip and popup details. The surf menu shows session totals by surf
-spot, and toggling it shows each surf marker with spot, wave size, rating, and
-date.
+marker tooltip and popup details. The surf menu shows the fixed list of surf
+spots, and toggling it shows each surf marker with spot, wave size, and rating.
+Adding the same surf spot again updates that spot instead of creating a second
+session marker.
 
 `fish_species_nsw.json` is a small reference list derived from the NSW DPI fish
 species index. It stores species names and freshwater/saltwater category only,
@@ -156,7 +157,13 @@ python3 -m http.server 8001
 
 ## Hike overlay
 
-Raw hike GPX files live in `hikes/gpx/`. Regenerate the hike overlay with:
+The easiest way to add a hike from your phone is the **Add hike** issue form.
+Attach the GPX file in the form, add optional text and photos, then submit. The
+workflow saves the GPX to `hikes/gpx/`, stores text/photos in `hike_stories.json`
+and `hike-media/`, regenerates `hikes.geojson` and `hikes_stats.json`, commits
+the result, and closes the issue.
+
+Raw hike GPX files still live in `hikes/gpx/`. Regenerate the hike overlay with:
 
 ```sh
 python3 process_hikes.py

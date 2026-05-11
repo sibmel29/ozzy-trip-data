@@ -1,0 +1,65 @@
+name: Add hike
+description: Add a hike GPX, story, and photos to the hike layer.
+title: "[HIKE] "
+labels: ["hike-log"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Attach the GPX file in the GPX field, then add any recap text or photos. GitHub Actions will save the GPX, regenerate the hike layer, and connect the story to the route.
+  - type: input
+    id: title
+    attributes:
+      label: Hike title
+      description: This becomes the hike id, media folder, and map popup title.
+      placeholder: "Mount Coolum summit"
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Optional. Use YYYY-MM-DD, for example 2026-05-11.
+      placeholder: "2026-05-11"
+    validations:
+      required: false
+  - type: textarea
+    id: gpx_file
+    attributes:
+      label: GPX file
+      description: Required. Drag/upload the GPX file here, or paste a direct GPX URL.
+      placeholder: Attach the GPX file here.
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Short summary
+      description: One sentence shown at the top of the hike popup.
+      placeholder: Quick note about the hike.
+    validations:
+      required: false
+  - type: textarea
+    id: story
+    attributes:
+      label: Story text
+      description: Longer recap. Blank is okay.
+      placeholder: Write the story here.
+    validations:
+      required: false
+  - type: textarea
+    id: images
+    attributes:
+      label: Image paths
+      description: Optional. Paste uploaded GitHub issue image links, one per line.
+      placeholder: https://github.com/user-attachments/assets/...
+    validations:
+      required: false
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Optional comma-separated tags.
+      placeholder: "hike, mountain"
+    validations:
+      required: false

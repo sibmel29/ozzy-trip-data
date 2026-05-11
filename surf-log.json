@@ -411,9 +411,9 @@
     "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/10"
   },
   {
-    "id": "brunswick-madness",
+    "id": "brunswick-head",
     "type": "surf",
-    "title": "Brunswick madness",
+    "title": "Brunswick Head",
     "date": "2026-04-12",
     "coordinates": [
       153.557799,
@@ -433,7 +433,8 @@
       "Wave size": "3 m",
       "Wind": "Offshore",
       "Rating": "5/5",
-      "Crowd": "Rather busy"
+      "Crowd": "Rather busy",
+      "First surfed": "2026-04-12"
     },
     "published": true,
     "source_issue": "7",

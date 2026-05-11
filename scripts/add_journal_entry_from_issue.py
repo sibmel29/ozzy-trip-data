@@ -23,9 +23,10 @@ MEDIA_FOLDER = Path(os.environ.get("MEDIA_FOLDER", f"{JOURNAL_TYPE}-media"))
 
 TYPE_CONFIG = {
     "fishing": {
-        "title_label": "Fishing log title",
+        "title_labels": ["Fishing log title"],
         "marker": "fish",
         "default_tag": "fishing",
+        "unique_by": "issue",
         "detail_labels": [
             "Spot name",
             "Species",
@@ -38,11 +39,13 @@ TYPE_CONFIG = {
         ],
     },
     "surf": {
-        "title_label": "Surf log title",
+        "title_labels": ["Surf spot", "Surf log title"],
         "marker": "surf",
         "default_tag": "surf",
+        "unique_by": "id",
         "detail_labels": [
             "Surf spot",
+            "First surfed",
             "Wave size",
             "Wind",
             "Tide",
@@ -54,12 +57,17 @@ TYPE_CONFIG = {
 }
 
 
-def unique_id(base_id, issue_number, entries):
+def unique_id(base_id, issue_number, entries, unique_by="issue"):
     source_issue = str(issue_number)
 
-    for entry in entries:
-        if str(entry.get("source_issue", "")) == source_issue:
-            return entry.get("id", base_id), entry
+    if unique_by == "issue":
+        for entry in entries:
+            if str(entry.get("source_issue", "")) == source_issue:
+                return entry.get("id", base_id), entry
+    else:
+        for entry in entries:
+            if entry.get("id") == base_id:
+                return base_id, entry
 
     existing_ids = {entry.get("id") for entry in entries}
 
@@ -77,6 +85,15 @@ def unique_id(base_id, issue_number, entries):
     return f"{issue_id}-{index}", None
 
 
+def first_value(sections, labels, default=""):
+    for label in labels:
+        value = value_for(sections, label)
+        if value:
+            return value
+
+    return default
+
+
 def details_from_sections(sections, labels):
     details = {}
 
@@ -88,10 +105,13 @@ def details_from_sections(sections, labels):
     return details
 
 
-def images_from_sections(sections, entry_id, title):
+def images_from_sections(sections, entry_id, title, existing=None):
     entries = image_entries_for(value_for(sections, "Image paths"))
 
     if not entries:
+        if existing:
+            return existing.get("images", [])
+
         media_folder = MEDIA_FOLDER / entry_id
         media_folder.mkdir(parents=True, exist_ok=True)
         (media_folder / ".gitkeep").touch()
@@ -102,32 +122,35 @@ def images_from_sections(sections, entry_id, title):
 
 def build_entry(sections, issue_number, issue_url, entries):
     config = TYPE_CONFIG[JOURNAL_TYPE]
-    title = value_for(sections, config["title_label"])
+    title = first_value(sections, config["title_labels"])
 
     if not title:
-        raise ValueError(f"{config['title_label']} is required")
+        raise ValueError(f"{config['title_labels'][0]} is required")
 
-    entry_id, existing = unique_id(slugify(title), issue_number, entries)
+    entry_id, existing = unique_id(slugify(title), issue_number, entries, config["unique_by"])
     original_media_folder = add_poi_from_issue.POI_MEDIA_FOLDER
     add_poi_from_issue.POI_MEDIA_FOLDER = MEDIA_FOLDER
 
     try:
-        images = images_from_sections(sections, entry_id, title)
+        images = images_from_sections(sections, entry_id, title, existing)
     finally:
         add_poi_from_issue.POI_MEDIA_FOLDER = original_media_folder
+
+    previous_details = existing.get("details", {}) if existing else {}
+    details = {**previous_details, **details_from_sections(sections, config["detail_labels"])}
 
     entry = {
         "id": entry_id,
         "type": JOURNAL_TYPE,
         "title": title,
-        "date": value_for(sections, "Date"),
+        "date": value_for(sections, "Date", existing.get("date", "") if existing else ""),
         "coordinates": coordinates_from_sections(sections, existing),
         "marker": config["marker"],
-        "summary": value_for(sections, "Short summary"),
-        "body": parse_paragraphs(value_for(sections, "Story text")),
+        "summary": value_for(sections, "Short summary", existing.get("summary", "") if existing else ""),
+        "body": parse_paragraphs(value_for(sections, "Story text")) if value_for(sections, "Story text") else (existing.get("body", []) if existing else []),
         "images": images,
-        "tags": parse_tags(value_for(sections, "Tags")) or [config["default_tag"]],
-        "details": details_from_sections(sections, config["detail_labels"]),
+        "tags": parse_tags(value_for(sections, "Tags")) or (existing.get("tags", []) if existing else [config["default_tag"]]),
+        "details": details,
         "published": published_from_sections(sections, existing),
         "source_issue": str(issue_number),
         "source_url": issue_url,

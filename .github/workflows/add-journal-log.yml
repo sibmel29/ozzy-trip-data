@@ -64,7 +64,7 @@ jobs:
             });
 
   surf-log:
-    if: contains(github.event.issue.labels.*.name, 'surf-log') || startsWith(github.event.issue.title, '[SURF]') || contains(github.event.issue.body, '### Surf log title')
+    if: contains(github.event.issue.labels.*.name, 'surf-log') || startsWith(github.event.issue.title, '[SURF]') || contains(github.event.issue.body, '### Surf spot') || contains(github.event.issue.body, '### Surf log title')
     runs-on: ubuntu-latest
 
     steps:
@@ -108,7 +108,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `${result.action === "updated" ? "Updated" : "Added"} surf log **${result.title}** in \`surf-log.json\` with id \`${result.id}\`.`
+              body: `${result.action === "updated" ? "Updated" : "Added"} surf spot **${result.title}** in \`surf-log.json\` with id \`${result.id}\`.`
             });
             await github.rest.issues.update({
               owner: context.repo.owner,

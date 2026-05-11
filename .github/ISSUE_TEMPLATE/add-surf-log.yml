@@ -1,24 +1,25 @@
-name: Add surf log
-description: Add a surf journal entry to the map.
+name: Add surf spot
+description: Add or update a surf spot on the map.
 title: "[SURF] "
 labels: ["surf-log"]
 body:
   - type: markdown
     attributes:
       value: |
-        Fill this in from your phone. When you submit, GitHub Actions will add the entry to `surf-log.json`.
+        Fill this in from your phone. When you submit, GitHub Actions will add or update one spot in `surf-log.json`.
   - type: input
-    id: title
+    id: surf_spot
     attributes:
-      label: Surf log title
-      description: A short title for this surf.
-      placeholder: "Morning surf at The Pass"
+      label: Surf spot
+      description: The spot name. Reusing the same spot name updates that spot instead of adding a new session.
+      placeholder: "The Pass"
     validations:
       required: true
   - type: input
     id: date
     attributes:
       label: Date
+      description: Optional. Use YYYY-MM-DD, for example 2026-05-07.
       placeholder: "2026-05-07"
     validations:
       required: false
@@ -47,10 +48,11 @@ body:
     validations:
       required: false
   - type: input
-    id: surf_spot
+    id: first_surfed
     attributes:
-      label: Surf spot
-      placeholder: "The Pass"
+      label: First surfed
+      description: Optional. Use this if the first surf date is different from the date above.
+      placeholder: "2026-04-12"
     validations:
       required: false
   - type: input
@@ -106,14 +108,14 @@ body:
     attributes:
       label: Short summary
       description: One sentence shown at the top of the popup.
-      placeholder: Quick note about the session.
+      placeholder: Quick note about the spot.
     validations:
       required: false
   - type: textarea
     id: story
     attributes:
       label: Story text
-      description: Longer recap. Blank is okay.
+      description: Longer recap of the spot. Blank keeps existing text when updating.
       placeholder: Write the story here.
     validations:
       required: false
