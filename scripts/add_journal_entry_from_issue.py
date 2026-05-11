@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from pathlib import Path
 
 import add_poi_from_issue
@@ -102,8 +103,83 @@ def details_from_sections(sections, labels):
     return details
 
 
+def parse_species_list(value):
+    if not value:
+        return []
+
+    species = []
+
+    for line in value.splitlines():
+        line = line.strip()
+
+        if not line:
+            continue
+
+        line = line.lstrip("-").strip()
+
+        if line and line not in {"_No response_"}:
+            species.append(line)
+
+    if len(species) <= 1:
+        species = [
+            item.strip()
+            for item in re.split(r"[,;]", value)
+            if item.strip() and item.strip() not in {"_No response_"}
+        ]
+
+    return species
+
+
+def catch_details_from_sections(sections):
+    details = {}
+
+    for line in value_for(sections, "Catch details").splitlines():
+        line = line.strip().lstrip("-").strip()
+
+        if not line:
+            continue
+
+        species = line
+        count = ""
+        size = ""
+        count_match = re.search(r"\bx\s*(\d+(?:\.\d+)?)\b", line, re.IGNORECASE)
+
+        if count_match:
+            count = count_match.group(1)
+            species = line[:count_match.start()].strip(" ,-")
+            remainder = line[count_match.end():].strip(" ,-")
+            size = remainder
+        elif "," in line:
+            parts = [part.strip() for part in line.split(",")]
+            species = parts[0]
+            size = ", ".join(part for part in parts[1:] if part)
+
+        if species:
+            details[species.lower()] = {"species": species, "count": count, "size": size}
+
+    return details
+
+
 def fishing_catches_from_sections(sections, existing=None):
     catches = []
+    detail_lookup = catch_details_from_sections(sections)
+    species_values = parse_species_list(value_for(sections, "Species caught"))
+    species_values.extend(parse_species_list(value_for(sections, "Other species")))
+
+    for species in species_values:
+        detail = detail_lookup.get(species.lower(), {"species": species})
+        catch = {"species": detail.get("species", species)}
+
+        if detail.get("count"):
+            catch["count"] = detail["count"]
+
+        if detail.get("size"):
+            catch["size"] = detail["size"]
+
+        catches.append(catch)
+
+    if catches:
+        return catches
 
     for index in range(1, 5):
         species = value_for(sections, f"Species {index}")
