@@ -131,8 +131,10 @@ Fishing catches and surf spots are stored separately from normal POIs:
 
 Use the **Add fishing log** and **Add surf spot** issue forms from your phone.
 Each form accepts a Google Maps link or coordinates, story text, tags, optional
-images, and log-specific details such as species, count, fish size, caught time,
-conditions, wave size, wind, tide, board, and rating.
+images, and log-specific details. The fishing form has four catch slots, so one
+session can include several species, each with its own count and size. The surf
+form stores fixed surf spots, with details such as wave size, wind, tide, board,
+and rating.
 
 GitHub Actions writes the entry to the matching JSON file, downloads and
 compresses attached images, commits the update, comments on the issue, and

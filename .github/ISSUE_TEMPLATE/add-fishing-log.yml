@@ -61,26 +61,225 @@ body:
       placeholder: "Jervis Bay"
     validations:
       required: false
-  - type: input
-    id: species
+  - type: dropdown
+    id: species_1
     attributes:
-      label: Species
-      description: Species or target fish. Free text for now.
-      placeholder: "Dusky flathead"
+      label: Species 1
+      description: Main species caught in this session.
+      options:
+        - Other / not listed
+        - No catch
+        - Albacore
+        - Amberjack
+        - Atlantic Salmon
+        - Australian Bass
+        - Australian Salmon
+        - Balmain Bug
+        - Black Bream
+        - Blue Swimmer Crab
+        - Bonito
+        - Brown Trout
+        - Carp
+        - Cobia
+        - Dusky Flathead
+        - Estuary Perch
+        - Garfish
+        - Golden Perch
+        - Hairtail
+        - Leatherjacket
+        - Luderick
+        - Mahi Mahi
+        - Mangrove Jack
+        - Mulloway
+        - Murray Cod
+        - Pearl Perch
+        - Rainbow Trout
+        - Redfin Perch
+        - Rock Blackfish
+        - Sand Whiting
+        - Snapper
+        - Southern Bluefin Tuna
+        - Squid
+        - Tailor
+        - Tarwhine
+        - Trevallies
+        - Wahoo
+        - Yabby
+        - Yellowfin Bream
+        - Yellowfin Tuna
+        - Yellowtail Kingfish
+      default: 0
     validations:
       required: false
   - type: input
-    id: count
+    id: species_1_other
     attributes:
-      label: Count
+      label: Species 1 other
+      description: Fill this only if Species 1 is Other / not listed.
+      placeholder: "Pompano"
+    validations:
+      required: false
+  - type: input
+    id: count_1
+    attributes:
+      label: Count 1
       placeholder: "2"
     validations:
       required: false
   - type: input
-    id: size
+    id: size_1
     attributes:
-      label: Size
+      label: Size 1
       placeholder: "42 cm"
+    validations:
+      required: false
+  - type: dropdown
+    id: species_2
+    attributes:
+      label: Species 2
+      description: Optional second species.
+      options:
+        - none
+        - Other / not listed
+        - Albacore
+        - Amberjack
+        - Atlantic Salmon
+        - Australian Bass
+        - Australian Salmon
+        - Black Bream
+        - Bonito
+        - Dusky Flathead
+        - Golden Perch
+        - Luderick
+        - Mahi Mahi
+        - Mulloway
+        - Sand Whiting
+        - Snapper
+        - Squid
+        - Tailor
+        - Trevallies
+        - Yellowfin Bream
+        - Yellowtail Kingfish
+      default: 0
+    validations:
+      required: false
+  - type: input
+    id: species_2_other
+    attributes:
+      label: Species 2 other
+      placeholder: "Species name"
+    validations:
+      required: false
+  - type: input
+    id: count_2
+    attributes:
+      label: Count 2
+      placeholder: "1"
+    validations:
+      required: false
+  - type: input
+    id: size_2
+    attributes:
+      label: Size 2
+      placeholder: "35 cm"
+    validations:
+      required: false
+  - type: dropdown
+    id: species_3
+    attributes:
+      label: Species 3
+      description: Optional third species.
+      options:
+        - none
+        - Other / not listed
+        - Albacore
+        - Amberjack
+        - Australian Bass
+        - Australian Salmon
+        - Black Bream
+        - Bonito
+        - Dusky Flathead
+        - Luderick
+        - Mahi Mahi
+        - Mulloway
+        - Sand Whiting
+        - Snapper
+        - Squid
+        - Tailor
+        - Trevallies
+        - Yellowfin Bream
+        - Yellowtail Kingfish
+      default: 0
+    validations:
+      required: false
+  - type: input
+    id: species_3_other
+    attributes:
+      label: Species 3 other
+      placeholder: "Species name"
+    validations:
+      required: false
+  - type: input
+    id: count_3
+    attributes:
+      label: Count 3
+      placeholder: "1"
+    validations:
+      required: false
+  - type: input
+    id: size_3
+    attributes:
+      label: Size 3
+      placeholder: "35 cm"
+    validations:
+      required: false
+  - type: dropdown
+    id: species_4
+    attributes:
+      label: Species 4
+      description: Optional fourth species.
+      options:
+        - none
+        - Other / not listed
+        - Albacore
+        - Amberjack
+        - Australian Bass
+        - Australian Salmon
+        - Black Bream
+        - Bonito
+        - Dusky Flathead
+        - Luderick
+        - Mahi Mahi
+        - Mulloway
+        - Sand Whiting
+        - Snapper
+        - Squid
+        - Tailor
+        - Trevallies
+        - Yellowfin Bream
+        - Yellowtail Kingfish
+      default: 0
+    validations:
+      required: false
+  - type: input
+    id: species_4_other
+    attributes:
+      label: Species 4 other
+      placeholder: "Species name"
+    validations:
+      required: false
+  - type: input
+    id: count_4
+    attributes:
+      label: Count 4
+      placeholder: "1"
+    validations:
+      required: false
+  - type: input
+    id: size_4
+    attributes:
+      label: Size 4
+      placeholder: "35 cm"
     validations:
       required: false
   - type: dropdown

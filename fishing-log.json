@@ -23,7 +23,14 @@
       "Caught time": "18:30",
       "Kept or released": "released",
       "Bait or lure": "Shrimp",
-      "Conditions": "Night"
+      "Conditions": "Night",
+      "Catches": [
+        {
+          "species": "Stripped Sea Perch",
+          "count": "2",
+          "size": "15"
+        }
+      ]
     },
     "published": true,
     "source_issue": "30",
@@ -54,7 +61,14 @@
       "Size": "30",
       "Kept or released": "kept",
       "Bait or lure": "Jerkbait hard lure",
-      "Conditions": "Wavy"
+      "Conditions": "Wavy",
+      "Catches": [
+        {
+          "species": "Taylor",
+          "count": "1",
+          "size": "30"
+        }
+      ]
     },
     "published": true,
     "source_issue": "14",
@@ -90,7 +104,14 @@
       "Size": "25/30",
       "Kept or released": "kept",
       "Bait or lure": "Kanji bait",
-      "Conditions": "Rocks dawn"
+      "Conditions": "Rocks dawn",
+      "Catches": [
+        {
+          "species": "Yellowtail Bream",
+          "count": "2",
+          "size": "25/30"
+        }
+      ]
     },
     "published": true,
     "source_issue": "12",
@@ -126,7 +147,14 @@
       "Count": "1",
       "Size": "3 Kg",
       "Kept or released": "kept",
-      "Bait or lure": "Polespear"
+      "Bait or lure": "Polespear",
+      "Catches": [
+        {
+          "species": "Cuttlefish",
+          "count": "1",
+          "size": "3 Kg"
+        }
+      ]
     },
     "published": true,
     "source_issue": "11",
@@ -156,7 +184,14 @@
       "Count": "4",
       "Size": "40+",
       "Kept or released": "kept",
-      "Bait or lure": "Polespear"
+      "Bait or lure": "Polespear",
+      "Catches": [
+        {
+          "species": "Wrasse",
+          "count": "4",
+          "size": "40+"
+        }
+      ]
     },
     "published": true,
     "source_issue": "9",
@@ -186,7 +221,14 @@
       "Count": "10",
       "Size": "30",
       "Kept or released": "kept",
-      "Bait or lure": "Lure (Asturias & Raglou)"
+      "Bait or lure": "Lure (Asturias & Raglou)",
+      "Catches": [
+        {
+          "species": "Taylor",
+          "count": "10",
+          "size": "30"
+        }
+      ]
     },
     "published": true,
     "source_issue": "8",
@@ -215,7 +257,14 @@
       "Size": "35",
       "Caught time": "13:00",
       "Kept or released": "kept",
-      "Bait or lure": "Shrimp"
+      "Bait or lure": "Shrimp",
+      "Catches": [
+        {
+          "species": "Trevally",
+          "count": "1",
+          "size": "35"
+        }
+      ]
     },
     "published": true,
     "source_issue": "6",

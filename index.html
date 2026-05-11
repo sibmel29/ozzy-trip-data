@@ -814,12 +814,28 @@ function renderStory() {
   ` : "";
   let body = (poi.body || []).map(paragraph => `<p>${escapeHTML(paragraph)}</p>`).join("");
   let tags = (poi.tags || []).map(tag => `<span>${escapeHTML(tag)}</span>`).join("");
+  function detailValue(value) {
+    if (Array.isArray(value)) {
+      return value.map(item => {
+        if (item && typeof item === "object") {
+          let count = item.count ? ` x${item.count}` : "";
+          let size = item.size ? ` (${item.size})` : "";
+          return `${item.species || "Catch"}${count}${size}`;
+        }
+
+        return String(item);
+      }).join(", ");
+    }
+
+    return value;
+  }
+
   let details = Object.entries(poi.details || {})
     .filter(([, value]) => value !== null && value !== undefined && String(value).trim() !== "")
     .map(([key, value]) => `
       <div>
         <dt>${escapeHTML(key)}</dt>
-        <dd>${escapeHTML(value)}</dd>
+        <dd>${escapeHTML(detailValue(value))}</dd>
       </div>
     `).join("");
 
@@ -975,11 +991,38 @@ fishMenuButton.onclick = () => {
 
 function fishLabel(entry) {
   let details = entry.details || {};
-  let species = details.Species || entry.title || "Catch";
-  let size = details.Size ? ` · ${details.Size}` : "";
+  let catches = catchesForEntry(entry);
+  let species = catches.length
+    ? catches.map(catchItem => `${catchItem.species}${catchItem.count ? ` x${catchItem.count}` : ""}`).join(", ")
+    : details.Species || entry.title || "Catch";
+  let size = catches.length === 1 && catches[0].size ? ` · ${catches[0].size}` : "";
   let timestamp = details["Caught time"] || entry.date || "";
   let time = timestamp ? ` · ${timestamp}` : "";
   return `${species}${size}${time}`;
+}
+
+function catchesForEntry(entry) {
+  let details = entry.details || {};
+
+  if (Array.isArray(details.Catches) && details.Catches.length) {
+    return details.Catches
+      .filter(catchItem => catchItem && catchItem.species)
+      .map(catchItem => ({
+        species: String(catchItem.species).trim(),
+        count: catchItem.count,
+        size: catchItem.size
+      }));
+  }
+
+  if (details.Species) {
+    return [{
+      species: String(details.Species).trim(),
+      count: details.Count,
+      size: details.Size
+    }];
+  }
+
+  return [];
 }
 
 function renderFishStats(entries) {
@@ -988,11 +1031,18 @@ function renderFishStats(entries) {
   entries.forEach(entry => {
     if (entry.published === false) return;
 
-    let details = entry.details || {};
-    let species = String(details.Species || "Unknown").trim() || "Unknown";
-    let count = Number.parseFloat(details.Count || "1");
+    let catches = catchesForEntry(entry);
 
-    totals.set(species, (totals.get(species) || 0) + (Number.isFinite(count) ? count : 1));
+    if (!catches.length) {
+      catches = [{ species: "Unknown", count: 1 }];
+    }
+
+    catches.forEach(catchItem => {
+      let species = String(catchItem.species || "Unknown").trim() || "Unknown";
+      let count = Number.parseFloat(catchItem.count || "1");
+
+      totals.set(species, (totals.get(species) || 0) + (Number.isFinite(count) ? count : 1));
+    });
   });
 
   let rows = [...totals.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));

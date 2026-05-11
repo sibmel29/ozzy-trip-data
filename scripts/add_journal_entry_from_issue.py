@@ -29,9 +29,6 @@ TYPE_CONFIG = {
         "unique_by": "issue",
         "detail_labels": [
             "Spot name",
-            "Species",
-            "Count",
-            "Size",
             "Caught time",
             "Kept or released",
             "Bait or lure",
@@ -105,6 +102,58 @@ def details_from_sections(sections, labels):
     return details
 
 
+def fishing_catches_from_sections(sections, existing=None):
+    catches = []
+
+    for index in range(1, 5):
+        species = value_for(sections, f"Species {index}")
+
+        if species.lower() in {"", "none", "no catch"}:
+            continue
+
+        if species == "Other / not listed":
+            species = value_for(sections, f"Species {index} other")
+
+        if not species:
+            continue
+
+        catch = {"species": species}
+        count = value_for(sections, f"Count {index}")
+        size = value_for(sections, f"Size {index}")
+
+        if count:
+            catch["count"] = count
+
+        if size:
+            catch["size"] = size
+
+        catches.append(catch)
+
+    if catches:
+        return catches
+
+    legacy_species = value_for(sections, "Species")
+
+    if legacy_species:
+        catch = {"species": legacy_species}
+        legacy_count = value_for(sections, "Count")
+        legacy_size = value_for(sections, "Size")
+
+        if legacy_count:
+            catch["count"] = legacy_count
+
+        if legacy_size:
+            catch["size"] = legacy_size
+
+        return [catch]
+
+    if existing:
+        existing_details = existing.get("details", {})
+        return existing_details.get("Catches", [])
+
+    return []
+
+
 def images_from_sections(sections, entry_id, title, existing=None):
     entries = image_entries_for(value_for(sections, "Image paths"))
 
@@ -138,6 +187,16 @@ def build_entry(sections, issue_number, issue_url, entries):
 
     previous_details = existing.get("details", {}) if existing else {}
     details = {**previous_details, **details_from_sections(sections, config["detail_labels"])}
+
+    if JOURNAL_TYPE == "fishing":
+        catches = fishing_catches_from_sections(sections, existing)
+
+        if catches:
+            details["Catches"] = catches
+            first_catch = catches[0]
+            details["Species"] = first_catch.get("species", "")
+            details["Count"] = first_catch.get("count", "")
+            details["Size"] = first_catch.get("size", "")
 
     entry = {
         "id": entry_id,
