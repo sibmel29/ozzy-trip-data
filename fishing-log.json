@@ -1,8 +1,8 @@
 [
   {
-    "id": "stripped-sea-perch",
+    "id": "striped-sea-perch",
     "type": "fishing",
-    "title": "Stripped Sea Perch",
+    "title": "Striped Sea Perch",
     "date": "2026-05-10",
     "coordinates": [
       153.101405,
@@ -17,7 +17,7 @@
     ],
     "details": {
       "Spot name": "Mudjimba",
-      "Species": "Stripped Sea Perch",
+      "Species": "Striped Sea Perch",
       "Count": "2",
       "Size": "15",
       "Caught time": "18:30",
@@ -26,7 +26,7 @@
       "Conditions": "Night",
       "Catches": [
         {
-          "species": "Stripped Sea Perch",
+          "species": "Striped Sea Perch",
           "count": "2",
           "size": "15"
         }
@@ -37,16 +37,16 @@
     "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/30"
   },
   {
-    "id": "taylor-yamba",
+    "id": "tailor-yamba",
     "type": "fishing",
-    "title": "Taylor @ Yamba",
+    "title": "Tailor @ Yamba",
     "date": "2026-03-15",
     "coordinates": [
       153.365679,
       -29.431914
     ],
     "marker": "fish",
-    "summary": "Nice Taylor",
+    "summary": "Nice Tailor",
     "body": [
       "Good ceviche"
     ],
@@ -56,7 +56,7 @@
     ],
     "details": {
       "Spot name": "Yamba",
-      "Species": "Taylor",
+      "Species": "Tailor",
       "Count": "1",
       "Size": "30",
       "Kept or released": "kept",
@@ -64,7 +64,7 @@
       "Conditions": "Wavy",
       "Catches": [
         {
-          "species": "Taylor",
+          "species": "Tailor",
           "count": "1",
           "size": "30"
         }
@@ -198,16 +198,16 @@
     "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/9"
   },
   {
-    "id": "taylors-on-the-rock",
+    "id": "tailor-on-the-rock",
     "type": "fishing",
-    "title": "Taylors on the rock",
+    "title": "Tailor on the rock",
     "date": "2026-02-13",
     "coordinates": [
       151.291797,
       -33.785679
     ],
     "marker": "fish",
-    "summary": "Many taylors",
+    "summary": "Many tailor",
     "body": [
       "Caught one by one on the Raglou,, very cool session."
     ],
@@ -217,14 +217,14 @@
     ],
     "details": {
       "Spot name": "Freshie",
-      "Species": "Taylor",
+      "Species": "Tailor",
       "Count": "10",
       "Size": "30",
       "Kept or released": "kept",
       "Bait or lure": "Lure (Asturias & Raglou)",
       "Catches": [
         {
-          "species": "Taylor",
+          "species": "Tailor",
           "count": "10",
           "size": "30"
         }

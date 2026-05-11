@@ -65,48 +65,29 @@ body:
     id: species_caught
     attributes:
       label: Species caught
-      description: Select every species caught in this session.
+      description: Select every species caught in this session. The first group is beach/ocean, the second group is river/estuary.
       multiple: true
       options:
-        - Albacore
-        - Amberjack
-        - Atlantic Salmon
-        - Australian Bass
-        - Australian Salmon
-        - Balmain Bug
-        - Black Bream
-        - Blue Swimmer Crab
-        - Bonito
-        - Brown Trout
-        - Carp
-        - Cobia
-        - Dusky Flathead
-        - Estuary Perch
-        - Garfish
-        - Golden Perch
-        - Hairtail
-        - Leatherjacket
-        - Luderick
-        - Mahi Mahi
-        - Mangrove Jack
-        - Mulloway
-        - Murray Cod
-        - Pearl Perch
-        - Rainbow Trout
-        - Redfin Perch
-        - Rock Blackfish
-        - Sand Whiting
-        - Snapper
-        - Southern Bluefin Tuna
-        - Squid
         - Tailor
-        - Tarwhine
-        - Trevallies
-        - Wahoo
-        - Yabby
+        - Dusky Flathead
+        - Australian Salmon
         - Yellowfin Bream
-        - Yellowfin Tuna
-        - Yellowtail Kingfish
+        - Sand Whiting
+        - Tarwhine
+        - Trevally
+        - Bonito
+        - Snapper
+        - Squid
+        - Barramundi
+        - Mangrove Jack
+        - Australian Bass
+        - Estuary Perch
+        - Murray Cod
+        - Golden Perch
+        - Sooty Grunter
+        - Saratoga
+        - Archerfish
+        - Eel-tailed Catfish
     validations:
       required: false
   - type: input

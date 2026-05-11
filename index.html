@@ -1001,6 +1001,22 @@ function fishLabel(entry) {
   return `${species}${size}${time}`;
 }
 
+const fishSpeciesAliases = new Map([
+  ["bream", "Yellowfin Bream"],
+  ["flathead", "Dusky Flathead"],
+  ["flaty", "Dusky Flathead"],
+  ["flatty", "Dusky Flathead"],
+  ["stripped sea perch", "Striped Sea Perch"],
+  ["taylor", "Tailor"],
+  ["taylors", "Tailor"],
+  ["trevallies", "Trevally"]
+]);
+
+function normalizeFishSpecies(species) {
+  let clean = String(species || "").trim().replace(/\s+/g, " ");
+  return fishSpeciesAliases.get(clean.toLowerCase()) || clean;
+}
+
 function catchesForEntry(entry) {
   let details = entry.details || {};
 
@@ -1008,7 +1024,7 @@ function catchesForEntry(entry) {
     return details.Catches
       .filter(catchItem => catchItem && catchItem.species)
       .map(catchItem => ({
-        species: String(catchItem.species).trim(),
+        species: normalizeFishSpecies(catchItem.species),
         count: catchItem.count,
         size: catchItem.size
       }));
@@ -1016,7 +1032,7 @@ function catchesForEntry(entry) {
 
   if (details.Species) {
     return [{
-      species: String(details.Species).trim(),
+      species: normalizeFishSpecies(details.Species),
       count: details.Count,
       size: details.Size
     }];

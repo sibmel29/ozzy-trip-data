@@ -54,6 +54,17 @@ TYPE_CONFIG = {
     },
 }
 
+SPECIES_ALIASES = {
+    "bream": "Yellowfin Bream",
+    "flathead": "Dusky Flathead",
+    "flaty": "Dusky Flathead",
+    "flatty": "Dusky Flathead",
+    "stripped sea perch": "Striped Sea Perch",
+    "taylor": "Tailor",
+    "taylors": "Tailor",
+    "trevallies": "Trevally",
+}
+
 
 def unique_id(base_id, issue_number, entries, unique_by="issue"):
     source_issue = str(issue_number)
@@ -103,6 +114,15 @@ def details_from_sections(sections, labels):
     return details
 
 
+def normalize_species_name(species):
+    clean = " ".join(str(species or "").strip().split())
+
+    if not clean:
+        return ""
+
+    return SPECIES_ALIASES.get(clean.lower(), clean)
+
+
 def parse_species_list(value):
     if not value:
         return []
@@ -118,11 +138,11 @@ def parse_species_list(value):
         line = line.lstrip("-").strip()
 
         if line and line not in {"_No response_"}:
-            species.append(line)
+            species.append(normalize_species_name(line))
 
     if len(species) <= 1:
         species = [
-            item.strip()
+            normalize_species_name(item)
             for item in re.split(r"[,;]", value)
             if item.strip() and item.strip() not in {"_No response_"}
         ]
@@ -154,6 +174,8 @@ def catch_details_from_sections(sections):
             species = parts[0]
             size = ", ".join(part for part in parts[1:] if part)
 
+        species = normalize_species_name(species)
+
         if species:
             details[species.lower()] = {"species": species, "count": count, "size": size}
 
@@ -168,7 +190,7 @@ def fishing_catches_from_sections(sections, existing=None):
 
     for species in species_values:
         detail = detail_lookup.get(species.lower(), {"species": species})
-        catch = {"species": detail.get("species", species)}
+        catch = {"species": normalize_species_name(detail.get("species", species))}
 
         if detail.get("count"):
             catch["count"] = detail["count"]
@@ -193,7 +215,7 @@ def fishing_catches_from_sections(sections, existing=None):
         if not species:
             continue
 
-        catch = {"species": species}
+        catch = {"species": normalize_species_name(species)}
         count = value_for(sections, f"Count {index}")
         size = value_for(sections, f"Size {index}")
 
@@ -211,7 +233,7 @@ def fishing_catches_from_sections(sections, existing=None):
     legacy_species = value_for(sections, "Species")
 
     if legacy_species:
-        catch = {"species": legacy_species}
+        catch = {"species": normalize_species_name(legacy_species)}
         legacy_count = value_for(sections, "Count")
         legacy_size = value_for(sections, "Size")
 
