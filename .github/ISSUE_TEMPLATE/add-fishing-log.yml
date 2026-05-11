@@ -93,9 +93,9 @@ body:
   - type: input
     id: other_species
     attributes:
-      label: Other species
-      description: Optional comma-separated species not listed above.
-      placeholder: "Pompano, Striped Sea Perch"
+      label: Other species (free text)
+      description: Optional. Type anything missing from the dropdown. Use commas for several species.
+      placeholder: "Pompano, Striped Sea Perch, Cuttlefish"
     validations:
       required: false
   - type: textarea
