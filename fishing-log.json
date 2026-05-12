@@ -1,5 +1,38 @@
 [
   {
+    "id": "fishing-at-rainbow-beach",
+    "type": "fishing",
+    "title": "Fishing at Rainbow beach",
+    "date": "2026-05-12",
+    "coordinates": [
+      153.171498,
+      -25.946343
+    ],
+    "marker": "fish",
+    "summary": "",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Rainbow Beach",
+      "Kept or released": "released",
+      "Bait or lure": "Bait",
+      "Catches": [
+        {
+          "species": "Sand Whiting"
+        }
+      ],
+      "Species": "Sand Whiting",
+      "Count": "",
+      "Size": ""
+    },
+    "published": true,
+    "source_issue": "31",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/31"
+  },
+  {
     "id": "striped-sea-perch",
     "type": "fishing",
     "title": "Striped Sea Perch",
