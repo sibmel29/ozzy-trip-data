@@ -1,5 +1,39 @@
 [
   {
+    "id": "barrum-heads",
+    "type": "fishing",
+    "title": "Barrum Heads",
+    "date": "2026-06-13",
+    "coordinates": [
+      152.606973,
+      -25.18353
+    ],
+    "marker": "fish",
+    "summary": "First time using the cast net!",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Barrum Heads",
+      "Kept or released": "released",
+      "Bait or lure": "Bait",
+      "Catches": [
+        {
+          "species": "Sand Whiting",
+          "count": "1"
+        }
+      ],
+      "Species": "Sand Whiting",
+      "Count": "1",
+      "Size": ""
+    },
+    "published": true,
+    "source_issue": "32",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/32"
+  },
+  {
     "id": "fishing-at-rainbow-beach",
     "type": "fishing",
     "title": "Fishing at Rainbow beach",
