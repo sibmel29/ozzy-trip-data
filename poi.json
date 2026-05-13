@@ -1,5 +1,28 @@
 [
   {
+    "id": "rainbow-beach",
+    "title": "Rainbow Beach",
+    "date": "2026-06-12",
+    "coordinates": [
+      153.182192,
+      -25.945192
+    ],
+    "marker": "sun",
+    "summary": "Full day off-road",
+    "body": [
+      "From the ferry after Noosa, all the way to Rainbow beach, we were off-road in pristine driving conditions. We were right in time to make it out with the tide and through the tracks taking us up the dunes and into rainbow beach area. \nFuji behaved so well, no issues, no overheating. (Thanks the new radiator!)",
+      "<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/a6701c54-8ddb-41ea-adf2-21b5ac030207\" />",
+      "<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/9fd567b4-dfd2-47ac-a574-b3351e69dfd7\" />"
+    ],
+    "images": [],
+    "tags": [
+      "Off-road"
+    ],
+    "published": true,
+    "source_issue": "33",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/33"
+  },
+  {
     "id": "jervis-bay",
     "title": "Jervis Bay",
     "date": "2025-12-01",
