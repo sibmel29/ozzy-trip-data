@@ -1,5 +1,40 @@
 [
   {
+    "id": "flathead-1770",
+    "type": "fishing",
+    "title": "Flathead 1770",
+    "date": "2026-06-14",
+    "coordinates": [
+      151.882765,
+      -24.171129
+    ],
+    "marker": "fish",
+    "summary": "",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "1770",
+      "Kept or released": "released",
+      "Bait or lure": "Pilchard",
+      "Catches": [
+        {
+          "species": "Dusky Flathead",
+          "count": "2",
+          "size": ". Juveniles, released."
+        }
+      ],
+      "Species": "Dusky Flathead",
+      "Count": "2",
+      "Size": ". Juveniles, released."
+    },
+    "published": true,
+    "source_issue": "34",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/34"
+  },
+  {
     "id": "barrum-heads",
     "type": "fishing",
     "title": "Barrum Heads",
