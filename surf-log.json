@@ -1,5 +1,33 @@
 [
   {
+    "id": "agnes-water",
+    "type": "surf",
+    "title": "Agnes water",
+    "date": "2026-06-16",
+    "coordinates": [
+      151.910342,
+      -24.206676
+    ],
+    "marker": "surf",
+    "summary": "Beautiful right hand wave, punchy and barreling in the offshore. Not too crowded. 5/5 for this wonderful spot.",
+    "body": [],
+    "images": [],
+    "tags": [
+      "surf"
+    ],
+    "details": {
+      "Surf spot": "Agnes water",
+      "Wave size": "1.5m",
+      "Wind": "Offshore",
+      "Tide": "Low",
+      "Rating": "5/5",
+      "Crowd": "Quier"
+    },
+    "published": true,
+    "source_issue": "36",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/36"
+  },
+  {
     "id": "manly",
     "type": "surf",
     "title": "Manly",
