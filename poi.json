@@ -1,5 +1,49 @@
 [
   {
+    "id": "agn-s-water-1770",
+    "title": "Agnès water & 1770",
+    "date": "2026-06-15",
+    "coordinates": [
+      151.8802766,
+      -24.1869927
+    ],
+    "marker": "sun",
+    "summary": "Magical place",
+    "body": [
+      "Agnes water and 1770 were one of the highlights of this east coast travels.",
+      "Good surf! A beautiful right waves, point break. Few people, and some punch to it, even barrels. Bori took her first real waves here, and started to enjoy it.",
+      "Good fishing, lots of people on boats. We mostly got a few small ones from the jetty, but still fun.",
+      "On hiccup: I did an oil change on a parking, cross threaded the filter, got us stranded for a day, but a random local helped us and we were really lucky to have met him, he got us back on the road.",
+      "I really loved our time in here, wish we could stay longer."
+    ],
+    "images": [
+      {
+        "src": "poi-media/agn-s-water-1770/1.jpg",
+        "alt": "Agnès water & 1770 photo 1"
+      },
+      {
+        "src": "poi-media/agn-s-water-1770/2.jpg",
+        "alt": "Agnès water & 1770 photo 2"
+      },
+      {
+        "src": "poi-media/agn-s-water-1770/3.jpg",
+        "alt": "Agnès water & 1770 photo 3"
+      },
+      {
+        "src": "poi-media/agn-s-water-1770/4.jpg",
+        "alt": "Agnès water & 1770 photo 4"
+      }
+    ],
+    "tags": [
+      "Coast",
+      "surf",
+      "fishing"
+    ],
+    "published": true,
+    "source_issue": "35",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/35"
+  },
+  {
     "id": "rainbow-beach",
     "title": "Rainbow Beach",
     "date": "2026-06-12",
