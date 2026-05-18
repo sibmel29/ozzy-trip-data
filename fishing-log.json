@@ -1,5 +1,40 @@
 [
   {
+    "id": "causeway-lake",
+    "type": "fishing",
+    "title": "Causeway Lake",
+    "date": "2026-06-18",
+    "coordinates": [
+      150.786278,
+      -23.197438
+    ],
+    "marker": "fish",
+    "summary": "Nice lake, calm.",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Kept or released": "kept",
+      "Bait or lure": "Bait Pilchard",
+      "Conditions": "Sunset",
+      "Catches": [
+        {
+          "species": "Yellowfin Bream",
+          "count": "1",
+          "size": "25 cm"
+        }
+      ],
+      "Species": "Yellowfin Bream",
+      "Count": "1",
+      "Size": "25 cm"
+    },
+    "published": true,
+    "source_issue": "37",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/37"
+  },
+  {
     "id": "flathead-1770",
     "type": "fishing",
     "title": "Flathead 1770",
