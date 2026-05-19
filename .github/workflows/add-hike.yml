@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   add-hike:
-    if: contains(github.event.issue.labels.*.name, 'hike-log') || startsWith(github.event.issue.title, '[HIKE]') || contains(github.event.issue.body, '### GPX file')
+    if: contains(github.event.issue.labels.*.name, 'hike-log') || startsWith(github.event.issue.title, '[HIKE]') || contains(github.event.issue.body, '### GPX file') || contains(github.event.issue.body, '### GPX file or ZIP')
     runs-on: ubuntu-latest
 
     steps:

@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Attach the GPX file in the GPX field, then add any recap text or photos. GitHub Actions will save the GPX, regenerate the hike layer, and connect the story to the route.
+        Upload a ZIP containing one GPX file in the GPX field, then add any recap text or photos. GitHub Actions will extract the GPX, regenerate the hike layer, and connect the story to the route.
   - type: input
     id: title
     attributes:
@@ -26,9 +26,9 @@ body:
   - type: textarea
     id: gpx_file
     attributes:
-      label: GPX file
-      description: Required. Drag/upload the GPX file here, or paste a direct GPX URL.
-      placeholder: Attach the GPX file here.
+      label: GPX file or ZIP
+      description: Required. GitHub issues may reject GPX files directly, so upload a .zip containing the GPX, or paste a direct GPX URL.
+      placeholder: Attach a ZIP containing the GPX here, or paste a direct GPX URL.
     validations:
       required: true
   - type: textarea
