@@ -3,7 +3,9 @@ import os
 import re
 import shutil
 import urllib.request
+from html import unescape
 from pathlib import Path
+from urllib.parse import unquote
 
 
 POI_FILE = Path(os.environ.get("POI_FILE", "poi.json"))
@@ -64,39 +66,64 @@ def coordinates_from_maps_link(value):
     if value in NO_RESPONSE:
         return None
 
+    def coordinates_from_text(text):
+        text = unquote(unescape(text))
+
+        patterns = [
+            r"@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
+            r"[?&](?:q|query|ll)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
+            r"/place/(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
+            r"(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, text)
+            if not match:
+                continue
+
+            first = float(match.group(1))
+            second = float(match.group(2))
+
+            if -90 <= first <= 90 and -180 <= second <= 180:
+                return [second, first]
+
+            if -180 <= first <= 180 and -90 <= second <= 90:
+                return [first, second]
+
+        data_match = re.search(
+            r"!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)",
+            text
+        )
+
+        if data_match:
+            latitude = float(data_match.group(1))
+            longitude = float(data_match.group(2))
+
+            if -90 <= latitude <= 90 and -180 <= longitude <= 180:
+                return [longitude, latitude]
+
+        return None
+
     if "maps.app.goo.gl" in value or "goo.gl/maps" in value:
         try:
             request = urllib.request.Request(
                 value,
-                headers={"User-Agent": "ozzy-trip-data-poi-action"}
+                headers={"User-Agent": "Mozilla/5.0 ozzy-trip-data-poi-action"}
             )
 
             with urllib.request.urlopen(request, timeout=15) as response:
-                value = response.geturl()
+                final_url = response.geturl()
+                page = response.read(200000).decode("utf-8", errors="ignore")
+                resolved_coordinates = coordinates_from_text(f"{final_url}\n{page}")
+
+                if resolved_coordinates:
+                    return resolved_coordinates
+
+                value = final_url
         except Exception:
             pass
 
-    patterns = [
-        r"@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
-        r"[?&](?:q|query|ll)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
-        r"(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)"
-    ]
-
-    for pattern in patterns:
-        match = re.search(pattern, value)
-        if not match:
-            continue
-
-        first = float(match.group(1))
-        second = float(match.group(2))
-
-        if -90 <= first <= 90 and -180 <= second <= 180:
-            return [second, first]
-
-        if -180 <= first <= 180 and -90 <= second <= 90:
-            return [first, second]
-
-    return None
+    return coordinates_from_text(value)
 
 
 def parse_paragraphs(value):
