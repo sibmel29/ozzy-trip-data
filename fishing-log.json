@@ -1,5 +1,40 @@
 [
   {
+    "id": "kemp-beach",
+    "type": "fishing",
+    "title": "Kemp Beach",
+    "date": "2026-06-19",
+    "coordinates": [
+      150.794,
+      -23.165231
+    ],
+    "marker": "fish",
+    "summary": "Nightfall on a live shrimp caught on the cash net",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Kemp Beach",
+      "Kept or released": "released",
+      "Bait or lure": "Live shrimp",
+      "Catches": [
+        {
+          "species": "Sand Whiting",
+          "count": "1",
+          "size": "Juvenile"
+        }
+      ],
+      "Species": "Sand Whiting",
+      "Count": "1",
+      "Size": "Juvenile"
+    },
+    "published": true,
+    "source_issue": "38",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/38"
+  },
+  {
     "id": "causeway-lake",
     "type": "fishing",
     "title": "Causeway Lake",
