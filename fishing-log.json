@@ -1,5 +1,39 @@
 [
   {
+    "id": "shoal-bay",
+    "type": "fishing",
+    "title": "Shoal bay",
+    "date": "2026-03-23",
+    "coordinates": [
+      149.150859,
+      -21.001369
+    ],
+    "marker": "fish",
+    "summary": "",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Shoal Bay",
+      "Kept or released": "released",
+      "Catches": [
+        {
+          "species": "Yellowfin Bream",
+          "count": "1",
+          "size": "25 cm"
+        }
+      ],
+      "Species": "Yellowfin Bream",
+      "Count": "1",
+      "Size": "25 cm"
+    },
+    "published": true,
+    "source_issue": "40",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/40"
+  },
+  {
     "id": "offshore-session",
     "type": "fishing",
     "title": "Offshore Session",
