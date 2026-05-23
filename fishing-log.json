@@ -1,5 +1,38 @@
 [
   {
+    "id": "offshore-session",
+    "type": "fishing",
+    "title": "Offshore Session",
+    "date": "2026-06-23",
+    "coordinates": [
+      149.235364,
+      -21.067587
+    ],
+    "marker": "fish",
+    "summary": "Today we're fishing offshore",
+    "body": [
+      "We woke up at the harbour beach early, and went straight to the boat ramp after coffee determined to hitch a ride on a fishing boat. After 3/4 rejections, we met the right person! Brock, 30 years old and with his own tin boat took is with him, we had a great few hours, in a very choppy sea, and beautiful sunshine.  Eventually we got three stripers, one really good size that I caught."
+    ],
+    "images": [
+      {
+        "src": "fishing-media/offshore-session/1.jpg",
+        "alt": "Offshore Session photo 1"
+      }
+    ],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Mackay",
+      "Kept or released": "kept",
+      "Bait or lure": "Squid, shrimp",
+      "Conditions": "Choppy windy"
+    },
+    "published": true,
+    "source_issue": "39",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/39"
+  },
+  {
     "id": "kemp-beach",
     "type": "fishing",
     "title": "Kemp Beach",
