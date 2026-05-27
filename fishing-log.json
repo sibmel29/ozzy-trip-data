@@ -1,5 +1,29 @@
 [
   {
+    "id": "shoal-bay-more-surprises",
+    "type": "fishing",
+    "title": "Shoal bay more surprises",
+    "date": "2026-05-23",
+    "coordinates": [
+      149.15035,
+      -21.001647
+    ],
+    "marker": "fish",
+    "summary": "",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Kept or released": "released",
+      "Bait or lure": "Shrimp"
+    },
+    "published": true,
+    "source_issue": "41",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/41"
+  },
+  {
     "id": "shoal-bay",
     "type": "fishing",
     "title": "Shoal bay",
