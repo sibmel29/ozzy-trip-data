@@ -1,5 +1,37 @@
 [
   {
+    "id": "cape-hillsborough",
+    "title": "Cape Hillsborough",
+    "date": "28-06-2026",
+    "coordinates": [
+      149.051889,
+      -20.92358
+    ],
+    "marker": "sun",
+    "summary": "Nice sunrise",
+    "body": [
+      "After sleep at the beautiful Halliday Bay, we took a sunrise walk on the beach at cape Hillsborough, and a nice hike up the rock, what a stunning view! Loved it so much. \nLater we did the board walk, and almost drove on a massive python. 🐍"
+    ],
+    "images": [
+      {
+        "src": "poi-media/cape-hillsborough/1.jpg",
+        "alt": "Cape Hillsborough photo 1"
+      },
+      {
+        "src": "poi-media/cape-hillsborough/2.jpg",
+        "alt": "Cape Hillsborough photo 2"
+      },
+      {
+        "src": "poi-media/cape-hillsborough/3.jpg",
+        "alt": "Cape Hillsborough photo 3"
+      }
+    ],
+    "tags": [],
+    "published": true,
+    "source_issue": "42",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/42"
+  },
+  {
     "id": "agn-s-water-1770",
     "title": "Agnès water & 1770",
     "date": "2026-06-15",
