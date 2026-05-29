@@ -1,5 +1,45 @@
 [
   {
+    "id": "eungella-national-park",
+    "title": "Eungella National Park",
+    "date": "2026-06-29",
+    "coordinates": [
+      148.498792,
+      -21.169297
+    ],
+    "marker": "camp",
+    "summary": "Finally we found the platypus.",
+    "body": [
+      "After thinking about this moment for so long, we finally found the platypus! A beautiful sunrise over the broken river, and a couple hours waiting with the binoculars, from the first lights, and we managed to sight the creature feeding, swimming and just going around. It was a very special experience and one that I'll remember forever."
+    ],
+    "images": [
+      {
+        "src": "poi-media/eungella-national-park/1.jpg",
+        "alt": "Eungella National Park photo 1"
+      },
+      {
+        "src": "poi-media/eungella-national-park/2.jpg",
+        "alt": "Eungella National Park photo 2"
+      },
+      {
+        "src": "poi-media/eungella-national-park/3.jpg",
+        "alt": "Eungella National Park photo 3"
+      },
+      {
+        "src": "poi-media/eungella-national-park/4.jpg",
+        "alt": "Eungella National Park photo 4"
+      },
+      {
+        "src": "poi-media/eungella-national-park/5.jpg",
+        "alt": "Eungella National Park photo 5"
+      }
+    ],
+    "tags": [],
+    "published": true,
+    "source_issue": "43",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/43"
+  },
+  {
     "id": "cape-hillsborough",
     "title": "Cape Hillsborough",
     "date": "28-06-2026",
