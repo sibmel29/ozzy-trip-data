@@ -1,5 +1,40 @@
 [
   {
+    "id": "dingo-beach",
+    "type": "fishing",
+    "title": "Dingo beach",
+    "date": "2026-06-02",
+    "coordinates": [
+      148.505627,
+      -20.08804
+    ],
+    "marker": "fish",
+    "summary": "",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Dingo beach",
+      "Kept or released": "kept",
+      "Bait or lure": "Shrimp",
+      "Catches": [
+        {
+          "species": "Yellowfin Bream",
+          "count": "1",
+          "size": "27 cm"
+        }
+      ],
+      "Species": "Yellowfin Bream",
+      "Count": "1",
+      "Size": "27 cm"
+    },
+    "published": true,
+    "source_issue": "44",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/44"
+  },
+  {
     "id": "shoal-bay-more-surprises",
     "type": "fishing",
     "title": "Shoal bay more surprises",
