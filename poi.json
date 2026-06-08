@@ -1,5 +1,45 @@
 [
   {
+    "id": "archaic-gathering-festival",
+    "title": "Archaic Gathering Festival",
+    "date": "2026-06-01",
+    "coordinates": [
+      148.419976,
+      -20.490837
+    ],
+    "marker": "sun",
+    "summary": "Weekend Doof in the woods",
+    "body": [
+      "Australian are really good at creating a space to party, colorful and playful, with the most high tech laser, sound systems, and amazing artists for decorating and visuals. This festival was one of the best decorated one I've been to. Sadly, the music wasn't too good for us, a lot of drum&bass and dubstep which is a style I don't like. The Saturday was really nice, with a lot of deeper stuff like pay trance in the night."
+    ],
+    "images": [
+      {
+        "src": "poi-media/archaic-gathering-festival/1.jpg",
+        "alt": "Archaic Gathering Festival photo 1"
+      },
+      {
+        "src": "poi-media/archaic-gathering-festival/2.jpg",
+        "alt": "Archaic Gathering Festival photo 2"
+      },
+      {
+        "src": "poi-media/archaic-gathering-festival/3.jpg",
+        "alt": "Archaic Gathering Festival photo 3"
+      },
+      {
+        "src": "poi-media/archaic-gathering-festival/4.jpg",
+        "alt": "Archaic Gathering Festival photo 4"
+      },
+      {
+        "src": "poi-media/archaic-gathering-festival/5.jpg",
+        "alt": "Archaic Gathering Festival photo 5"
+      }
+    ],
+    "tags": [],
+    "published": true,
+    "source_issue": "45",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/45"
+  },
+  {
     "id": "eungella-national-park",
     "title": "Eungella National Park",
     "date": "2026-06-29",
