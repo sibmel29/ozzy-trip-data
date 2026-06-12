@@ -1,5 +1,30 @@
 [
   {
+    "id": "fishing-alva-beach",
+    "type": "fishing",
+    "title": "Fishing Alva Beach",
+    "date": "2026-06-11",
+    "coordinates": [
+      147.478517,
+      -19.440005
+    ],
+    "marker": "fish",
+    "summary": "What a nice fight these little fellas put on! We ended up eating them grilled, they are delicious fish.",
+    "body": [],
+    "images": [],
+    "tags": [
+      "fishing"
+    ],
+    "details": {
+      "Spot name": "Alva Beach",
+      "Kept or released": "kept",
+      "Bait or lure": "Bait shrimp"
+    },
+    "published": true,
+    "source_issue": "46",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/46"
+  },
+  {
     "id": "dingo-beach",
     "type": "fishing",
     "title": "Dingo beach",
