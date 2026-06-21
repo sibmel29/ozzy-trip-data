@@ -139,6 +139,33 @@ def parse_paragraphs(value):
     ]
 
 
+def story_image_entries(value):
+    if value in NO_RESPONSE:
+        return []
+
+    entries = re.findall(
+        r"""<img\b[^>]*\bsrc=["'](https?://[^"']+)["'][^>]*>""",
+        value,
+        flags=re.IGNORECASE,
+    )
+    entries.extend(re.findall(r"!\[[^\]]*\]\((https?://[^)]+)\)", value))
+    return list(dict.fromkeys(entries))
+
+
+def story_without_images(value):
+    if value in NO_RESPONSE:
+        return value
+
+    value = re.sub(
+        r"""<img\b[^>]*\bsrc=["']https?://[^"']+["'][^>]*>""",
+        "",
+        value,
+        flags=re.IGNORECASE,
+    )
+    value = re.sub(r"!\[[^\]]*\]\(https?://[^)]+\)", "", value)
+    return re.sub(r"\n\s*\n\s*\n+", "\n\n", value).strip()
+
+
 def parse_tags(value):
     if value in NO_RESPONSE:
         return []
@@ -348,11 +375,18 @@ def marker_from_sections(sections, existing=None):
     return marker if marker in MARKERS else "info"
 
 
-def images_from_sections(sections, poi_id, title, existing=None):
-    if not has_value(sections, "Image paths"):
+def images_from_sections(sections, poi_id, title, story_value="", existing=None):
+    image_entries = []
+
+    if has_value(sections, "Image paths"):
+        image_entries.extend(image_entries_for(value_for(sections, "Image paths")))
+
+    image_entries.extend(story_image_entries(story_value))
+    image_entries = list(dict.fromkeys(image_entries))
+
+    if not image_entries:
         return existing.get("images", []) if existing else []
 
-    image_entries = image_entries_for(value_for(sections, "Image paths"))
     return images_from_entries(image_entries, poi_id, title)
 
 
@@ -378,6 +412,7 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
     media_folder = POI_MEDIA_FOLDER / poi_id
     media_folder.mkdir(parents=True, exist_ok=True)
     (media_folder / ".gitkeep").touch()
+    story_value = value_for(sections, "Story text")
 
     poi = {
         "id": poi_id,
@@ -386,8 +421,8 @@ def build_poi(sections, issue_number, issue_url, existing_pois):
         "coordinates": coordinates_from_sections(sections, existing),
         "marker": marker_from_sections(sections, existing),
         "summary": value_for(sections, "Short summary", existing.get("summary", "") if existing else ""),
-        "body": parse_paragraphs(value_for(sections, "Story text")) if has_value(sections, "Story text") else (existing.get("body", []) if existing else []),
-        "images": images_from_sections(sections, poi_id, title, existing),
+        "body": parse_paragraphs(story_without_images(story_value)) if has_value(sections, "Story text") else (existing.get("body", []) if existing else []),
+        "images": images_from_sections(sections, poi_id, title, story_value, existing),
         "tags": parse_tags(value_for(sections, "Tags")) if has_value(sections, "Tags") else (existing.get("tags", []) if existing else []),
         "published": published_from_sections(sections, existing),
         "source_issue": str(issue_number),

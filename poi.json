@@ -10,10 +10,50 @@
     "marker": "forest",
     "summary": "Island of beauty",
     "body": [
-      "This island isn't too straightforward to hike, as it's mostly developed on the east side, so you can't walk around it. Yet, the walking trails are very well connected, and indicated. We managed to find a way that took us all the way across, and cruising the coast, visiting all the bays on the first day. The second day we made our way back taking a different road. We saw two koalas, and two echidnas, this was the first time seeing these animals which was a very nice surprise! We slept on a private little beach/bay under a sky full of stars. I really had a great time here on the island and would highly recommend it!",
-      "<img width=\"1836\" height=\"4096\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/5e1a4b50-4357-486b-acdd-f58949cfc509\" />\n<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/ed75a980-d476-4507-b6a5-b9aede6eda87\" />\n<img width=\"1836\" height=\"4096\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/9131ee17-a4cc-4164-8c5f-2178d88577ca\" />\n<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/42457fe6-daa3-4b17-ad61-28c42365e1b1\" />\n<img width=\"3136\" height=\"1404\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/132ea9d3-f400-426d-a114-1a0ea91c0951\" />\n<img width=\"1404\" height=\"3136\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/65b67712-3892-4bb3-94ed-98b62a97f32f\" />\n<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/a8e872d0-4a70-4f56-84d2-6bd6ae79bed6\" />\n<img width=\"4000\" height=\"1792\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/6e1c5878-66da-4cde-95c8-e956f4674411\" />\n<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/7474735a-3dc1-44e1-84bc-4b0554952553\" />\n<img width=\"4608\" height=\"2072\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/70fb64f2-8284-464b-9767-120075b57095\" />"
+      "This island isn't too straightforward to hike, as it's mostly developed on the east side, so you can't walk around it. Yet, the walking trails are very well connected, and indicated. We managed to find a way that took us all the way across, and cruising the coast, visiting all the bays on the first day. The second day we made our way back taking a different road. We saw two koalas, and two echidnas, this was the first time seeing these animals which was a very nice surprise! We slept on a private little beach/bay under a sky full of stars. I really had a great time here on the island and would highly recommend it!"
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "poi-media/magnetic-island/1.jpg",
+        "alt": "Magnetic Island photo 1"
+      },
+      {
+        "src": "poi-media/magnetic-island/2.jpg",
+        "alt": "Magnetic Island photo 2"
+      },
+      {
+        "src": "poi-media/magnetic-island/3.jpg",
+        "alt": "Magnetic Island photo 3"
+      },
+      {
+        "src": "poi-media/magnetic-island/4.jpg",
+        "alt": "Magnetic Island photo 4"
+      },
+      {
+        "src": "poi-media/magnetic-island/5.jpg",
+        "alt": "Magnetic Island photo 5"
+      },
+      {
+        "src": "poi-media/magnetic-island/6.jpg",
+        "alt": "Magnetic Island photo 6"
+      },
+      {
+        "src": "poi-media/magnetic-island/7.jpg",
+        "alt": "Magnetic Island photo 7"
+      },
+      {
+        "src": "poi-media/magnetic-island/8.jpg",
+        "alt": "Magnetic Island photo 8"
+      },
+      {
+        "src": "poi-media/magnetic-island/9.jpg",
+        "alt": "Magnetic Island photo 9"
+      },
+      {
+        "src": "poi-media/magnetic-island/10.jpg",
+        "alt": "Magnetic Island photo 10"
+      }
+    ],
     "tags": [],
     "published": true,
     "source_issue": "47",
@@ -186,11 +226,18 @@
     "marker": "sun",
     "summary": "Full day off-road",
     "body": [
-      "From the ferry after Noosa, all the way to Rainbow beach, we were off-road in pristine driving conditions. We were right in time to make it out with the tide and through the tracks taking us up the dunes and into rainbow beach area. \nFuji behaved so well, no issues, no overheating. (Thanks the new radiator!)",
-      "<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/a6701c54-8ddb-41ea-adf2-21b5ac030207\" />",
-      "<img width=\"4096\" height=\"1836\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/9fd567b4-dfd2-47ac-a574-b3351e69dfd7\" />"
+      "From the ferry after Noosa, all the way to Rainbow beach, we were off-road in pristine driving conditions. We were right in time to make it out with the tide and through the tracks taking us up the dunes and into rainbow beach area. \nFuji behaved so well, no issues, no overheating. (Thanks the new radiator!)"
     ],
-    "images": [],
+    "images": [
+      {
+        "src": "poi-media/rainbow-beach/1.jpg",
+        "alt": "Rainbow Beach photo 1"
+      },
+      {
+        "src": "poi-media/rainbow-beach/2.jpg",
+        "alt": "Rainbow Beach photo 2"
+      }
+    ],
     "tags": [
       "Off-road"
     ],
