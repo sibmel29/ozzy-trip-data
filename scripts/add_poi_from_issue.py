@@ -297,32 +297,34 @@ def find_poi_by_id(pois, poi_id):
 
 
 def coordinates_from_sections(sections, existing=None):
+    longitude_value = value_for(sections, "Longitude")
+    latitude_value = value_for(sections, "Latitude")
+
+    # Explicit coordinates are authoritative. Google Maps pages can contain
+    # unrelated viewport coordinates in their metadata.
+    if longitude_value and latitude_value:
+        longitude = parse_coordinate(longitude_value, "Longitude")
+        latitude = parse_coordinate(latitude_value, "Latitude")
+
+        if 110 <= longitude <= 155 and 0 < latitude <= 45:
+            latitude = -latitude
+
+        if not -180 <= longitude <= 180:
+            raise ValueError("Longitude must be between -180 and 180")
+
+        if not -90 <= latitude <= 90:
+            raise ValueError("Latitude must be between -90 and 90")
+
+        return [longitude, latitude]
+
     maps_coordinates = coordinates_from_maps_link(value_for(sections, "Google Maps link"))
     if maps_coordinates:
         return maps_coordinates
 
-    longitude_value = value_for(sections, "Longitude")
-    latitude_value = value_for(sections, "Latitude")
-
     if not longitude_value and not latitude_value and existing is not None:
         return existing.get("coordinates", [])
 
-    if not longitude_value or not latitude_value:
-        raise ValueError("Longitude and Latitude must both be filled when changing location")
-
-    longitude = parse_coordinate(longitude_value, "Longitude")
-    latitude = parse_coordinate(latitude_value, "Latitude")
-
-    if 110 <= longitude <= 155 and 0 < latitude <= 45:
-        latitude = -latitude
-
-    if not -180 <= longitude <= 180:
-        raise ValueError("Longitude must be between -180 and 180")
-
-    if not -90 <= latitude <= 90:
-        raise ValueError("Latitude must be between -90 and 90")
-
-    return [longitude, latitude]
+    raise ValueError("Longitude and Latitude must both be filled when changing location")
 
 
 def published_from_sections(sections, existing=None):
