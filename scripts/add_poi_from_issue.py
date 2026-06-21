@@ -69,6 +69,20 @@ def coordinates_from_maps_link(value):
     def coordinates_from_text(text):
         text = unquote(unescape(text))
 
+        # Google encodes the selected place as !3d<latitude>!4d<longitude>.
+        # Check this before generic comma pairs, which can be viewport centres.
+        data_match = re.search(
+            r"!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)",
+            text
+        )
+
+        if data_match:
+            latitude = float(data_match.group(1))
+            longitude = float(data_match.group(2))
+
+            if -90 <= latitude <= 90 and -180 <= longitude <= 180:
+                return [longitude, latitude]
+
         patterns = [
             r"@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
             r"[?&](?:q|query|ll)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)",
@@ -89,18 +103,6 @@ def coordinates_from_maps_link(value):
 
             if -180 <= first <= 180 and -90 <= second <= 90:
                 return [first, second]
-
-        data_match = re.search(
-            r"!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)",
-            text
-        )
-
-        if data_match:
-            latitude = float(data_match.group(1))
-            longitude = float(data_match.group(2))
-
-            if -90 <= latitude <= 90 and -180 <= longitude <= 180:
-                return [longitude, latitude]
 
         return None
 

@@ -8,7 +8,7 @@ body:
       value: |
         Fill this in from your phone. When you submit, GitHub Actions will add the POI to `poi.json`.
 
-        Coordinates use map format: longitude first, latitude second. Google Maps usually shows latitude first, so copy carefully.
+        Share the place from Google Maps and paste its link below. Longitude and latitude are only fallback options.
   - type: input
     id: poi_title
     attributes:
@@ -27,26 +27,26 @@ body:
     id: maps_link
     attributes:
       label: Google Maps link
-      description: Optional. Paste a Maps link instead of coordinates when possible.
-      placeholder: https://maps.google.com/?q=-31.053463,153.062065
+      description: Required. In Google Maps, open the place, tap Share, then paste the link here.
+      placeholder: https://maps.app.goo.gl/example
     validations:
-      required: false
+      required: true
   - type: input
     id: longitude
     attributes:
       label: Longitude
-      description: East/west coordinate. Example for eastern Australia is around 150 to 153.
+      description: Optional fallback only. Leave blank when using the Google Maps link.
       placeholder: "150.892986"
     validations:
-      required: true
+      required: false
   - type: input
     id: latitude
     attributes:
       label: Latitude
-      description: North/south coordinate. Example for Australia is usually negative.
+      description: Optional fallback only. Leave blank when using the Google Maps link.
       placeholder: "-28.688287"
     validations:
-      required: true
+      required: false
   - type: dropdown
     id: marker
     attributes:
