@@ -1,0 +1,43 @@
+name: Add analog photos
+description: Upload a batch of analog photos to the website gallery.
+title: "[ANALOG] "
+labels: ["analog-gallery"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Upload the original photos from your phone. GitHub Actions will create fast thumbnails and web-sized viewing copies automatically.
+  - type: input
+    id: collection_title
+    attributes:
+      label: Collection title
+      description: A short name used when individual captions are blank.
+      placeholder: "Outback roll 01"
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: Optional shooting or development date.
+      placeholder: "2026-06-21"
+    validations:
+      required: false
+  - type: textarea
+    id: photos
+    attributes:
+      label: Photo uploads
+      description: Required. Tap here and upload all photos in this batch. Leave the generated links in place.
+      placeholder: Upload your photos here.
+    validations:
+      required: true
+  - type: textarea
+    id: captions
+    attributes:
+      label: Captions
+      description: Optional. Add one caption per line, in the same order as the uploaded photos.
+      placeholder: |
+        Dust road near Winton
+        Sunset outside Longreach
+    validations:
+      required: false

@@ -20,7 +20,7 @@ The script:
 
 1. Reads GPX files in the repository root, `car/gpx/`, and `car/archive/`.
 2. Keeps points that move at least 150 metres from the previous accepted point.
-3. Splits the route at GPS jumps over 5 km.
+3. Bridges short, physically plausible GPS signal gaps and splits impossible jumps or long pauses.
 4. Writes the result to `route_live.geojson` and latest GPS metadata to `route_meta.json`.
 5. Moves processed files from `car/gpx/` into `car/archive/YYYY-MM/`.
 
@@ -146,6 +146,33 @@ marker tooltip and popup details. The surf menu shows the fixed list of surf
 spots, and toggling it shows each surf marker with spot, wave size, and rating.
 Adding the same surf spot again updates that spot instead of creating a second
 session marker.
+
+## Analog photo gallery
+
+The camera button below the ODO tile opens a separate full-screen analog photo
+gallery. The gallery manifest is stored in `analog-gallery/gallery.json`.
+
+### Add photos from your phone
+
+1. Open the repository and go to **Issues**.
+2. Tap **New issue** and choose **Add analog photos**.
+3. Enter a collection title and optional date.
+4. Upload several original photos in **Photo uploads**.
+5. Optionally add one caption per line, in the same order as the photos.
+6. Submit the issue.
+
+The GitHub Action downloads each original temporarily and commits only two
+optimized copies:
+
+```text
+analog-gallery/thumbs/issue-<number>-<photo>.jpg
+analog-gallery/web/issue-<number>-<photo>.jpg
+```
+
+Thumbnails are capped at 600px and load lazily only after the gallery opens.
+Viewing copies are capped at 2000px and load only when a photograph is opened.
+Editing or reopening the same issue replaces that issue's gallery entries rather
+than creating duplicates. The large phone originals are not stored in the repo.
 
 `fish_species_nsw.json` is a small reference list derived from the NSW DPI fish
 species index. It stores species names and freshwater/saltwater category only,

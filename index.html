@@ -41,17 +41,24 @@ body { margin:0; font-family: system-ui; }
 }
 
 /* ODO tile */
-.odo {
+.left-stack {
   position: fixed;
   top: 20px;
   left: 20px;
   z-index: 1000;
+  display: grid;
+  gap: 8px;
+  width: 154px;
+}
+
+.odo {
+  box-sizing: border-box;
+  width: 100%;
   background: rgba(255,255,255,0.9);
   padding: 10px 12px 12px;
   border-radius: 12px;
   font-size: 14px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  min-width: 130px;
 }
 
 .odo-logo {
@@ -65,6 +72,31 @@ body { margin:0; font-family: system-ui; }
 
 .odo-values {
   line-height: 1.35;
+}
+
+.analog-gallery-launch {
+  width: 100%;
+  aspect-ratio: 1.66 / 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 5px 8px rgba(0,0,0,0.28));
+  transition: transform 0.16s ease, filter 0.16s ease;
+}
+
+.analog-gallery-launch:hover,
+.analog-gallery-launch:focus-visible {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 7px 10px rgba(0,0,0,0.34));
+  outline: none;
+}
+
+.analog-gallery-launch img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Map style panel */
@@ -620,6 +652,143 @@ body { margin:0; font-family: system-ui; }
   cursor: pointer;
 }
 
+.analog-gallery {
+  position: fixed;
+  inset: 0;
+  z-index: 2400;
+  display: none;
+  overflow: auto;
+  background: #171512;
+  color: #f7f1e5;
+}
+
+.analog-gallery.visible {
+  display: block;
+}
+
+.analog-gallery-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px clamp(16px, 4vw, 48px);
+  background: rgba(23,21,18,0.94);
+  border-bottom: 1px solid rgba(247,241,229,0.16);
+  backdrop-filter: blur(10px);
+}
+
+.analog-gallery-header h2 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(22px, 4vw, 34px);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.analog-gallery-close {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border: 1px solid rgba(247,241,229,0.35);
+  border-radius: 50%;
+  background: transparent;
+  color: #f7f1e5;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.analog-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: clamp(18px, 3vw, 34px);
+  padding: clamp(20px, 4vw, 48px);
+}
+
+.analog-photo {
+  min-width: 0;
+  margin: 0;
+}
+
+.analog-photo button {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(247,241,229,0.2);
+  border-radius: 3px;
+  background: #29251f;
+  cursor: zoom-in;
+}
+
+.analog-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.analog-photo button:hover img,
+.analog-photo button:focus-visible img {
+  transform: scale(1.025);
+}
+
+.analog-photo figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 9px;
+  color: #f7f1e5;
+  font-family: Georgia, serif;
+  font-size: 14px;
+}
+
+.analog-photo time {
+  flex: 0 0 auto;
+  color: #b9ad9b;
+  font-family: system-ui;
+  font-size: 12px;
+}
+
+.analog-gallery-status {
+  padding: 56px 24px;
+  color: #cfc5b5;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .left-stack {
+    top: 10px;
+    left: 10px;
+    width: 138px;
+  }
+
+  .odo-logo {
+    width: 92px;
+  }
+
+  .analog-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 10px;
+    padding: 16px 10px 28px;
+  }
+
+  .analog-photo figcaption {
+    display: block;
+    font-size: 13px;
+  }
+
+  .analog-photo time {
+    display: block;
+    margin-top: 3px;
+  }
+}
+
 /* Welcome popup */
 .popup {
   position: fixed;
@@ -672,9 +841,14 @@ body { margin:0; font-family: system-ui; }
 
 <div id="map"></div>
 
-<div class="odo" id="odoTile">
-  <img src="fuji-logo.png" class="odo-logo" alt="Fuji logo" />
-  <div class="odo-values">🚐 Loading...</div>
+<div class="left-stack">
+  <div class="odo" id="odoTile">
+    <img src="fuji-logo.png" class="odo-logo" alt="Fuji logo" />
+    <div class="odo-values">🚐 Loading...</div>
+  </div>
+  <button class="analog-gallery-launch" id="analogGalleryLaunch" type="button" aria-label="View analog photo gallery">
+    <img src="analog-gallery-button.png" alt="" />
+  </button>
 </div>
 
 <div class="panel">
@@ -751,6 +925,15 @@ body { margin:0; font-family: system-ui; }
   <button type="button" id="lightboxClose" aria-label="Close image">×</button>
   <img id="lightboxImage" alt="">
 </div>
+
+<section id="analogGallery" class="analog-gallery" aria-hidden="true" aria-labelledby="analogGalleryTitle">
+  <header class="analog-gallery-header">
+    <h2 id="analogGalleryTitle">Analog Photo Gallery</h2>
+    <button class="analog-gallery-close" id="analogGalleryClose" type="button" aria-label="Close analog gallery">×</button>
+  </header>
+  <div id="analogGalleryGrid" class="analog-gallery-grid"></div>
+  <div id="analogGalleryStatus" class="analog-gallery-status">Loading photographs...</div>
+</section>
 
 <script>
 
@@ -923,6 +1106,82 @@ lightboxClose.onclick = closeLightbox;
 lightbox.onclick = event => {
   if (event.target === lightbox) closeLightbox();
 };
+
+// === ANALOG PHOTO GALLERY
+const analogGalleryLaunch = document.getElementById("analogGalleryLaunch");
+const analogGallery = document.getElementById("analogGallery");
+const analogGalleryClose = document.getElementById("analogGalleryClose");
+const analogGalleryGrid = document.getElementById("analogGalleryGrid");
+const analogGalleryStatus = document.getElementById("analogGalleryStatus");
+let analogPhotos = null;
+
+function renderAnalogGallery() {
+  analogGalleryGrid.innerHTML = "";
+
+  if (!analogPhotos || analogPhotos.length === 0) {
+    analogGalleryStatus.textContent = "The first roll is still waiting to be developed.";
+    analogGalleryStatus.hidden = false;
+    return;
+  }
+
+  analogGalleryStatus.hidden = true;
+
+  analogPhotos.forEach(photo => {
+    let figure = document.createElement("figure");
+    figure.className = "analog-photo";
+    figure.innerHTML = `
+      <button type="button" aria-label="View ${escapeHTML(photo.title || "analog photograph")}">
+        <img src="${escapeHTML(photo.thumb || photo.src)}" alt="${escapeHTML(photo.title || "Analog photograph")}" loading="lazy" decoding="async">
+      </button>
+      <figcaption>
+        <span>${escapeHTML(photo.title || "Untitled")}</span>
+        ${photo.date ? `<time>${escapeHTML(photo.date)}</time>` : ""}
+      </figcaption>
+    `;
+    figure.querySelector("button").onclick = () => openLightbox({
+      src: photo.src,
+      alt: photo.title || "Analog photograph"
+    });
+    analogGalleryGrid.appendChild(figure);
+  });
+}
+
+async function loadAnalogGallery() {
+  if (analogPhotos !== null) return;
+
+  analogGalleryStatus.textContent = "Loading photographs...";
+  analogGalleryStatus.hidden = false;
+
+  try {
+    let response = await fetch("analog-gallery/gallery.json");
+    analogPhotos = response.ok ? await response.json() : [];
+  } catch (error) {
+    console.warn("Analog gallery not loaded:", error);
+    analogPhotos = [];
+  }
+
+  renderAnalogGallery();
+}
+
+function openAnalogGallery() {
+  analogGallery.classList.add("visible");
+  analogGallery.setAttribute("aria-hidden", "false");
+  loadAnalogGallery();
+}
+
+function closeAnalogGallery() {
+  analogGallery.classList.remove("visible");
+  analogGallery.setAttribute("aria-hidden", "true");
+}
+
+analogGalleryLaunch.onclick = openAnalogGallery;
+analogGalleryClose.onclick = closeAnalogGallery;
+
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") return;
+  if (lightbox.classList.contains("visible")) closeLightbox();
+  else if (analogGallery.classList.contains("visible")) closeAnalogGallery();
+});
 
 const poiLayer = L.featureGroup();
 
