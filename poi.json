@@ -1,5 +1,37 @@
 [
   {
+    "id": "whitsunday-snorkeling-trip",
+    "title": "Whitsunday Snorkeling Trip",
+    "date": "2026-06-01",
+    "coordinates": [
+      149.0256194,
+      -20.2418806
+    ],
+    "marker": "sun",
+    "summary": "White sand and clear water",
+    "body": [
+      "Just like a post card? Full of tourists on boats! \nIt was amazing to snorkel in the coral reef, we saw many species of fish all very colourful."
+    ],
+    "images": [
+      {
+        "src": "poi-media/whitsunday-snorkeling-trip/1.jpg",
+        "alt": "Whitsunday Snorkeling Trip photo 1"
+      },
+      {
+        "src": "poi-media/whitsunday-snorkeling-trip/2.jpg",
+        "alt": "Whitsunday Snorkeling Trip photo 2"
+      },
+      {
+        "src": "poi-media/whitsunday-snorkeling-trip/3.jpg",
+        "alt": "Whitsunday Snorkeling Trip photo 3"
+      }
+    ],
+    "tags": [],
+    "published": true,
+    "source_issue": "50",
+    "source_url": "https://github.com/sibmel29/ozzy-trip-data/issues/50"
+  },
+  {
     "id": "magnetic-island",
     "title": "Magnetic Island",
     "date": "2026-06-14",
