@@ -10,6 +10,8 @@ from pathlib import Path
 # === SETTINGS (tune these if needed)
 MIN_DISTANCE_METERS = 150     # skip jitter
 MAX_JUMP_METERS = 5000        # split tracks at impossible GPS jumps
+MAX_BRIDGE_GAP_SECONDS = 30 * 60
+MAX_BRIDGE_SPEED_KMH = 160
 MAX_POINTS = 800              # keep file light
 INPUT_FOLDERS = [".", "car/gpx", "car/archive"]
 OUTPUT_FILE = "route_live.geojson"
@@ -26,6 +28,19 @@ def haversine(lat1, lon1, lat2, lon2):
     a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
     c = 2 * atan2(sqrt(a), sqrt(1-a))
     return R * c
+
+
+def can_bridge_signal_gap(distance_meters, previous_time, current_time):
+    if previous_time is None or current_time is None:
+        return False
+
+    elapsed_seconds = (current_time - previous_time).total_seconds()
+
+    if elapsed_seconds <= 0 or elapsed_seconds > MAX_BRIDGE_GAP_SECONDS:
+        return False
+
+    implied_speed_kmh = distance_meters / elapsed_seconds * 3.6
+    return implied_speed_kmh <= MAX_BRIDGE_SPEED_KMH
 
 
 def car_gpx_files():
@@ -107,6 +122,8 @@ all_times = []
 
 last_lat = None
 last_lon = None
+last_time = None
+bridged_gaps = 0
 
 
 # === MERGE ALL FILES
@@ -137,12 +154,16 @@ for file in gpx_files:
 
                     # skip crazy GPS jumps
                     if dist > MAX_JUMP_METERS:
-                        if len(coords) >= 2:
-                            segments.append((coords, times))
-                        coords = []
-                        times = []
-                        last_lat = None
-                        last_lon = None
+                        if can_bridge_signal_gap(dist, last_time, time):
+                            bridged_gaps += 1
+                        else:
+                            if len(coords) >= 2:
+                                segments.append((coords, times))
+                            coords = []
+                            times = []
+                            last_lat = None
+                            last_lon = None
+                            last_time = None
 
                     elif dist < MIN_DISTANCE_METERS:
                         continue
@@ -152,6 +173,7 @@ for file in gpx_files:
 
                 last_lat = lat
                 last_lon = lon
+                last_time = time
 
 if len(coords) >= 2:
     segments.append((coords, times))
@@ -237,4 +259,7 @@ with open(META_FILE, "w") as f:
 if ARCHIVE_CAR_GPX:
     archive_car_files(gpx_files)
 
-print(f"✅ Done: {sum(len(segment_coords) for segment_coords, _ in segments)} points → {OUTPUT_FILE}")
+print(
+    f"✅ Done: {sum(len(segment_coords) for segment_coords, _ in segments)} points "
+    f"→ {OUTPUT_FILE} ({bridged_gaps} GPS gaps bridged)"
+)

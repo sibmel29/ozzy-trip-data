@@ -18,6 +18,7 @@ on:
       - 'hike-media/**/*.webp'
       - 'hike-media/**/*.WEBP'
       - 'hike_stories.json'
+      - 'geojson_merge.py'
 
 permissions:
   contents: write
